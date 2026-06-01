@@ -36,7 +36,6 @@
     line-height: 1.7;
   }
 
-  /* NAV */
   nav {
     background: var(--accent);
     color: #fff;
@@ -54,10 +53,7 @@
     letter-spacing: 0.12em;
     color: rgba(255,255,255,0.9);
   }
-  .nav-tabs {
-    display: flex;
-    gap: 4px;
-  }
+  .nav-tabs { display: flex; gap: 4px; }
   .nav-tab {
     font-family: var(--mono);
     font-size: 11px;
@@ -73,11 +69,9 @@
   .nav-tab:hover { background: rgba(255,255,255,0.1); color: #fff; }
   .nav-tab.active { background: rgba(255,255,255,0.2); color: #fff; border-color: rgba(255,255,255,0.6); }
 
-  /* SCREENS */
   .screen { display: none; }
   .screen.active { display: block; }
 
-  /* HOME */
   #home {
     max-width: 760px;
     margin: 0 auto;
@@ -169,7 +163,6 @@
     padding-left: 1rem;
   }
 
-  /* EXAM SCREEN */
   #exam-screen {
     max-width: 860px;
     margin: 0 auto;
@@ -183,7 +176,6 @@
     justify-content: space-between;
     align-items: flex-end;
   }
-  .exam-header-left {}
   .exam-course {
     font-family: var(--mono);
     font-size: 11px;
@@ -215,7 +207,6 @@
   }
   .back-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* CASE STUDY */
   .case-study {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -253,10 +244,7 @@
     border-radius: 0 3px 3px 0;
     display: block;
   }
-  .case-figure {
-    margin: 1.5rem 0;
-    text-align: center;
-  }
+  .case-figure { margin: 1.5rem 0; text-align: center; }
   .case-figure svg {
     max-width: 100%;
     border: 1px solid var(--border);
@@ -271,7 +259,6 @@
     margin-top: 0.5rem;
   }
 
-  /* MCQ SECTION */
   .mcq-section {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -286,12 +273,7 @@
     color: var(--text-dim);
     margin-bottom: 0.5rem;
   }
-  .mcq-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--accent);
-    margin-bottom: 0.5rem;
-  }
+  .mcq-title { font-size: 20px; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
   .mcq-instruction {
     font-size: 14px;
     color: var(--text-muted);
@@ -332,18 +314,9 @@
   }
   .option-row:last-child { border-bottom: none; }
   .option-row:hover { background: rgba(26,58,92,0.03); }
-  .option-letter {
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-dim);
-  }
+  .option-letter { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text-dim); }
   .option-text { font-size: 14px; line-height: 1.5; }
-  .tf-btns {
-    display: flex;
-    gap: 6px;
-    justify-content: flex-end;
-  }
+  .tf-btns { display: flex; gap: 6px; justify-content: flex-end; }
   .tf-btn {
     font-family: var(--mono);
     font-size: 12px;
@@ -379,11 +352,7 @@
   }
   .feedback-row.show { display: block; }
 
-  /* SUBMIT + RESULTS */
-  .submit-area {
-    text-align: center;
-    padding: 2rem 0;
-  }
+  .submit-area { text-align: center; padding: 2rem 0; }
   .submit-btn {
     font-family: var(--mono);
     font-size: 13px;
@@ -429,18 +398,8 @@
     overflow: hidden;
     margin-bottom: 1.5rem;
   }
-  .rg-cell {
-    background: white;
-    padding: 1rem;
-    text-align: center;
-  }
-  .rg-num {
-    font-family: var(--mono);
-    font-size: 28px;
-    font-weight: 500;
-    display: block;
-    margin-bottom: 2px;
-  }
+  .rg-cell { background: white; padding: 1rem; text-align: center; }
+  .rg-num { font-family: var(--mono); font-size: 28px; font-weight: 500; display: block; margin-bottom: 2px; }
   .rg-lbl { font-size: 12px; color: var(--text-muted); font-style: italic; }
   .rg-correct { color: var(--correct); }
   .rg-wrong { color: var(--wrong); }
@@ -478,16 +437,14 @@
   </div>
 </nav>
 
-<!-- HOME -->
 <div id="home" class="screen active">
   <p class="home-eyebrow">LIFE CYCLE ASSESSMENT OF MATERIALS AND PROCESSES · G. DOTELLI · N. BERTOLDO</p>
   <h1 class="home-title">Mock Exam<br>Simulator</h1>
-  <p class="home-desc">Two complete mock exams — two case studies each, followed by 9 True/False questions. Same format as the real exam.</p>
+  <p class="home-desc">Eight complete mock exams — two case studies each, followed by 9 True/False questions. Same format as the real exam.</p>
   <div class="exam-cards" id="exam-cards"></div>
-  <p class="home-note">Each exam: 9 points — Part A (case study 1) · Part B (case study 2) · Part C (9 T/F questions). Answers and explanations revealed after submission.</p>
+  <p class="home-note">Each exam: Part A (case study 1) · Part B (case study 2) · Part C (9 T/F questions). Answers and explanations revealed after submission.</p>
 </div>
 
-<!-- EXAM SCREEN -->
 <div id="exam-screen" class="screen">
   <button class="back-btn" onclick="showHome()">← BACK TO EXAMS</button>
   <div id="exam-content"></div>
@@ -504,40 +461,30 @@ const EXAMS = [
       title: "Portland Cement Production and Carbon Capture",
       figure: `<svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg" width="580" height="200">
         <rect width="580" height="200" fill="white"/>
-        <!-- Raw materials box -->
         <rect x="20" y="60" width="110" height="80" rx="4" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1.5"/>
         <text x="75" y="94" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c">Raw</text>
         <text x="75" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c">Materials</text>
         <text x="75" y="122" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666">(limestone, clay,</text>
         <text x="75" y="133" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666">iron ore, gypsum)</text>
-        <!-- Arrow -->
         <line x1="130" y1="100" x2="165" y2="100" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr)"/>
-        <!-- Kiln box -->
         <rect x="165" y="60" width="120" height="80" rx="4" fill="#fff3cd" stroke="#856404" stroke-width="1.5"/>
         <text x="225" y="94" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#856404">Rotary</text>
         <text x="225" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#856404">Kiln</text>
         <text x="225" y="122" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666">~1450 °C</text>
-        <!-- CO2 emission -->
         <line x1="225" y1="60" x2="225" y2="25" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3"/>
         <text x="235" y="20" font-family="JetBrains Mono, monospace" font-size="9" fill="#c0392b">CO₂ (~60% process</text>
         <text x="235" y="32" font-family="JetBrains Mono, monospace" font-size="9" fill="#c0392b">+ ~40% combustion)</text>
-        <!-- Arrow -->
         <line x1="285" y1="100" x2="320" y2="100" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr)"/>
-        <!-- Clinker box -->
         <rect x="320" y="60" width="110" height="80" rx="4" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1.5"/>
         <text x="375" y="94" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c">Clinker</text>
         <text x="375" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c">+ Gypsum</text>
-        <!-- Arrow -->
         <line x1="430" y1="100" x2="455" y2="100" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr)"/>
-        <!-- Cement box -->
         <rect x="455" y="60" width="100" height="80" rx="4" fill="#d4edda" stroke="#2d6a4f" stroke-width="1.5"/>
         <text x="505" y="94" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#2d6a4f">Portland</text>
         <text x="505" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#2d6a4f">Cement</text>
         <text x="505" y="122" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666">~0.8 kg CO₂/kg</text>
-        <!-- Fuel input -->
         <line x1="225" y1="140" x2="225" y2="175" stroke="#856404" stroke-width="1.5" stroke-dasharray="4,3"/>
         <text x="232" y="172" font-family="JetBrains Mono, monospace" font-size="9" fill="#856404">Fuel (coal, petcoke, AF)</text>
-        <!-- Arrow marker -->
         <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#1a3a5c"/></marker></defs>
       </svg>`,
       figureCaption: "Figure 1 – Simplified process flow of Portland cement production, highlighting CO₂ emission sources.",
@@ -556,10 +503,8 @@ const EXAMS = [
       title: "LCA of a Pumped Hydro Storage Plant: Cradle-to-Gate vs Cradle-to-Grave",
       figure: `<svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg" width="560" height="220">
         <rect width="560" height="220" fill="white"/>
-        <!-- System boundary dashed box -->
         <rect x="10" y="10" width="540" height="160" rx="4" fill="none" stroke="#1a3a5c" stroke-width="1.5" stroke-dasharray="6,4"/>
         <text x="20" y="24" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">System boundary (cradle-to-grave)</text>
-        <!-- Boxes -->
         <rect x="25" y="35" width="90" height="50" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
         <text x="70" y="57" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">Raw</text>
         <text x="70" y="69" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">Materials</text>
@@ -567,7 +512,6 @@ const EXAMS = [
         <rect x="145" y="35" width="90" height="50" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
         <text x="190" y="57" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">Construc-</text>
         <text x="190" y="69" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">tion</text>
-        <!-- FU1 bracket -->
         <line x1="145" y1="95" x2="235" y2="95" stroke="#856404" stroke-width="1" stroke-dasharray="3,2"/>
         <text x="188" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">FU 1: 1 plant</text>
         <line x1="235" y1="60" x2="265" y2="60" stroke="#1a3a5c" stroke-width="1.2" marker-end="url(#a2)"/>
@@ -575,30 +519,27 @@ const EXAMS = [
         <text x="310" y="57" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">Operation</text>
         <text x="310" y="69" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">&amp; Mainten.</text>
         <line x1="355" y1="60" x2="385" y2="60" stroke="#1a3a5c" stroke-width="1.2" marker-end="url(#a2)"/>
-        <!-- EoL outside boundary -->
         <rect x="385" y="35" width="90" height="50" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1" stroke-dasharray="4,3"/>
         <text x="430" y="57" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#c0392b">End of</text>
         <text x="430" y="69" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#c0392b">Life</text>
         <text x="430" y="83" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">(outside SB)</text>
-        <!-- FU2 bracket -->
         <line x1="145" y1="120" x2="480" y2="120" stroke="#2d6a4f" stroke-width="1" stroke-dasharray="3,2"/>
         <text x="310" y="133" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">FU 2: 1 kWh stored electricity / 20 years</text>
-        <!-- Legend -->
         <rect x="25" y="155" width="12" height="10" fill="#fdecea" stroke="#c0392b" stroke-width="1" stroke-dasharray="3,2"/>
         <text x="42" y="164" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Outside system boundary</text>
         <rect x="200" y="155" width="12" height="10" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
         <text x="217" y="164" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Inside system boundary</text>
         <defs><marker id="a2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#1a3a5c"/></marker></defs>
       </svg>`,
-      figureCaption: "Figure 2 – System boundary for the LCA of the pumped hydro storage plant. The End-of-Life stage falls outside the system boundary. Two functional units are defined.",
+      figureCaption: "Figure 2 – System boundary for the LCA of the pumped hydro storage plant.",
       body: `<p>Pumped Hydro Storage (PHS) is the most mature and widely deployed large-scale energy storage technology. In a PHS system, electricity is used to pump water from a lower reservoir to an upper reservoir (charging), and the stored potential energy is recovered by releasing water through turbines (discharging).</p>
       <p>A recent LCA study analysed a conventional PHS plant in an inland European location with a rated power of 1.2 GW and a storage capacity of 6 GWh. The study compared two approaches with different functional units (FU):</p>
       <ul>
-        <li><strong>FU 1:</strong> Construction and maintenance of 1 PHS plant (covers raw materials, construction, maintenance; no operational energy modelled).</li>
-        <li><strong>FU 2:</strong> 1 kWh of electricity stored with a daily delivery of 6 GWh for 20 years (includes operation; enables comparison with other storage technologies).</li>
+        <li><strong>FU 1:</strong> Construction and maintenance of 1 PHS plant.</li>
+        <li><strong>FU 2:</strong> 1 kWh of electricity stored with a daily delivery of 6 GWh for 20 years.</li>
       </ul>
-      <p>The system boundary includes raw material extraction, construction, and operation and maintenance. The End-of-Life (EoL) stage — demolition and waste treatment — was <em>excluded</em> from the system boundary due to high uncertainty in future EoL scenarios for large civil infrastructure.</p>
-      <p>The study used the <strong>EF 3.1 methodology</strong> (European Product Environmental Footprint), which provides 16 midpoint impact categories. The dominant environmental burden in construction is associated with <strong>concrete and steel</strong> (civil structures such as dams and tunnels), which together account for over 80% of the GWP of the construction phase. Operational impacts depend strongly on the carbon intensity of the electricity used for pumping.</p>`
+      <p>The system boundary includes raw material extraction, construction, and operation and maintenance. The End-of-Life (EoL) stage was <em>excluded</em> from the system boundary due to high uncertainty in future EoL scenarios for large civil infrastructure.</p>
+      <p>The study used the <strong>EF 3.1 methodology</strong> (European Product Environmental Footprint), which provides 16 midpoint impact categories. The dominant environmental burden in construction is associated with <strong>concrete and steel</strong>, which together account for over 80% of the GWP of the construction phase.</p>`
     },
     questions: [
       {
@@ -621,10 +562,10 @@ const EXAMS = [
           { letter: "D", text: "Reducing the clinker-to-cement ratio from 0.90 to 0.50 would approximately halve the process-related CO₂ per kg of cement" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. Calcination (CaCO₃ → CaO + CO₂) is responsible for ~60% of total CO₂ in OPC production.", B: "False. There are two sources: fuel combustion (~40%) and calcination (~60%). Calcination cannot be eliminated by fuel switching.", C: "Correct. SCMs like fly ash and GGBS are industrial by-products with very low CO₂ embedded, so they dilute the high-emission clinker.", D: "Correct. Since calcination CO₂ is proportional to the clinker content, halving the clinker ratio approximately halves the process CO₂ per kg of cement." }
+        fb: { A: "Correct. Calcination (CaCO₃ → CaO + CO₂) is responsible for ~60% of total CO₂ in OPC production.", B: "False. There are two sources: fuel combustion (~40%) and calcination (~60%). Calcination cannot be eliminated by fuel switching.", C: "Correct. SCMs like fly ash and GGBS are industrial by-products with very low CO₂ embedded.", D: "Correct. Since calcination CO₂ is proportional to the clinker content, halving the clinker ratio approximately halves the process CO₂ per kg of cement." }
       },
       {
-        stem: "In the LCA of the Pumped Hydro Storage plant (Figure 2), which of the following statements about the system boundary are true?",
+        stem: "In the LCA of the Pumped Hydro Storage plant, which of the following statements about the system boundary are true?",
         options: [
           { letter: "A", text: "The system boundary corresponds to a cradle-to-grave approach" },
           { letter: "B", text: "The system boundary is cradle-to-gate with End-of-Life excluded" },
@@ -632,7 +573,7 @@ const EXAMS = [
           { letter: "D", text: "EoL is inside the system boundary under FU 1 but outside under FU 2" }
         ],
         answers: { A: false, B: true, C: true, D: false },
-        fb: { A: "False. Cradle-to-grave would include EoL. Here EoL is explicitly excluded from the system boundary.", B: "Correct. The system includes raw materials through operation/maintenance, but EoL falls outside the boundary — effectively cradle-to-gate of the operational phase.", C: "Correct. FU 2 (1 kWh stored over 20 years) requires modelling operation since storage performance depends on operational parameters.", D: "False. EoL is outside the system boundary for both FU 1 and FU 2 as stated in the case study." }
+        fb: { A: "False. Cradle-to-grave would include EoL. Here EoL is explicitly excluded.", B: "Correct. The system includes raw materials through operation/maintenance, but EoL falls outside the boundary.", C: "Correct. FU 2 (1 kWh stored over 20 years) requires modelling operation.", D: "False. EoL is outside the system boundary for both FU 1 and FU 2." }
       },
       {
         stem: "The EF 3.1 (Environmental Footprint) methodology used in the PHS LCA study:",
@@ -643,7 +584,7 @@ const EXAMS = [
           { letter: "D", text: "Allows optional normalisation and weighting steps according to ISO 14044" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. EF 3.1 is a midpoint method — it characterises impacts at intermediate points in the cause-effect chain.", B: "False. Endpoint methods (like ReCiPe endpoint) express results in DALYs and species·year. EF 3.1 stays at midpoint level.", C: "Correct. EF 3.1 covers exactly 16 midpoint impact categories.", D: "Correct. ISO 14044 allows normalisation and weighting as optional LCIA steps; EF 3.1 provides normalisation and weighting factors for these optional steps." }
+        fb: { A: "Correct. EF 3.1 is a midpoint method.", B: "False. Endpoint methods express results in DALYs and species·year. EF 3.1 stays at midpoint level.", C: "Correct. EF 3.1 covers exactly 16 midpoint impact categories.", D: "Correct. ISO 14044 allows normalisation and weighting as optional LCIA steps; EF 3.1 provides factors for these." }
       },
       {
         stem: "In the context of LCA Goal & Scope definition (ISO 14044), which statements are true?",
@@ -654,7 +595,7 @@ const EXAMS = [
           { letter: "D", text: "The system boundary defines which unit processes are included in the product system" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. The FU quantifies the function and normalises all LCI flows.", B: "False. The reference flow is the quantity of product needed to fulfil the FU. Example: FU = '1 m² of painted surface for 10 years'; reference flow = '0.15 kg of paint'.", C: "Correct. ISO 14044 requires an independent panel review for comparative assertions intended for public communication.", D: "Correct. The system boundary specifies which unit processes belong to the product system." }
+        fb: { A: "Correct. The FU quantifies the function and normalises all LCI flows.", B: "False. The reference flow is the quantity of product needed to fulfil the FU.", C: "Correct. ISO 14044 requires an independent panel review for comparative assertions intended for public communication.", D: "Correct. The system boundary specifies which unit processes belong to the product system." }
       },
       {
         stem: "Regarding the concept of 'primary energy' in LCA:",
@@ -665,7 +606,7 @@ const EXAMS = [
           { letter: "D", text: "Uranium used in nuclear power plants is classified as a non-renewable primary energy source" }
         ],
         answers: { A: false, B: true, C: true, D: true },
-        fb: { A: "False. Electricity is a secondary energy carrier — it is produced by converting a primary source (natural gas). Primary energy is the energy embodied in natural resources before any anthropogenic transformation.", B: "Correct. CED is an LCA indicator that sums total primary energy demand, distinguishing renewable (solar, wind, hydro, biomass, geothermal) from non-renewable (fossil fuels, uranium).", C: "Correct. Solar irradiation is a primary renewable energy source — it has not undergone any anthropogenic transformation.", D: "Correct. Uranium is a naturally occurring mineral used as a primary energy source; it is non-renewable on human timescales." }
+        fb: { A: "False. Electricity is a secondary energy carrier — it is produced by converting a primary source.", B: "Correct. CED sums total primary energy demand, distinguishing renewable from non-renewable.", C: "Correct. Solar irradiation is a primary renewable energy source.", D: "Correct. Uranium is a naturally occurring mineral — non-renewable on human timescales." }
       },
       {
         stem: "In the 100-0 approach (cut-off / recycled content method) for handling recycled materials in LCA:",
@@ -676,7 +617,7 @@ const EXAMS = [
           { letter: "D", text: "The cut-off model is also known as the 'polluter pays' approach" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. In the cut-off model, the system that generates the waste takes all end-of-life burdens; the next user receives the secondary material burden-free.", B: "Correct. Primary materials carry their full upstream burden (extraction, transport, processing).", C: "Correct. Scrap in the cut-off model enters the EAF system without burdens from the previous life cycle — those belong to the system that generated the scrap.", D: "False. The cut-off model is sometimes described as the 'recycler pays nothing' or 'upstream cut-off' approach. The 'polluter pays' principle is a different concept in environmental economics." }
+        fb: { A: "Correct. In the cut-off model, the system that generates the waste takes all end-of-life burdens; the next user receives the secondary material burden-free.", B: "Correct. Primary materials carry their full upstream burden.", C: "Correct. Scrap in the cut-off model enters the EAF system without burdens from the previous life cycle.", D: "False. The cut-off model is the 'recycler pays nothing' approach. 'Polluter pays' is a different concept in environmental economics." }
       },
       {
         stem: "Which of the following statements about the LCA characterisation step (LCIA) are true?",
@@ -687,7 +628,7 @@ const EXAMS = [
           { letter: "D", text: "A single inventory flow can contribute to more than one impact category" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. Characterisation multiplies each elementary flow by its CF to produce a result expressed in the unit of the category indicator.", B: "Correct. CO₂ is the reference substance for climate change (GWP), defined as 1 kg CO₂-eq by definition.", C: "False. Normalisation is an optional step in LCIA. Only classification and characterisation are mandatory.", D: "Correct. For example, SO₂ contributes to both terrestrial acidification (AP) and fine particulate matter formation." }
+        fb: { A: "Correct. Characterisation multiplies each elementary flow by its CF to produce a result in the unit of the category indicator.", B: "Correct. CO₂ is the reference substance for climate change (GWP), defined as 1 kg CO₂-eq.", C: "False. Normalisation is an optional step in LCIA. Only classification and characterisation are mandatory.", D: "Correct. For example, SO₂ contributes to both terrestrial acidification and fine particulate matter formation." }
       },
       {
         stem: "In 'Our Common Future' (Brundtland Report, 1987), sustainable development is defined as:",
@@ -698,7 +639,7 @@ const EXAMS = [
           { letter: "D", text: "Development based exclusively on renewable energy sources and circular economy principles" }
         ],
         answers: { A: true, B: false, C: false, D: false },
-        fb: { A: "Correct. This is the exact Brundtland definition: 'Sustainable development is development that meets the needs of the present without compromising the ability of future generations to meet their own needs.'", B: "False. The Brundtland definition explicitly links environmental, social, and economic dimensions — it does not prioritise growth over environment.", C: "False. This directly contradicts the Brundtland definition.", D: "False. The concept is much broader than energy or circular economy; it encompasses social equity and intergenerational justice." }
+        fb: { A: "Correct. This is the exact Brundtland definition.", B: "False. The Brundtland definition explicitly links environmental, social, and economic dimensions.", C: "False. This directly contradicts the Brundtland definition.", D: "False. The concept is much broader than energy or circular economy." }
       }
     ]
   },
@@ -711,92 +652,68 @@ const EXAMS = [
       title: "Life Cycle Assessment of Lithium-Ion Battery Packs for Electric Vehicles",
       figure: `<svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" width="560" height="210">
         <rect width="560" height="210" fill="white"/>
-        <!-- Title -->
         <text x="280" y="22" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c" font-weight="bold">LFP Battery Pack — GWP Contribution by Component</text>
-        <!-- Bar chart -->
-        <!-- Y axis -->
         <line x1="70" y1="35" x2="70" y2="165" stroke="#999" stroke-width="1"/>
         <line x1="70" y1="165" x2="530" y2="165" stroke="#999" stroke-width="1"/>
-        <!-- Bars -->
-        <!-- Cathode 38% -->
         <rect x="90" y="80" width="55" height="85" fill="#1a3a5c"/>
         <text x="117" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">38%</text>
-        <text x="117" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Cathode</text>
-        <text x="117" y="190" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">(LFP)</text>
-        <!-- Anode 18% -->
+        <text x="117" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Cathode (LFP)</text>
         <rect x="175" y="124" width="55" height="41" fill="#2e6da4"/>
         <text x="202" y="119" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#2e6da4">18%</text>
-        <text x="202" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Anode</text>
-        <text x="202" y="190" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">(graphite)</text>
-        <!-- BMS/Casing 20% -->
+        <text x="202" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Anode (graphite)</text>
         <rect x="260" y="115" width="55" height="50" fill="#5b9bd5"/>
         <text x="287" y="110" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#5b9bd5">20%</text>
-        <text x="287" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">BMS &amp;</text>
-        <text x="287" y="190" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Casing</text>
-        <!-- Electrolyte 12% -->
+        <text x="287" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">BMS &amp; Casing</text>
         <rect x="345" y="138" width="55" height="27" fill="#9dc3e6"/>
         <text x="372" y="133" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#9dc3e6">12%</text>
         <text x="372" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Electrolyte</text>
-        <!-- Assembly 12% -->
         <rect x="430" y="138" width="55" height="27" fill="#d6e4f0"/>
         <text x="457" y="133" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#666">12%</text>
-        <text x="457" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Assembly</text>
-        <text x="457" y="190" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">energy</text>
-        <!-- Y axis labels -->
+        <text x="457" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Assembly energy</text>
         <text x="60" y="168" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">0%</text>
         <text x="60" y="120" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">25%</text>
         <text x="60" y="80" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">40%</text>
         <line x1="68" y1="120" x2="72" y2="120" stroke="#999" stroke-width="1"/>
         <line x1="68" y1="80" x2="72" y2="80" stroke="#999" stroke-width="1"/>
       </svg>`,
-      figureCaption: "Figure 1 – Approximate GWP contribution of major components in the production of a 60 kWh LFP battery pack for an electric vehicle (illustrative values based on literature).",
-      body: `<p>Lithium-ion (Li-ion) battery packs are the enabling technology for electric vehicles (EVs). As EV adoption accelerates globally, the environmental footprint of battery production has become a critical topic in Life Cycle Assessment. Battery packs consist of cells assembled into modules and then packs, with a Battery Management System (BMS) and thermal management components.</p>
-      <p>Among different Li-ion chemistries, <strong>Lithium Iron Phosphate (LFP)</strong> batteries have gained renewed interest because they avoid cobalt and nickel — materials associated with high environmental and social impacts — and use abundant iron and phosphate resources. The typical cell components are:</p>
+      figureCaption: "Figure 1 – Approximate GWP contribution of major components in the production of a 60 kWh LFP battery pack.",
+      body: `<p>Lithium-ion (Li-ion) battery packs are the enabling technology for electric vehicles (EVs). Among different Li-ion chemistries, <strong>Lithium Iron Phosphate (LFP)</strong> batteries have gained renewed interest because they avoid cobalt and nickel. The typical cell components are:</p>
       <ul>
-        <li><strong>Cathode:</strong> LiFePO₄ (LFP) — the dominant contributor to GWP due to energy-intensive synthesis of lithium salts and phosphate processing.</li>
+        <li><strong>Cathode:</strong> LiFePO₄ (LFP) — the dominant contributor to GWP due to energy-intensive synthesis.</li>
         <li><strong>Anode:</strong> graphite — either natural (mined) or synthetic (energy-intensive production from petroleum coke).</li>
         <li><strong>Electrolyte:</strong> lithium hexafluorophosphate (LiPF₆) in organic solvent — significant contribution to ozone depletion and toxicity categories.</li>
         <li><strong>Separator, current collectors, BMS, and casing.</strong></li>
       </ul>
-      <p>The GWP of LFP battery production is typically in the range of <strong>60–100 kg CO₂-eq per kWh</strong> of nominal capacity, depending on the energy mix of the manufacturing country. The <em>use phase</em> GWP depends critically on the carbon intensity of the electricity grid used for charging: with a carbon-intensive grid (&gt;600 g CO₂/kWh), the use phase can dominate lifetime GWP; with a renewable-dominated grid (&lt;100 g CO₂/kWh), the production phase becomes the dominant contributor.</p>
-      <p>End-of-Life (EoL) management is an emerging challenge: hydrometallurgical and pyrometallurgical recycling processes can recover lithium, cobalt, and other materials, but their LCA performance varies significantly. A key methodological question in battery LCA is how to <strong>allocate the impacts of recycling</strong> between the current product system and future users of recovered materials.</p>`
+      <p>The GWP of LFP battery production is typically in the range of <strong>60–100 kg CO₂-eq per kWh</strong> of nominal capacity, depending on the energy mix of the manufacturing country. The <em>use phase</em> GWP depends critically on the carbon intensity of the electricity grid used for charging.</p>
+      <p>End-of-Life (EoL) management is an emerging challenge: hydrometallurgical and pyrometallurgical recycling processes can recover lithium, cobalt, and other materials, but their LCA performance varies significantly.</p>`
     },
     caseB: {
       label: "CASE STUDY B",
       title: "Comparative LCA of Cotton vs Polyester T-shirts: Multifunctionality and Allocation",
       figure: `<svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" width="560" height="200">
         <rect width="560" height="200" fill="white"/>
-        <!-- Cotton lifecycle -->
         <text x="140" y="20" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#2d6a4f" font-weight="bold">COTTON T-SHIRT</text>
         <rect x="20" y="30" width="70" height="35" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1"/>
-        <text x="55" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Cotton</text>
-        <text x="55" y="57" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">farming</text>
+        <text x="55" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Cotton farming</text>
         <line x1="90" y1="47" x2="110" y2="47" stroke="#2d6a4f" stroke-width="1" marker-end="url(#ac)"/>
         <rect x="110" y="30" width="60" height="35" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1"/>
-        <text x="140" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Spinning</text>
-        <text x="140" y="57" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">&amp; Weaving</text>
+        <text x="140" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Spinning &amp; Weaving</text>
         <line x1="170" y1="47" x2="190" y2="47" stroke="#2d6a4f" stroke-width="1" marker-end="url(#ac)"/>
         <rect x="190" y="30" width="60" height="35" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1"/>
-        <text x="220" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Dyeing</text>
-        <text x="220" y="57" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">&amp; Finishing</text>
+        <text x="220" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Dyeing &amp; Finishing</text>
         <line x1="250" y1="47" x2="255" y2="47" stroke="#2d6a4f" stroke-width="1" stroke-dasharray="2,2"/>
         <text x="260" y="47" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">Use → EoL</text>
-        <!-- Polyester lifecycle -->
         <text x="140" y="110" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c" font-weight="bold">POLYESTER T-SHIRT</text>
         <rect x="20" y="120" width="70" height="35" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="55" y="137" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Crude oil</text>
-        <text x="55" y="147" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">refining</text>
+        <text x="55" y="137" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Crude oil refining</text>
         <line x1="90" y1="137" x2="110" y2="137" stroke="#1a3a5c" stroke-width="1" marker-end="url(#ap)"/>
         <rect x="110" y="120" width="60" height="35" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="140" y="137" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">PET</text>
-        <text x="140" y="147" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">synthesis</text>
+        <text x="140" y="137" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">PET synthesis</text>
         <line x1="170" y1="137" x2="190" y2="137" stroke="#1a3a5c" stroke-width="1" marker-end="url(#ap)"/>
         <rect x="190" y="120" width="60" height="35" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="220" y="137" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Fibre</text>
-        <text x="220" y="147" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">production</text>
+        <text x="220" y="137" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Fibre production</text>
         <line x1="250" y1="137" x2="255" y2="137" stroke="#1a3a5c" stroke-width="1" stroke-dasharray="2,2"/>
         <text x="260" y="137" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">Use → EoL</text>
-        <!-- Use phase note -->
         <rect x="340" y="75" width="195" height="55" rx="3" fill="#fff3cd" stroke="#856404" stroke-width="1"/>
         <text x="350" y="93" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">Use phase (both):</text>
         <text x="350" y="105" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">Washing: ~50 cycles/year</text>
@@ -806,16 +723,13 @@ const EXAMS = [
           <marker id="ap" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#1a3a5c"/></marker>
         </defs>
       </svg>`,
-      figureCaption: "Figure 2 – Simplified life cycle stages for cotton and polyester T-shirts. The use phase (washing and drying) represents a significant contribution for both systems.",
-      body: `<p>The global textile industry produces over 100 billion garments per year and is responsible for approximately 8–10% of global GHG emissions. Life Cycle Assessment is increasingly applied to compare the environmental performance of textile products made from different fibres.</p>
-      <p>A comparative LCA was conducted between a <strong>200 g cotton T-shirt</strong> and a <strong>150 g polyester T-shirt</strong>, both providing the same function: a single item of casual upper-body clothing worn 200 times over a lifetime of 3 years. The functional unit was defined as: <em>"providing upper-body clothing coverage for 1 wearing event."</em></p>
-      <p>Key findings from the study:</p>
+      figureCaption: "Figure 2 – Simplified life cycle stages for cotton and polyester T-shirts.",
+      body: `<p>A comparative LCA was conducted between a <strong>200 g cotton T-shirt</strong> and a <strong>150 g polyester T-shirt</strong>. The functional unit was: <em>"providing upper-body clothing coverage for 1 wearing event."</em></p>
       <ul>
-        <li><strong>Cotton:</strong> the agricultural phase dominates several impact categories — particularly <em>water consumption</em> (irrigation: ~10,000 L/kg cotton), <em>eutrophication</em> (nitrogen fertilisers), and <em>land use</em>. GWP at production is lower per kg than polyester but the heavier fabric (200 g vs 150 g) partially offsets this.</li>
-        <li><strong>Polyester:</strong> derived from crude oil (PET synthesis). Higher GWP per kg in production due to fossil feedstock. However, significantly lower water consumption. The use phase (washing and drying) contributes significantly to both systems — especially when tumble drying is included.</li>
+        <li><strong>Cotton:</strong> the agricultural phase dominates several impact categories — particularly <em>water consumption</em> (~10,000 L/kg cotton), <em>eutrophication</em> (nitrogen fertilisers), and <em>land use</em>.</li>
+        <li><strong>Polyester:</strong> derived from crude oil (PET synthesis). Higher GWP per kg in production. However, significantly lower water consumption. The use phase (washing and drying) contributes significantly to both systems.</li>
       </ul>
-      <p>A key methodological challenge in this study arises from the <strong>cotton ginning process</strong>, which simultaneously produces cotton fibres (main product) and cotton seeds (co-product used for oil and animal feed). This is a classic case of <strong>multifunctionality</strong> requiring allocation. ISO 14044 recommends: (1) subdivision or system expansion; (2) physical allocation; (3) economic allocation — in order of preference.</p>
-      <p>The End-of-Life phase presents further complexity: cotton can biodegrade, be mechanically recycled into lower-grade fibres (downcycling), or be incinerated. Polyester can be chemically recycled (depolymerisation back to monomers) or mechanically recycled into lower-quality fibres.</p>`
+      <p>A key methodological challenge arises from the <strong>cotton ginning process</strong>, which simultaneously produces cotton fibres (main product) and cotton seeds (co-product used for oil and animal feed). This is a classic case of <strong>multifunctionality</strong> requiring allocation. ISO 14044 recommends: (1) subdivision or system expansion; (2) physical allocation; (3) economic allocation — in order of preference.</p>`
     },
     questions: [
       {
@@ -827,7 +741,7 @@ const EXAMS = [
           { letter: "D", text: "The functional unit must quantify the performance of the system over its entire lifetime" }
         ],
         answers: { A: false, B: true, C: true, D: true },
-        fb: { A: "False. '1 kg of T-shirt' is a mass-based reference that ignores the actual function (clothing coverage, durability, use cycles). It would lead to a comparison of material quantities rather than functions.", B: "Correct. '1 wearing event' accounts for the different weights by normalising to the actual function performed.", C: "Correct. To provide 1 wearing event 200 times over 3 years, you need 1/200 of the cotton shirt (1 g) vs 1/200 of the polyester shirt (0.75 g). These are different reference flows for the same FU.", D: "Correct. ISO 14044 requires the FU to specify the function, its magnitude, and relevant performance characteristics including duration." }
+        fb: { A: "False. '1 kg of T-shirt' ignores the actual function (clothing coverage, durability, use cycles).", B: "Correct. '1 wearing event' accounts for the different weights by normalising to the actual function performed.", C: "Correct. To provide 1 wearing event, you need 1/200 of the cotton shirt vs 1/200 of the polyester shirt — different reference flows for the same FU.", D: "Correct. ISO 14044 requires the FU to specify the function, its magnitude, and relevant performance characteristics including duration." }
       },
       {
         stem: "The cotton ginning process produces cotton fibres (main product) and cotton seeds (co-product). According to ISO 14044 hierarchy for multifunctionality, which approaches are preferred over economic allocation?",
@@ -838,7 +752,7 @@ const EXAMS = [
           { letter: "D", text: "Allocation based on the market price of cotton fibres and cotton seeds" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. Subdivision is the first preference in ISO 14044 — physically separating the process to avoid allocation entirely.", B: "Correct. Physical allocation (e.g., mass-based) is the second preference under ISO 14044, before economic allocation.", C: "Correct. System expansion is equivalent to subdivision as the first preference — it avoids allocation by expanding the system boundary to include the avoided production of the co-product's function.", D: "False. Economic allocation is the last resort under ISO 14044, to be used only when physical properties cannot establish a causal relationship. It is not preferred over physical allocation." }
+        fb: { A: "Correct. Subdivision is the first preference in ISO 14044.", B: "Correct. Physical allocation (e.g., mass-based) is the second preference under ISO 14044, before economic allocation.", C: "Correct. System expansion is equivalent to subdivision as the first preference.", D: "False. Economic allocation is the last resort under ISO 14044." }
       },
       {
         stem: "Regarding the GWP of LFP battery production for EVs, which of the following statements are true?",
@@ -849,7 +763,7 @@ const EXAMS = [
           { letter: "D", text: "LFP batteries avoid cobalt and nickel, which reduces concerns in the human toxicity and mineral resource depletion categories" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. The cathode accounts for approximately 35–40% of battery pack GWP due to energy-intensive lithium and phosphate processing.", B: "False. Manufacturing energy is a major input to battery production. A coal-heavy grid significantly increases the GWP of the production phase compared to a renewable grid.", C: "Correct. When use-phase emissions approach zero (clean grid), the embodied carbon in battery production dominates the lifetime GWP — a classic 'embodied carbon' shift.", D: "Correct. Cobalt and nickel have high associated GWP and toxicity impacts. LFP's reliance on iron and phosphate (abundant and lower-impact materials) reduces these concerns compared to NMC chemistries." }
+        fb: { A: "Correct. The cathode accounts for approximately 35–40% of battery pack GWP.", B: "False. Manufacturing energy is a major input. A coal-heavy grid significantly increases GWP of the production phase.", C: "Correct. When use-phase emissions approach zero (clean grid), embodied carbon in battery production dominates.", D: "Correct. LFP's reliance on iron and phosphate reduces toxicity concerns compared to NMC chemistries." }
       },
       {
         stem: "In the EoL modelling of the polyester T-shirt under the cut-off (recycled content) approach, which statements are true?",
@@ -860,18 +774,18 @@ const EXAMS = [
           { letter: "D", text: "Under the cut-off model, EoL recycling provides a 'credit' to the current product system for avoided virgin material production" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. In the cut-off model, secondary materials enter the next system without burdens — the current system bears the EoL treatment costs but receives no credit.", B: "Correct. The production phase always bears full virgin material impacts in the cut-off model; the benefit goes to the future user of the recyclate.", C: "Correct. Chemical recycling that recovers monomers reinserted into PET production is genuinely closed-loop; if recycled fibres go to a lower-grade product (downcycling), it is open-loop.", D: "False. In the cut-off model, the current system does NOT receive a credit for EoL recycling. Credits accrue to future systems. This is the opposite of the system expansion approach." }
+        fb: { A: "Correct. In the cut-off model, secondary materials enter the next system without burdens.", B: "Correct. The production phase always bears full virgin material impacts in the cut-off model.", C: "Correct. Chemical recycling that recovers monomers reinserted into PET production is genuinely closed-loop.", D: "False. In the cut-off model, the current system does NOT receive a credit for EoL recycling. Credits accrue to future systems." }
       },
       {
         stem: "Regarding impact categories particularly relevant to cotton agriculture, which statements are true?",
         options: [
           { letter: "A", text: "Water consumption in LCA refers to the volume of water withdrawn from water bodies, regardless of whether it is returned" },
-          { letter: "B", text: "The AWARE method weights freshwater consumption by local water scarcity — 1 m³ consumed in an arid region has a higher impact than 1 m³ in a water-rich region" },
+          { letter: "B", text: "The AWARE method weights freshwater consumption by local water scarcity" },
           { letter: "C", text: "Nitrogen fertilisers applied to cotton fields contribute primarily to the eutrophication impact category" },
-          { letter: "D", text: "The land use impact category in LCA accounts for both the area occupied and the quality of land use (biodiversity, soil quality)" }
+          { letter: "D", text: "The land use impact category in LCA accounts for both the area occupied and the quality of land use" }
         ],
         answers: { A: false, B: true, C: true, D: true },
-        fb: { A: "False. Water consumption in LCA is the net water consumed — i.e., withdrawn minus returned to the same catchment in the same time period. Water that evapotranspires or is incorporated in products counts as consumed.", B: "Correct. AWARE characterises water consumption impact by the local water availability remaining after human and ecosystem needs — making scarcity-weighted m³ world-eq the unit.", C: "Correct. Nitrate and phosphate leaching from agricultural fields drives both freshwater and marine eutrophication.", D: "Correct. Modern land use characterisation factors (e.g., in ReCiPe) account for occupation area, duration, and transformation intensity, reflecting impacts on biodiversity and soil organic matter." }
+        fb: { A: "False. Water consumption in LCA is the net water consumed — withdrawn minus returned to the same catchment.", B: "Correct. AWARE characterises water consumption impact by local water availability.", C: "Correct. Nitrate and phosphate leaching from agricultural fields drives both freshwater and marine eutrophication.", D: "Correct. Modern land use CFs account for occupation area, duration, and transformation intensity." }
       },
       {
         stem: "The second phase of an ISO 14044-compliant LCA is:",
@@ -882,7 +796,7 @@ const EXAMS = [
           { letter: "D", text: "Scope Definition" }
         ],
         answers: { A: false, B: false, C: true, D: false },
-        fb: { A: "False. LCIA is the third phase.", B: "False. Interpretation is the fourth phase.", C: "Correct. The four phases in order are: (1) Goal & Scope Definition, (2) Life Cycle Inventory Analysis (LCI), (3) Life Cycle Impact Assessment (LCIA), (4) Interpretation.", D: "False. Scope Definition is part of the first phase (Goal & Scope) — not a separate phase." }
+        fb: { A: "False. LCIA is the third phase.", B: "False. Interpretation is the fourth phase.", C: "Correct. The four phases: (1) Goal & Scope, (2) LCI, (3) LCIA, (4) Interpretation.", D: "False. Scope Definition is part of the first phase." }
       },
       {
         stem: "Which of the following statements about data quality in LCA are true?",
@@ -893,7 +807,7 @@ const EXAMS = [
           { letter: "D", text: "The pedigree matrix in Ecoinvent assesses five dimensions: reliability, completeness, temporal correlation, geographical correlation, and technological correlation" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. ISO 14044 includes temporal representativeness as a data quality criterion.", B: "Correct. In Ecoinvent's pedigree matrix, DQR = average of 5 scores (1–5 each); a DQR near 1 means all five dimensions scored 1 (highest quality).", C: "False. Foreground data (primary data from the specific process) can be of high quality, but this is not guaranteed — a poorly measured site-specific dataset can be worse than a well-validated generic dataset.", D: "Correct. These are the exact five pedigree dimensions used in Ecoinvent's DQI system." }
+        fb: { A: "Correct. ISO 14044 includes temporal representativeness as a data quality criterion.", B: "Correct. In Ecoinvent's pedigree matrix, DQR near 1 means highest quality.", C: "False. Foreground data can be of high quality, but a poorly measured dataset can be worse than a well-validated generic one.", D: "Correct. These are the exact five pedigree dimensions used in Ecoinvent's DQI system." }
       },
       {
         stem: "Natural capital is a concept central to sustainability assessment. Which of the following statements are correct?",
@@ -904,10 +818,10 @@ const EXAMS = [
           { letter: "D", text: "Ecosystem services are the flows of value generated by natural capital to human societies" }
         ],
         answers: { A: false, B: true, C: true, D: true },
-        fb: { A: "False. Natural capital encompasses both biotic (living) and abiotic (non-living) components. Limiting it to biotic elements would exclude minerals, water, air, and soil — all critical components.", B: "Correct. This corresponds to the IPBES and TEEB definitions of natural capital.", C: "Correct. This aligns with the ecological economics definition recognising the systemic nature of natural capital.", D: "Correct. Ecosystem services (provisioning, regulating, cultural, supporting) represent the flows of benefits that human societies derive from natural capital." }
+        fb: { A: "False. Natural capital encompasses both biotic and abiotic components.", B: "Correct. This corresponds to IPBES and TEEB definitions.", C: "Correct. This aligns with the ecological economics definition.", D: "Correct. Ecosystem services represent the flows of benefits that human societies derive from natural capital." }
       },
       {
-        stem: "In an LCA comparing the textile dyeing process (which produces dyed fabric and generates wastewater as co-output), which of the following statements about multifunctionality are true?",
+        stem: "In an LCA comparing the textile dyeing process, which of the following statements about multifunctionality are true?",
         options: [
           { letter: "A", text: "Wastewater discharged to a treatment plant is typically classified as a waste output, not a co-product, and all burdens remain with the dyeing process" },
           { letter: "B", text: "If the wastewater has zero economic value, economic allocation assigns 100% of impacts to the dyed fabric" },
@@ -915,7 +829,7 @@ const EXAMS = [
           { letter: "D", text: "ISO 14044 recommends economic allocation as the first preference when dealing with co-outputs of different value" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. Wastewater classified as waste (no market value, sent to treatment) carries all EoL treatment burdens to the process that generated it — no allocation is needed.", B: "Correct. If economic value of wastewater = 0 and dyed fabric = 100% of revenue, economic allocation assigns 100% of impacts to the fabric.", C: "Correct. System expansion adds the avoided treatment system to the boundary and subtracts its impacts, reflecting the real-world substitution the co-output enables.", D: "False. ISO 14044 hierarchy: (1) subdivision/system expansion; (2) physical allocation; (3) economic allocation. Economic allocation is the last resort, not the first preference." }
+        fb: { A: "Correct. Wastewater classified as waste carries all EoL treatment burdens to the process that generated it.", B: "Correct. If wastewater economic value = 0, economic allocation assigns 100% of impacts to the fabric.", C: "Correct. System expansion adds the avoided treatment system and subtracts its impacts.", D: "False. ISO 14044 hierarchy: (1) subdivision/system expansion; (2) physical allocation; (3) economic allocation." }
       }
     ]
   },
@@ -929,40 +843,27 @@ const EXAMS = [
       figure: `<svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" width="560" height="210">
         <rect width="560" height="210" fill="white"/>
         <text x="280" y="18" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c" font-weight="bold">Primary vs Secondary Aluminium — GWP (kg CO₂-eq / kg Al)</text>
-        <!-- Primary route -->
         <text x="130" y="38" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#c0392b">PRIMARY ROUTE</text>
         <rect x="15" y="45" width="75" height="38" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1"/>
-        <text x="52" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Bauxite</text>
-        <text x="52" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">mining</text>
+        <text x="52" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Bauxite mining</text>
         <line x1="90" y1="64" x2="108" y2="64" stroke="#c0392b" stroke-width="1" marker-end="url(#ar)"/>
         <rect x="108" y="45" width="75" height="38" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1"/>
-        <text x="145" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Bayer</text>
-        <text x="145" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">process</text>
-        <text x="145" y="82" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">(Al₂O₃)</text>
+        <text x="145" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Bayer process (Al₂O₃)</text>
         <line x1="183" y1="64" x2="200" y2="64" stroke="#c0392b" stroke-width="1" marker-end="url(#ar)"/>
         <rect x="200" y="45" width="75" height="38" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1"/>
-        <text x="237" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Hall-Héroult</text>
-        <text x="237" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">electrolysis</text>
+        <text x="237" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Hall-Héroult electrolysis</text>
         <line x1="275" y1="64" x2="295" y2="64" stroke="#c0392b" stroke-width="1" marker-end="url(#ar)"/>
         <rect x="295" y="45" width="80" height="38" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1.5"/>
-        <text x="335" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Primary Al</text>
-        <text x="335" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">~8–16 kg</text>
-        <text x="335" y="82" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#2d6a4f">CO₂-eq/kg</text>
-        <!-- Secondary route -->
+        <text x="335" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Primary Al ~8–16 kg CO₂-eq/kg</text>
         <text x="130" y="118" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">SECONDARY ROUTE</text>
         <rect x="15" y="125" width="75" height="38" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="52" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Scrap</text>
-        <text x="52" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">collection</text>
+        <text x="52" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Scrap collection</text>
         <line x1="90" y1="144" x2="200" y2="144" stroke="#1a3a5c" stroke-width="1" marker-end="url(#ab)"/>
         <rect x="200" y="125" width="75" height="38" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="237" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Re-melting</text>
-        <text x="237" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">~700 °C</text>
+        <text x="237" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Re-melting ~700 °C</text>
         <line x1="275" y1="144" x2="295" y2="144" stroke="#1a3a5c" stroke-width="1" marker-end="url(#ab)"/>
         <rect x="295" y="125" width="80" height="38" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1.5"/>
-        <text x="335" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Secondary Al</text>
-        <text x="335" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">~0.5–1 kg</text>
-        <text x="335" y="162" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#2d6a4f">CO₂-eq/kg</text>
-        <!-- Energy label -->
+        <text x="335" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Secondary Al ~0.5–1 kg CO₂-eq/kg</text>
         <text x="237" y="103" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">~14 kWh/kg Al (electricity)</text>
         <line x1="237" y1="83" x2="237" y2="98" stroke="#856404" stroke-width="1" stroke-dasharray="3,2"/>
         <defs>
@@ -970,17 +871,16 @@ const EXAMS = [
           <marker id="ab" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#1a3a5c"/></marker>
         </defs>
       </svg>`,
-      figureCaption: "Figure 1 – Comparison of primary and secondary aluminium production routes, highlighting the large GWP difference driven by the Hall-Héroult electrolysis step.",
-      body: `<p>Aluminium is the most widely used non-ferrous metal in the world, with applications in packaging, transport, construction, and electronics. Its production is highly energy-intensive, making it a significant contributor to industrial GHG emissions. Two fundamentally different production routes exist:</p>
+      figureCaption: "Figure 1 – Comparison of primary and secondary aluminium production routes.",
+      body: `<p>Aluminium is the most widely used non-ferrous metal in the world. Two fundamentally different production routes exist:</p>
       <p><strong>Primary aluminium (virgin production)</strong> follows a three-step process:</p>
       <ul>
-        <li><strong>Bauxite mining:</strong> bauxite ore (aluminium hydroxide mineral) is extracted, typically in tropical regions.</li>
-        <li><strong>Bayer process:</strong> bauxite is refined into alumina (Al₂O₃) using caustic soda at elevated temperature and pressure. A key co-output is red mud (bauxite residue), a hazardous waste requiring careful management.</li>
-        <li><strong>Hall-Héroult electrolysis:</strong> alumina is dissolved in molten cryolite and reduced electrochemically at ~960 °C, consuming approximately 13–15 kWh of electricity per kg of aluminium produced. This step dominates the GWP — the carbon footprint of primary aluminium depends almost entirely on the electricity grid mix used for electrolysis.</li>
+        <li><strong>Bauxite mining</strong></li>
+        <li><strong>Bayer process:</strong> bauxite is refined into alumina (Al₂O₃). A key co-output is red mud.</li>
+        <li><strong>Hall-Héroult electrolysis:</strong> alumina is dissolved in molten cryolite and reduced electrochemically, consuming approximately 13–15 kWh of electricity per kg of aluminium produced. This step dominates the GWP.</li>
       </ul>
-      <p>The GWP of primary aluminium ranges from approximately <strong>2 kg CO₂-eq/kg</strong> (hydropower-based, e.g. Norway, Iceland) to <strong>16–20 kg CO₂-eq/kg</strong> (coal-based grids, e.g. parts of China).</p>
-      <p><strong>Secondary aluminium (recycling)</strong> requires only re-melting of scrap at ~700 °C, consuming roughly <strong>5% of the energy</strong> of primary production. The GWP of secondary aluminium is typically 0.5–1 kg CO₂-eq/kg, essentially independent of the grid mix.</p>
-      <p>A key methodological challenge in LCA of aluminium is the treatment of the scrap at end-of-life: under the <em>cut-off approach</em>, the secondary aluminium is burden-free; under <em>system expansion</em>, credits are awarded to the system for avoiding primary aluminium production.</p>`
+      <p>The GWP of primary aluminium ranges from approximately <strong>2 kg CO₂-eq/kg</strong> (hydropower-based) to <strong>16–20 kg CO₂-eq/kg</strong> (coal-based grids).</p>
+      <p><strong>Secondary aluminium (recycling)</strong> requires only re-melting of scrap at ~700 °C, consuming roughly <strong>5% of the energy</strong> of primary production. The GWP of secondary aluminium is typically 0.5–1 kg CO₂-eq/kg.</p>`
     },
     caseB: {
       label: "CASE STUDY B",
@@ -988,46 +888,36 @@ const EXAMS = [
       figure: `<svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" width="560" height="200">
         <rect width="560" height="200" fill="white"/>
         <text x="280" y="18" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c" font-weight="bold">GWP of Offshore Wind — Sensitivity to Lifetime (g CO₂-eq / kWh)</text>
-        <!-- Axes -->
         <line x1="80" y1="25" x2="80" y2="160" stroke="#999" stroke-width="1"/>
         <line x1="80" y1="160" x2="520" y2="160" stroke="#999" stroke-width="1"/>
-        <!-- Bars for 20yr -->
         <rect x="100" y="60" width="50" height="100" fill="#1a3a5c"/>
         <text x="125" y="55" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1a3a5c">18</text>
         <text x="125" y="175" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">20 yr</text>
-        <!-- Bars for 25yr -->
         <rect x="200" y="74" width="50" height="86" fill="#2e6da4"/>
         <text x="225" y="69" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#2e6da4">15</text>
         <text x="225" y="175" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">25 yr</text>
-        <!-- Bars for 30yr -->
         <rect x="300" y="85" width="50" height="75" fill="#5b9bd5"/>
         <text x="325" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#5b9bd5">12</text>
         <text x="325" y="175" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">30 yr</text>
-        <!-- Bars for 35yr -->
         <rect x="400" y="96" width="50" height="64" fill="#9dc3e6"/>
         <text x="425" y="91" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#666">10</text>
         <text x="425" y="175" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">35 yr</text>
-        <!-- Y axis labels -->
         <text x="70" y="163" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">0</text>
         <text x="70" y="113" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">10</text>
         <text x="70" y="63" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">20</text>
         <line x1="78" y1="113" x2="82" y2="113" stroke="#999" stroke-width="1"/>
         <line x1="78" y1="63" x2="82" y2="63" stroke="#999" stroke-width="1"/>
-        <!-- X label -->
         <text x="300" y="192" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666">Plant lifetime (years)</text>
-        <!-- Y label -->
-        <text x="20" y="100" font-family="JetBrains Mono, monospace" font-size="8" fill="#666" transform="rotate(-90,20,100)">g CO₂-eq/kWh</text>
       </svg>`,
-      figureCaption: "Figure 2 – Sensitivity of GWP (g CO₂-eq/kWh) of offshore wind electricity to plant lifetime assumptions. Longer lifetime amortises the construction impacts over more kWh generated.",
-      body: `<p>Offshore wind energy is one of the key technologies in Europe's decarbonisation strategy. A recent LCA study examined the environmental performance of a 500 MW offshore wind farm located in the North Sea, consisting of 100 turbines of 5 MW each with a hub height of 90 m and monopile foundations.</p>
-      <p>The functional unit was defined as <strong>1 kWh of electricity delivered to the grid</strong>. The system boundary was cradle-to-grave, including raw material extraction, manufacturing of turbine components (tower, nacelle, blades, foundations, cables), installation, operation and maintenance, and decommissioning.</p>
+      figureCaption: "Figure 2 – Sensitivity of GWP (g CO₂-eq/kWh) of offshore wind electricity to plant lifetime assumptions.",
+      body: `<p>A recent LCA study examined the environmental performance of a 500 MW offshore wind farm in the North Sea. The functional unit was <strong>1 kWh of electricity delivered to the grid</strong>. The system boundary was cradle-to-grave.</p>
       <p>Key findings:</p>
       <ul>
         <li>The <strong>construction phase</strong> dominated the GWP (over 85%), with steel for foundations and towers as the largest single contributor.</li>
-        <li>The GWP ranged from <strong>10–18 g CO₂-eq/kWh</strong> depending on the assumed plant lifetime (20–35 years) — see Figure 2. This illustrates why lifetime assumptions are a critical parameter in wind LCA sensitivity analysis.</li>
-        <li>For impact categories other than GWP, the picture differs: <strong>land use</strong> is negligible for offshore wind; <strong>freshwater ecotoxicity</strong> is driven by copper in cables; <strong>mineral resource depletion</strong> is driven by rare earth elements in permanent magnets (neodymium, dysprosium).</li>
+        <li>The GWP ranged from <strong>10–18 g CO₂-eq/kWh</strong> depending on the assumed plant lifetime (20–35 years).</li>
+        <li>For impact categories other than GWP: <strong>land use</strong> is negligible for offshore wind; <strong>freshwater ecotoxicity</strong> is driven by copper in cables; <strong>mineral resource depletion</strong> is driven by rare earth elements in permanent magnets.</li>
       </ul>
-      <p>The study applied <strong>both ReCiPe 2016 (H)</strong> and <strong>EF 3.1</strong> as impact assessment methods. For climate change, results were consistent; for toxicity and mineral resource categories, differences were observed due to different characterisation factors. This illustrates that the choice of LCIA method can influence conclusions for certain impact categories.</p>`
+      <p>The study applied <strong>both ReCiPe 2016 (H)</strong> and <strong>EF 3.1</strong> as impact assessment methods. For climate change, results were consistent; for toxicity and mineral resource categories, differences were observed due to different characterisation factors.</p>`
     },
     questions: [
       {
@@ -1039,10 +929,10 @@ const EXAMS = [
           { letter: "D", text: "The Bayer process converts bauxite into aluminium metal ready for use" }
         ],
         answers: { A: true, B: false, C: true, D: false },
-        fb: { A: "Correct. The Hall-Héroult electrolysis step consumes ~13–15 kWh/kg Al and accounts for the vast majority of GWP in primary aluminium.", B: "False. Grid mix is decisive: Norwegian hydropower gives ~2 kg CO₂-eq/kg Al; a coal-based grid can give 16–20 kg CO₂-eq/kg — roughly a 10-fold difference.", C: "Correct. Re-melting requires only ~5% of the energy of primary production, making secondary aluminium dramatically lower-impact.", D: "False. The Bayer process produces alumina (Al₂O₃), not metallic aluminium. The subsequent Hall-Héroult electrolysis step converts alumina into aluminium metal." }
+        fb: { A: "Correct. The Hall-Héroult step consumes ~13–15 kWh/kg Al and accounts for the vast majority of GWP.", B: "False. Norwegian hydropower gives ~2 kg CO₂-eq/kg Al; a coal-based grid can give 16–20 kg — roughly a 10-fold difference.", C: "Correct. Re-melting requires only ~5% of the energy of primary production.", D: "False. The Bayer process produces alumina (Al₂O₃), not metallic aluminium. Hall-Héroult converts alumina into aluminium metal." }
       },
       {
-        stem: "In the LCA of the offshore wind farm, the sensitivity analysis on plant lifetime shows that GWP per kWh decreases with longer lifetime. Which of the following explain this correctly?",
+        stem: "In the LCA of the offshore wind farm, the sensitivity analysis on plant lifetime shows GWP per kWh decreases with longer lifetime. Which of the following explain this correctly?",
         options: [
           { letter: "A", text: "A longer lifetime means the fixed construction impacts are amortised over a larger total electricity output" },
           { letter: "B", text: "Longer lifetime reduces the operational impacts per kWh because maintenance frequency decreases" },
@@ -1050,7 +940,7 @@ const EXAMS = [
           { letter: "D", text: "If construction dominates GWP, then GWP/kWh is inversely proportional to total lifetime electricity production" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. Construction impacts are fixed; dividing by more kWh (longer lifetime) reduces the impact per kWh.", B: "False. Maintenance frequency does not necessarily decrease with lifetime — it is typically proportional to operational time. This is not the mechanism driving the sensitivity.", C: "Correct. The FU normalises all impacts per kWh, so lifetime directly affects the denominator (total kWh produced).", D: "Correct. If GWP ≈ Construction_GWP / (Power × Capacity_Factor × Lifetime), then GWP/kWh is inversely proportional to lifetime when construction dominates." }
+        fb: { A: "Correct. Construction impacts are fixed; dividing by more kWh reduces the impact per kWh.", B: "False. Maintenance frequency does not necessarily decrease with lifetime — this is not the mechanism.", C: "Correct. The FU normalises all impacts per kWh, so lifetime directly affects the denominator.", D: "Correct. If GWP ≈ Construction_GWP / (Power × Capacity_Factor × Lifetime), GWP/kWh is inversely proportional to lifetime." }
       },
       {
         stem: "Regarding the choice of LCIA method (ReCiPe 2016 vs EF 3.1) in the wind farm LCA, which statements are true?",
@@ -1061,7 +951,7 @@ const EXAMS = [
           { letter: "D", text: "For climate change, results from different methods are always identical because all use the same IPCC GWP100 factors" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. Both EF 3.1 and ReCiPe 2016 midpoint are midpoint methods.", B: "Correct. ReCiPe 2016 includes both midpoint and endpoint levels; the endpoint aggregates midpoint results into Human Health (DALYs), Ecosystems (species·year), and Resource Scarcity (USD).", C: "Correct. Toxicity characterisation factors depend heavily on fate, exposure, and effect models (e.g., USEtox for EF vs ReCiPe's own model), leading to differences between methods.", D: "False. While most methods use IPCC GWP100 values as a basis, minor differences in how biogenic carbon, land use emissions, or indirect effects are handled can cause small discrepancies between methods." }
+        fb: { A: "Correct. Both EF 3.1 and ReCiPe 2016 midpoint are midpoint methods.", B: "Correct. ReCiPe 2016 includes both midpoint and endpoint levels.", C: "Correct. Toxicity CFs depend heavily on fate, exposure, and effect models.", D: "False. Minor differences in how biogenic carbon, land use emissions, or indirect effects are handled can cause discrepancies." }
       },
       {
         stem: "Under the cut-off (recycled content) model for aluminium, which statements are true?",
@@ -1072,7 +962,7 @@ const EXAMS = [
           { letter: "D", text: "The cut-off model and system expansion will always give identical results for the GWP of a product containing aluminium" }
         ],
         answers: { A: true, B: false, C: true, D: false },
-        fb: { A: "Correct. In the cut-off model, secondary materials are burden-free — the scrap producer bears all EoL burdens and the scrap user starts with a clean slate.", B: "False. In the cut-off model, the scrap-producing system bears the EoL treatment burden but receives NO credit for the scrap value. Credits for avoided production go to the future system under system expansion, not cut-off.", C: "Correct. Under system expansion, the current system is credited with avoiding production of primary aluminium (the substituted product), reducing its net environmental impact.", D: "False. The two approaches give different results — this is one of the most significant methodological choices in LCA and is the subject of sensitivity analyses precisely because results differ." }
+        fb: { A: "Correct. In the cut-off model, secondary materials are burden-free.", B: "False. In the cut-off model, the scrap-producing system bears EoL burden but receives NO credit. Credits go to future systems under system expansion.", C: "Correct. Under system expansion, the current system is credited with avoiding production of primary aluminium.", D: "False. The two approaches give different results — a major methodological choice in LCA." }
       },
       {
         stem: "In LCA, the 'interpretation' phase includes which of the following activities?",
@@ -1083,7 +973,7 @@ const EXAMS = [
           { letter: "D", text: "Characterisation: multiplying inventory flows by impact characterisation factors" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. The completeness check is one of the three evaluation elements in ISO 14044 interpretation.", B: "Correct. The sensitivity check evaluates the reliability of conclusions by testing how results change when key assumptions vary.", C: "Correct. The consistency check ensures methods, data, and assumptions have been applied consistently, especially important in comparative studies.", D: "False. Characterisation belongs to the LCIA phase, not the interpretation phase." }
+        fb: { A: "Correct. The completeness check is one of the three evaluation elements in ISO 14044 interpretation.", B: "Correct. The sensitivity check evaluates how results change when key assumptions vary.", C: "Correct. The consistency check ensures methods have been applied consistently.", D: "False. Characterisation belongs to the LCIA phase, not the interpretation phase." }
       },
       {
         stem: "Regarding the concept of 'functional unit' and 'reference flow' in LCA, which statements are true?",
@@ -1094,7 +984,7 @@ const EXAMS = [
           { letter: "D", text: "Two products with different reference flows cannot be compared in LCA" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. ISO 14044 defines the FU as the quantified performance of a product system for use as a reference unit.", B: "Correct. The reference flow is derived from the FU — it is the actual amount of product required to deliver the function.", C: "Correct. The reference flow for 1 kWh is an infinitesimal fraction of the plant — all inventory flows are scaled proportionally.", D: "False. Different reference flows are normal and expected in LCA — all flows are scaled to the same FU, enabling comparison regardless of different physical quantities." }
+        fb: { A: "Correct. ISO 14044 defines the FU as the quantified performance of a product system for use as a reference unit.", B: "Correct. The reference flow is derived from the FU — the actual amount of product required to deliver the function.", C: "Correct. The reference flow for 1 kWh is an infinitesimal fraction of the plant — all inventory flows are scaled proportionally.", D: "False. Different reference flows are normal — all flows are scaled to the same FU, enabling comparison." }
       },
       {
         stem: "Which of the following statements about the Ecoinvent database are true?",
@@ -1105,7 +995,7 @@ const EXAMS = [
           { letter: "D", text: "The pedigree matrix in Ecoinvent is used to quantify data quality and translate it into additional uncertainty for Monte Carlo analysis" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. Ecoinvent v3 introduced the three system models: cut-off (attributional), APOS (attributional with substitution), and consequential.", B: "False. The consequential model uses marginal technologies — the technologies that actually respond to a marginal change in demand — not average technology mixes. Average mixes are used in the attributional models.", C: "Correct. RoW (Rest of World) is a geographic aggregation covering regions without dedicated datasets.", D: "Correct. The pedigree matrix assigns uncertainty scores that are converted to additional variance, propagated through Monte Carlo simulation to quantify output uncertainty." }
+        fb: { A: "Correct. Ecoinvent v3 introduced three system models: cut-off, APOS, and consequential.", B: "False. The consequential model uses marginal technologies — not average mixes.", C: "Correct. RoW covers regions without dedicated datasets.", D: "Correct. The pedigree matrix assigns uncertainty scores propagated through Monte Carlo simulation." }
       },
       {
         stem: "The concept of 'natural capital' in sustainability includes which of the following?",
@@ -1116,7 +1006,7 @@ const EXAMS = [
           { letter: "D", text: "Natural processes and functions that support life, even when they have no direct market price" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. Ecosystem services are central to the concept of natural capital — they represent the flows of value generated by ecosystems.", B: "False. Natural capital is much broader than extractable resources with market value. It includes non-marketable services (e.g., climate regulation, biodiversity) and non-extractable resources.", C: "Correct. Abiotic components — mineral deposits, water, air, soil, solar energy — are integral parts of natural capital.", D: "Correct. Many critical natural processes (e.g., soil formation, ocean thermohaline circulation) have no market price but are fundamental to life support systems." }
+        fb: { A: "Correct. Ecosystem services are central to the concept of natural capital.", B: "False. Natural capital is much broader than extractable resources with market value.", C: "Correct. Abiotic components — mineral deposits, water, air, soil — are integral parts of natural capital.", D: "Correct. Many critical natural processes have no market price but are fundamental to life support systems." }
       },
       {
         stem: "In a comparative LCA of primary vs secondary aluminium for use in an automotive component, which methodological choices would most influence the conclusions?",
@@ -1127,7 +1017,7 @@ const EXAMS = [
           { letter: "D", text: "The use phase of the car is irrelevant because both components have identical function and mass" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. The grid mix for electrolysis determines primary Al GWP almost entirely — a 10× difference between hydropower and coal grids.", B: "Correct. Under cut-off, secondary Al is always burden-free regardless of EoL; under system expansion, primary Al production receives a credit for the secondary Al it will eventually enable. This can change which option is preferable.", C: "Correct. Secondary aluminium uses more salt flux and can have higher ecotoxicity impacts from slag treatment; primary aluminium has higher GWP and energy use. Different categories tell different stories.", D: "False. If both components have the same mass and function, the use phase is indeed equivalent and cancels out in the comparison — but if they differ in weight (lightweighting), the use phase becomes critical and cannot be ignored." }
+        fb: { A: "Correct. Grid mix for electrolysis determines primary Al GWP almost entirely.", B: "Correct. Cut-off vs system expansion can change which option is preferable.", C: "Correct. Different categories tell different stories — secondary Al may have higher ecotoxicity from slag treatment.", D: "False. If they differ in weight (lightweighting), the use phase becomes critical and cannot be ignored." }
       }
     ]
   },
@@ -1141,34 +1031,27 @@ const EXAMS = [
       figure: `<svg viewBox="0 0 560 205" xmlns="http://www.w3.org/2000/svg" width="560" height="205">
         <rect width="560" height="205" fill="white"/>
         <text x="280" y="18" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c" font-weight="bold">GWP Breakdown: Glass vs PET Bottle (g CO₂-eq per litre of water delivered)</text>
-        <!-- Legend -->
         <rect x="80" y="25" width="10" height="8" fill="#1a3a5c"/>
         <text x="95" y="33" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Glass (300g)</text>
         <rect x="200" y="25" width="10" height="8" fill="#5b9bd5"/>
         <text x="215" y="33" font-family="JetBrains Mono, monospace" font-size="8" fill="#5b9bd5">PET (40g)</text>
-        <!-- Axes -->
         <line x1="80" y1="42" x2="80" y2="165" stroke="#999" stroke-width="1"/>
         <line x1="80" y1="165" x2="520" y2="165" stroke="#999" stroke-width="1"/>
-        <!-- Categories: Production, Transport, EoL, Total -->
-        <!-- Production -->
         <rect x="100" y="65" width="40" height="100" fill="#1a3a5c"/>
         <text x="120" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">290</text>
         <rect x="148" y="125" width="40" height="40" fill="#5b9bd5"/>
         <text x="168" y="120" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#5b9bd5">118</text>
         <text x="143" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Production</text>
-        <!-- Transport -->
         <rect x="225" y="130" width="40" height="35" fill="#1a3a5c"/>
         <text x="245" y="126" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">98</text>
         <rect x="273" y="148" width="40" height="17" fill="#5b9bd5"/>
         <text x="293" y="144" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#5b9bd5">47</text>
         <text x="268" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Transport</text>
-        <!-- EoL -->
         <rect x="350" y="155" width="40" height="10" fill="#1a3a5c"/>
         <text x="370" y="151" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">28</text>
         <rect x="398" y="158" width="40" height="7" fill="#5b9bd5"/>
         <text x="418" y="154" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#5b9bd5">19</text>
         <text x="393" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">EoL</text>
-        <!-- Y axis labels -->
         <text x="70" y="168" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">0</text>
         <text x="70" y="118" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">150</text>
         <text x="70" y="68" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">300</text>
@@ -1176,62 +1059,45 @@ const EXAMS = [
         <line x1="78" y1="68" x2="82" y2="68" stroke="#999" stroke-width="1"/>
         <text x="300" y="196" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666">g CO₂-eq / litre water delivered</text>
       </svg>`,
-      figureCaption: "Figure 1 – GWP contributions by life cycle stage for a 1-litre glass bottle (300 g) vs a 1-litre PET bottle (40 g), per litre of mineral water delivered to the consumer. Values are illustrative.",
-      body: `<p>Packaging accounts for a significant share of the environmental footprint of many food and beverage products. Glass and PET (polyethylene terephthalate) are the two dominant materials for bottled water and soft drinks. A comparative LCA was conducted with the functional unit: <em>"delivery of 1 litre of mineral water to the consumer, in a single-use container"</em>.</p>
-      <p>Key characteristics of the two systems:</p>
+      figureCaption: "Figure 1 – GWP contributions by life cycle stage for a 1-litre glass bottle (300 g) vs a 1-litre PET bottle (40 g).",
+      body: `<p>A comparative LCA was conducted between glass and PET bottles for mineral water. The functional unit: <em>"delivery of 1 litre of mineral water to the consumer, in a single-use container."</em></p>
       <ul>
-        <li><strong>Glass bottle (300 g):</strong> produced from silica sand, soda ash, and limestone melted at ~1,500 °C in energy-intensive furnaces. GWP of glass production: ~0.9 kg CO₂-eq/kg. Heavy weight means high transport impacts. Recyclable indefinitely without quality loss.</li>
-        <li><strong>PET bottle (40 g):</strong> produced from crude oil-derived terephthalic acid and ethylene glycol. GWP of PET production: ~3.4 kg CO₂-eq/kg. Much lighter, reducing transport impacts. Can be mechanically recycled (with some quality loss — downcycling) or chemically recycled (closed-loop).</li>
+        <li><strong>Glass bottle (300 g):</strong> produced from silica sand, soda ash, and limestone melted at ~1,500 °C. GWP of glass production: ~0.9 kg CO₂-eq/kg. Heavy weight means high transport impacts. Recyclable indefinitely without quality loss.</li>
+        <li><strong>PET bottle (40 g):</strong> produced from crude oil-derived terephthalic acid and ethylene glycol. GWP of PET production: ~3.4 kg CO₂-eq/kg. Much lighter, reducing transport impacts. Can be mechanically or chemically recycled.</li>
       </ul>
-      <p>Despite PET having a higher GWP per kg of material, the <strong>much lower mass per container</strong> (40 g vs 300 g) means that PET has significantly lower total GWP per litre of water delivered. Transport is the second-largest contributor, and here the weight advantage of PET is again decisive.</p>
-      <p>However, the picture changes for other impact categories: PET scores worse for <strong>fossil resource depletion</strong> (petrochemical feedstock) and potentially for <strong>photochemical ozone formation</strong> (VOC emissions from PET production). Glass scores worse for <strong>energy demand</strong> and <strong>GWP</strong> per bottle but better for fossil resource use.</p>
-      <p>This is a classic example of an environmental <strong>trade-off</strong> in LCA: no single material is better across all impact categories, and the conclusions depend on which categories are prioritised.</p>`
+      <p>Despite PET having a higher GWP per kg of material, the <strong>much lower mass per container</strong> (40 g vs 300 g) means that PET has significantly lower total GWP per litre of water delivered. However, PET scores worse for <strong>fossil resource depletion</strong> and glass scores worse for <strong>energy demand</strong> and <strong>GWP</strong> per bottle. This is a classic LCA <strong>trade-off</strong>.</p>`
     },
     caseB: {
       label: "CASE STUDY B",
       title: "LCA of First-Generation Bioethanol: Biogenic Carbon and Land Use Change",
       figure: `<svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" width="560" height="200">
         <rect width="560" height="200" fill="white"/>
-        <!-- System boundary -->
         <rect x="10" y="10" width="540" height="145" rx="4" fill="none" stroke="#2d6a4f" stroke-width="1.5" stroke-dasharray="6,4"/>
         <text x="20" y="24" font-family="JetBrains Mono, monospace" font-size="9" fill="#2d6a4f">System boundary</text>
-        <!-- Biomass box -->
         <rect x="25" y="35" width="80" height="45" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1"/>
-        <text x="65" y="53" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Sugarcane</text>
-        <text x="65" y="65" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">cultivation</text>
-        <!-- CO2 uptake -->
+        <text x="65" y="53" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Sugarcane cultivation</text>
         <line x1="65" y1="35" x2="65" y2="15" stroke="#2d6a4f" stroke-width="1" stroke-dasharray="3,2"/>
         <text x="72" y="13" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">-CO₂ (biogenic uptake)</text>
         <line x1="105" y1="57" x2="125" y2="57" stroke="#2d6a4f" stroke-width="1" marker-end="url(#ag)"/>
-        <!-- Processing -->
         <rect x="125" y="35" width="80" height="45" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1"/>
-        <text x="165" y="53" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Fermentation</text>
-        <text x="165" y="65" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">&amp; distillation</text>
+        <text x="165" y="53" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Fermentation &amp; distillation</text>
         <line x1="205" y1="57" x2="225" y2="57" stroke="#2d6a4f" stroke-width="1" marker-end="url(#ag)"/>
-        <!-- Bioethanol -->
         <rect x="225" y="35" width="80" height="45" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1.5"/>
-        <text x="265" y="53" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Bioethanol</text>
-        <text x="265" y="65" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">(fuel use)</text>
-        <!-- Combustion CO2 -->
+        <text x="265" y="53" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Bioethanol (fuel use)</text>
         <line x1="265" y1="35" x2="265" y2="15" stroke="#c0392b" stroke-width="1" stroke-dasharray="3,2"/>
         <text x="272" y="13" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">+CO₂ (biogenic release)</text>
         <line x1="305" y1="57" x2="325" y2="57" stroke="#2d6a4f" stroke-width="1" marker-end="url(#ag)"/>
-        <!-- Co-product bagasse -->
         <rect x="325" y="35" width="80" height="45" rx="3" fill="#fff3cd" stroke="#856404" stroke-width="1"/>
-        <text x="365" y="49" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">Co-product:</text>
-        <text x="365" y="61" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">Bagasse</text>
-        <text x="365" y="73" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#856404">(allocation!)</text>
-        <!-- ILUC note -->
+        <text x="365" y="49" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">Co-product: Bagasse (allocation!)</text>
         <rect x="25" y="100" width="510" height="45" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1" stroke-dasharray="4,3"/>
         <text x="280" y="116" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#c0392b" font-weight="bold">Indirect Land Use Change (ILUC) — outside direct system boundary</text>
         <text x="280" y="130" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Sugarcane expansion displaces food crops → food production moves to new land → deforestation elsewhere</text>
         <defs><marker id="ag" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#2d6a4f"/></marker></defs>
       </svg>`,
-      figureCaption: "Figure 2 – System boundary for sugarcane bioethanol LCA, showing biogenic CO₂ flows and the Indirect Land Use Change (ILUC) issue that falls outside the direct system boundary but is addressed in consequential LCA.",
-      body: `<p>First-generation bioethanol, produced from food crops such as sugarcane, maize, or wheat, is the most commercially deployed liquid biofuel globally. It is often promoted as a low-carbon alternative to petrol, but its LCA performance is more nuanced than it appears.</p>
-      <p>A study compared the GWP of Brazilian sugarcane ethanol with conventional petrol. The functional unit was <strong>1 MJ of fuel energy delivered to the vehicle</strong>. The system boundary included sugarcane cultivation, harvesting, fermentation, distillation, and combustion in a vehicle.</p>
-      <p><strong>Biogenic carbon accounting</strong> is a key issue. During cultivation, sugarcane absorbs CO₂ from the atmosphere (biogenic uptake). When the ethanol is combusted, the same CO₂ is re-released. Under the conventional assumption of <em>carbon neutrality</em> of biogenic CO₂ (uptake = release over the crop cycle), the biogenic CO₂ does not contribute to GWP. However, this assumes the carbon cycle is in equilibrium.</p>
-      <p><strong>Indirect Land Use Change (ILUC)</strong> is one of the most contested issues in biofuel LCA. If sugarcane expansion displaces existing food crops, those food crops must be grown elsewhere — potentially requiring deforestation. The carbon release from this indirect deforestation is not captured in the direct system boundary but can be estimated through economic models. ILUC factors can significantly increase the GWP of biofuels.</p>
+      figureCaption: "Figure 2 – System boundary for sugarcane bioethanol LCA, showing biogenic CO₂ flows and the ILUC issue.",
+      body: `<p>A study compared the GWP of Brazilian sugarcane ethanol with conventional petrol. The functional unit was <strong>1 MJ of fuel energy delivered to the vehicle</strong>.</p>
+      <p><strong>Biogenic carbon accounting</strong> is a key issue. During cultivation, sugarcane absorbs CO₂ from the atmosphere (biogenic uptake). When the ethanol is combusted, the same CO₂ is re-released. Under the conventional assumption of <em>carbon neutrality</em>, the biogenic CO₂ does not contribute to GWP.</p>
+      <p><strong>Indirect Land Use Change (ILUC)</strong> is one of the most contested issues in biofuel LCA. If sugarcane expansion displaces existing food crops, those food crops must be grown elsewhere — potentially requiring deforestation. The carbon release from this indirect deforestation is not captured in the direct system boundary.</p>
       <p>The fermentation/distillation process produces <strong>bagasse</strong> (sugarcane residue) as a co-product, which is used for electricity generation. This introduces multifunctionality requiring allocation between ethanol and bagasse-derived electricity.</p>`
     },
     questions: [
@@ -1244,7 +1110,7 @@ const EXAMS = [
           { letter: "D", text: "The functional unit (1 litre of water delivered) correctly accounts for the mass difference by requiring a specific reference flow for each material" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. 300 g × 0.9 kg CO₂-eq/kg = 270 g CO₂-eq for glass production vs 40 g × 3.4 kg CO₂-eq/kg = 136 g CO₂-eq for PET — PET wins despite higher GWP per kg.", B: "Correct. Transport is the second-largest contributor, and the 7.5× weight ratio means glass generates much higher transport emissions per litre.", C: "False. This statement might be locally true but is not the explanation for the GWP difference — mass is the dominant factor, not recycling rates in the EoL phase.", D: "Correct. The FU 'per litre delivered' makes the reference flow for glass (1 × 300 g bottle) vs PET (1 × 40 g bottle) directly comparable." }
+        fb: { A: "Correct. 300 g × 0.9 = 270 g CO₂-eq for glass vs 40 g × 3.4 = 136 g CO₂-eq for PET — PET wins despite higher GWP per kg.", B: "Correct. Transport is the second-largest contributor; the 7.5× weight ratio means glass generates much higher transport emissions.", C: "False. Mass is the dominant factor, not recycling rates.", D: "Correct. The FU 'per litre delivered' makes the reference flows directly comparable." }
       },
       {
         stem: "Regarding biogenic carbon in the LCA of sugarcane bioethanol, which statements are true?",
@@ -1252,10 +1118,10 @@ const EXAMS = [
           { letter: "A", text: "Under the conventional 'carbon neutrality' assumption, CO₂ absorbed during sugarcane growth exactly offsets CO₂ released during combustion" },
           { letter: "B", text: "The 'carbon neutrality' assumption is always valid regardless of the time frame considered" },
           { letter: "C", text: "EN 15804+A2 requires explicit accounting of biogenic CO₂ uptake and release, with uptake registered as a negative emission in the agricultural phase" },
-          { letter: "D", text: "If biogenic CO₂ is treated as carbon-neutral, then only fossil GHG emissions (from fertilisers, machinery, transport) contribute to the GWP of bioethanol" }
+          { letter: "D", text: "If biogenic CO₂ is treated as carbon-neutral, then only fossil GHG emissions contribute to the GWP of bioethanol" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. This is the basis of the carbon neutrality assumption — the crop cycle re-absorbs what combustion releases.", B: "False. Carbon neutrality holds only if the land was already in a steady-state (no net carbon stock change). If new land is cleared for crops, there is a net release of stored carbon that is not re-absorbed within the GWP time horizon.", C: "Correct. EN 15804+A2 requires explicit biogenic carbon tracking: -1 kg CO₂-eq per kg CO₂ biogenically absorbed in A1, and +1 kg CO₂-eq per kg released at combustion/EoL.", D: "Correct. Under carbon neutrality, the biogenic CO₂ flows cancel, and only fossil-origin GHG emissions determine the GWP of the system." }
+        fb: { A: "Correct. This is the basis of the carbon neutrality assumption.", B: "False. Carbon neutrality holds only if the land was already in a steady-state. If new land is cleared, there is a net carbon debt.", C: "Correct. EN 15804+A2 requires explicit biogenic carbon tracking.", D: "Correct. Under carbon neutrality, only fossil-origin GHG emissions determine the GWP of the system." }
       },
       {
         stem: "Indirect Land Use Change (ILUC) in biofuel LCA is best addressed by:",
@@ -1266,7 +1132,7 @@ const EXAMS = [
           { letter: "D", text: "ILUC effects are zero by definition because LCA system boundaries do not include indirect effects" }
         ],
         answers: { A: false, B: true, C: true, D: false },
-        fb: { A: "False. Attributional LCA with direct system boundaries explicitly does NOT capture ILUC — the indirect land displacement falls outside the boundary by definition.", B: "Correct. Consequential LCA is designed to capture market-mediated consequences of a decision, including demand-driven land use displacement.", C: "Correct. Economic equilibrium models (GTAP, MIRAGE, FASOM) are the standard tool for estimating ILUC factors, which can then be incorporated into LCA.", D: "False. ILUC is a real environmental effect. The reason it is often excluded is methodological difficulty, not because it does not exist — consequential approaches aim to include it." }
+        fb: { A: "False. Attributional LCA with direct system boundaries explicitly does NOT capture ILUC.", B: "Correct. Consequential LCA is designed to capture market-mediated consequences of a decision.", C: "Correct. Economic equilibrium models (GTAP, MIRAGE) are the standard tool for estimating ILUC factors.", D: "False. ILUC is a real environmental effect — consequential approaches aim to include it." }
       },
       {
         stem: "The bagasse co-product in sugarcane bioethanol production introduces multifunctionality. Which approaches are consistent with ISO 14044?",
@@ -1277,7 +1143,7 @@ const EXAMS = [
           { letter: "D", text: "Ignore bagasse as it is a waste product with no economic value" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. System expansion is the first preference in ISO 14044 — it avoids allocation by expanding the boundary to include the bagasse electricity system.", B: "Correct. Energy content is a physical property with a direct causal relationship to process impacts, making it a valid physical allocation basis (ISO 14044 second preference).", C: "Correct. Economic allocation is valid as a last resort under ISO 14044 when physical properties do not provide a causal relationship.", D: "False. Bagasse is not a waste — it has economic value as a fuel for electricity generation. It is a genuine co-product requiring allocation." }
+        fb: { A: "Correct. System expansion is the first preference in ISO 14044.", B: "Correct. Energy content is a valid physical allocation basis.", C: "Correct. Economic allocation is valid as a last resort under ISO 14044.", D: "False. Bagasse is not a waste — it has economic value as a fuel for electricity generation." }
       },
       {
         stem: "Regarding trade-offs between impact categories in LCA, which of the following statements are true?",
@@ -1288,7 +1154,7 @@ const EXAMS = [
           { letter: "D", text: "The existence of a trade-off means LCA cannot provide any useful information for decision-making" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. This is the definition of a trade-off in LCA — it is common and prevents a simple 'winner' conclusion.", B: "Correct. Weighting aggregates different categories using value-based weights, potentially resolving trade-offs — but introducing value judgements.", C: "Correct. ISO 14044 explicitly notes that weighting should not be used in comparative assertions disclosed to the public because it introduces subjective value choices.", D: "False. Even with trade-offs, LCA provides valuable information: it identifies which categories are affected, their magnitude, and helps stakeholders understand the implications of different priorities." }
+        fb: { A: "Correct. This is the definition of a trade-off in LCA.", B: "Correct. Weighting aggregates different categories using value-based weights.", C: "Correct. ISO 14044 explicitly notes that weighting should not be used in comparative assertions disclosed to the public.", D: "False. LCA provides valuable information even with trade-offs — it identifies categories affected, magnitudes, and implications." }
       },
       {
         stem: "In the ISO 14044 LCA framework, which of the following are mandatory elements of the Life Cycle Inventory (LCI) phase?",
@@ -1299,7 +1165,7 @@ const EXAMS = [
           { letter: "D", text: "Allocation procedures when multi-output processes are encountered" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. Data collection for all included unit processes is a core mandatory step of the LCI phase.", B: "Correct. Scaling all flows to the functional unit via calculation procedures is mandatory.", C: "False. Monte Carlo analysis (uncertainty analysis) is recommended but not mandatory under ISO 14044 — it is an optional quality assurance tool.", D: "Correct. When multi-output processes are present, ISO 14044 requires an allocation procedure to be selected and applied." }
+        fb: { A: "Correct. Data collection for all included unit processes is a core mandatory step.", B: "Correct. Scaling all flows to the functional unit via calculation procedures is mandatory.", C: "False. Monte Carlo analysis is recommended but not mandatory under ISO 14044.", D: "Correct. When multi-output processes are present, ISO 14044 requires an allocation procedure." }
       },
       {
         stem: "Regarding fossil resource depletion as an LCA impact category, which statements are true?",
@@ -1310,7 +1176,7 @@ const EXAMS = [
           { letter: "D", text: "Renewable energy sources such as solar and wind have zero contribution to fossil ADP" }
         ],
         answers: { A: true, B: true, C: true, D: true },
-        fb: { A: "Correct. In CML-IA, ADP fossil is expressed in MJ of energy equivalent, unlike ADP elements (which is in kg Sb-eq).", B: "Correct. Crude oil is a non-renewable abiotic resource; its extraction and use as a feedstock for PET production contributes to ADP fossil.", C: "Correct. ADP weights resources by the inverse of their remaining reserves squared, reflecting scarcity — more depleted resources have higher ADP per unit consumed.", D: "Correct. Solar, wind, and hydro energy do not consume fossil resources as their primary input, so their ADP fossil contribution is effectively zero (only minor contributions from manufacturing and maintenance)." }
+        fb: { A: "Correct. In CML-IA, ADP fossil is expressed in MJ of energy equivalent.", B: "Correct. Crude oil is a non-renewable abiotic resource.", C: "Correct. ADP weights resources by the inverse of their remaining reserves squared.", D: "Correct. Solar, wind, and hydro do not consume fossil resources as primary input." }
       },
       {
         stem: "The document 'Our Common Future' (Brundtland Commission, 1987) and the concept of sustainable development are related to LCA because:",
@@ -1321,18 +1187,18 @@ const EXAMS = [
           { letter: "D", text: "LCA is limited to environmental assessment and does not directly address the social or economic dimensions of sustainable development" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. LCA provides a systematic, science-based framework for assessing environmental burdens, making sustainability concepts operational and measurable.", B: "Correct. By covering the entire life cycle, LCA helps avoid problem-shifting — moving burdens from one phase or location to another — which is key to intergenerational responsibility.", C: "False. The Brundtland Report did not prescribe LCA — it defined the concept of sustainable development. LCA developed independently as a methodology.", D: "Correct. LCA focuses on environmental impacts. Social and economic dimensions require complementary tools: Social LCA (S-LCA) and Life Cycle Costing (LCC), collectively integrated in LCSA." }
+        fb: { A: "Correct. LCA provides a systematic, science-based framework for assessing environmental burdens.", B: "Correct. By covering the entire life cycle, LCA helps avoid problem-shifting.", C: "False. The Brundtland Report defined sustainable development — it did not prescribe LCA.", D: "Correct. LCA focuses on environmental impacts. Social and economic dimensions require S-LCA and LCC." }
       },
       {
         stem: "In a consequential LCA of PET bottle production, which of the following changes compared to an attributional LCA?",
         options: [
-          { letter: "A", text: "The electricity input uses the marginal electricity technology (e.g., the technology responding to a change in demand) rather than the average grid mix" },
+          { letter: "A", text: "The electricity input uses the marginal electricity technology rather than the average grid mix" },
           { letter: "B", text: "Co-products are handled through system expansion to reflect market substitution effects, rather than allocation" },
           { letter: "C", text: "The system boundary is identical to the attributional LCA because both approaches use the same product system" },
           { letter: "D", text: "Consequential LCA answers the question 'what are the environmental consequences of increasing PET bottle production by 1 unit?' rather than 'what is the average environmental profile of 1 PET bottle?'" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. Consequential LCA uses marginal suppliers/technologies — those that will actually change in response to the decision — rather than average market mixes.", B: "Correct. Consequential LCA prefers system expansion because it models the actual market substitution; allocation is an artefact of not expanding the boundary.", C: "False. Consequential LCA expands the system boundary to include affected markets and avoids allocation through substitution, leading to different system boundaries than attributional LCA.", D: "Correct. This is the fundamental distinction: attributional LCA describes, consequential LCA predicts consequences of a change." }
+        fb: { A: "Correct. Consequential LCA uses marginal suppliers/technologies.", B: "Correct. Consequential LCA prefers system expansion.", C: "False. Consequential LCA expands the system boundary to include affected markets.", D: "Correct. This is the fundamental distinction: attributional LCA describes, consequential LCA predicts consequences." }
       }
     ]
   },
@@ -1369,11 +1235,10 @@ const EXAMS = [
         <line x1="68" y1="108" x2="72" y2="108" stroke="#999" stroke-width="1"/>
         <line x1="68" y1="58" x2="72" y2="58" stroke="#999" stroke-width="1"/>
       </svg>`,
-      figureCaption: "Figure 1 – GWP contribution by component in a rooftop c-Si PV system per kWp installed. PV modules dominate due to energy-intensive silicon purification.",
-      body: `<p>Photovoltaic (PV) systems convert solar irradiation directly into electricity. Rooftop PV is one of the fastest-growing renewable technologies globally. While the operational phase produces no direct GHG emissions, manufacturing PV components — particularly silicon cells — is energy-intensive, making LCA essential to understand the true environmental footprint.</p>
-      <p>A standard rooftop PV system consists of PV modules (crystalline silicon, c-Si), aluminium mounting structure, inverter (replaced 1–2 times during lifetime), and balance of system (BOS: cables, connectors). Silicon purification via the Siemens process and cell fabrication are the most energy-intensive steps.</p>
+      figureCaption: "Figure 1 – GWP contribution by component in a rooftop c-Si PV system per kWp installed.",
+      body: `<p>Photovoltaic (PV) systems convert solar irradiation directly into electricity. While the operational phase produces no direct GHG emissions, manufacturing PV components is energy-intensive. A standard rooftop PV system consists of PV modules (crystalline silicon, c-Si), aluminium mounting structure, inverter (replaced 1–2 times during lifetime), and balance of system (BOS).</p>
       <p>The key performance indicator for PV is the <strong>Energy Payback Time (EPBT)</strong>: the time to generate as much energy as was consumed in production. For c-Si systems, EPBT is typically <strong>1–3 years</strong> for a 25–30 year lifetime. GWP of PV electricity is typically <strong>25–60 g CO₂-eq/kWh</strong>.</p>
-      <p>The electricity grid mix used during manufacturing strongly affects PV system GWP — a module made with coal electricity has significantly higher embodied carbon than one made with renewables. This <em>location-of-manufacturing</em> sensitivity is a key finding in PV LCA.</p>`,
+      <p>The electricity grid mix used during manufacturing strongly affects PV system GWP — a module made with coal electricity has significantly higher embodied carbon than one made with renewables.</p>`
     },
     caseB: {
       label: "CASE STUDY B",
@@ -1402,11 +1267,10 @@ const EXAMS = [
         <text x="280" y="145" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#856404">FU: packaging protecting 1 kg of chilled food for 14 days</text>
         <text x="280" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#666" font-style="italic">Key: hotspot depends on which impact category is examined</text>
       </svg>`,
-      figureCaption: "Figure 2 – Impact contributions by life cycle stage for multilayer food packaging. Hotspots differ by category: paper layer drives eutrophication; plastic layers drive fossil resource depletion.",
-      body: `<p>Modern food packaging uses multilayer structures combining polyethylene (PE), polyamide (PA), and paper layers to achieve barrier properties (oxygen, moisture, light) while minimising material use. This creates LCA and recyclability challenges.</p>
-      <p>A study analysed multilayer flexible film for chilled meat with FU: <em>"packaging protecting 1 kg of chilled food for 14 days at standard retail conditions."</em></p>
-      <p>Key findings: for <strong>GWP</strong>, raw material production dominates (48%), with plastic layers as the main contributor. For <strong>eutrophication</strong>, the paper layer from paper mills with pulping effluent is dominant. For <strong>water use</strong>, the paper/pulping process leads. For <strong>fossil resource depletion</strong>, PE and PA layers from petrochemical feedstocks dominate.</p>
-      <p>Because the multilayer structure makes recycling technically difficult, most packaging ends up incinerated — meaning no significant EoL credit from material recycling. This illustrates the key LCA principle: <em>the environmental hotspot depends on which impact category is examined</em>, making multi-category assessment essential.</p>`,
+      figureCaption: "Figure 2 – Impact contributions by life cycle stage for multilayer food packaging.",
+      body: `<p>Modern food packaging uses multilayer structures combining polyethylene (PE), polyamide (PA), and paper layers to achieve barrier properties. A study analysed multilayer flexible film for chilled meat with FU: <em>"packaging protecting 1 kg of chilled food for 14 days."</em></p>
+      <p>Key findings: for <strong>GWP</strong>, raw material production dominates (48%), with plastic layers as the main contributor. For <strong>eutrophication</strong>, the paper layer from paper mills is dominant. For <strong>water use</strong>, the paper/pulping process leads. For <strong>fossil resource depletion</strong>, PE and PA layers from petrochemical feedstocks dominate.</p>
+      <p>Because the multilayer structure makes recycling technically difficult, most packaging ends up incinerated — meaning no significant EoL credit from material recycling. This illustrates the key LCA principle: <em>the environmental hotspot depends on which impact category is examined</em>, making multi-category assessment essential.</p>`
     },
     questions: [
       {
@@ -1418,7 +1282,7 @@ const EXAMS = [
           { letter: "D", text: "EPBT depends on local solar irradiation — the same system in southern Europe has shorter EPBT than in northern Europe" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. EPBT = energy invested in lifecycle / annual primary energy output.", B: "False. EPBT is an energy metric; GWP/kWh additionally depends on the carbon intensity of the manufacturing grid, not just the energy quantity.", C: "Correct. Modern c-Si PV achieves EPBT 1–3 years depending on irradiation and grid mix.", D: "Correct. Higher irradiation means more kWh/year, amortising fixed manufacturing energy faster." }
+        fb: { A: "Correct. EPBT = energy invested in lifecycle / annual primary energy output.", B: "False. EPBT is an energy metric; GWP/kWh additionally depends on the carbon intensity of the manufacturing grid.", C: "Correct. Modern c-Si PV achieves EPBT 1–3 years depending on irradiation and grid mix.", D: "Correct. Higher irradiation means more kWh/year, amortising fixed manufacturing energy faster." }
       },
       {
         stem: "In the multilayer food packaging LCA, the hotspot for eutrophication differs from the hotspot for GWP. This illustrates which principles?",
@@ -1429,7 +1293,7 @@ const EXAMS = [
           { letter: "D", text: "ISO 14044 requires that all 16 EF categories be evaluated in every LCA study" }
         ],
         answers: { A: true, B: true, C: false, D: false },
-        fb: { A: "Correct. Relying on GWP alone would identify plastics as the main concern, missing the eutrophication burden from the paper layer.", B: "Correct. Multi-category LCA reveals the full environmental profile invisible in single-indicator approaches.", C: "False. The FU affects all results proportionally — it does not change which category has the highest relative contribution from a specific process.", D: "False. ISO 14044 does not mandate a specific set of categories; selection is based on the goal and scope." }
+        fb: { A: "Correct. Relying on GWP alone would miss the eutrophication burden from the paper layer.", B: "Correct. Multi-category LCA reveals the full environmental profile.", C: "False. The FU affects all results proportionally — it does not change relative contributions.", D: "False. ISO 14044 does not mandate a specific set of categories." }
       },
       {
         stem: "Regarding freshwater eutrophication as an LCA impact category, which statements are true?",
@@ -1440,7 +1304,7 @@ const EXAMS = [
           { letter: "D", text: "Pulping effluents from paper production can contribute to freshwater eutrophication" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. In freshwater ecosystems, phosphorus is the limiting nutrient — excess P triggers algal blooms.", B: "Correct. Both ReCiPe and CML express freshwater eutrophication in kg P-eq.", C: "False. Marine eutrophication is driven by nitrogen (limiting nutrient in marine systems); freshwater eutrophication by phosphorus.", D: "Correct. Pulping effluents can contain phosphorus compounds contributing to freshwater eutrophication." }
+        fb: { A: "Correct. In freshwater ecosystems, phosphorus is the limiting nutrient.", B: "Correct. Both ReCiPe and CML express freshwater eutrophication in kg P-eq.", C: "False. Marine eutrophication is driven by nitrogen; freshwater eutrophication by phosphorus.", D: "Correct. Pulping effluents can contain phosphorus compounds contributing to freshwater eutrophication." }
       },
       {
         stem: "In LCA, the 'classification' step of LCIA involves:",
@@ -1451,7 +1315,7 @@ const EXAMS = [
           { letter: "D", text: "Classification and characterisation are both mandatory steps of LCIA according to ISO 14044" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. Classification assigns flows to categories — e.g., CO₂ → climate change, SO₂ → acidification AND particulate matter.", B: "False. Multiplying by characterisation factors is characterisation, not classification.", C: "Correct. SO₂ contributes to acidification (sulphuric acid deposition) and particulate matter (secondary PM2.5 formation).", D: "Correct. Classification and characterisation are mandatory; normalisation, grouping, and weighting are optional." }
+        fb: { A: "Correct. Classification assigns flows to categories.", B: "False. Multiplying by characterisation factors is characterisation, not classification.", C: "Correct. SO₂ contributes to acidification and particulate matter formation.", D: "Correct. Classification and characterisation are mandatory; normalisation, grouping, and weighting are optional." }
       },
       {
         stem: "Regarding the ISO 14044 critical review requirements, which statements are true?",
@@ -1462,7 +1326,7 @@ const EXAMS = [
           { letter: "D", text: "The purpose of critical review is to verify that the LCA methodology is consistent with ISO 14044 and results are scientifically credible" }
         ],
         answers: { A: false, B: true, C: true, D: true },
-        fb: { A: "False. Critical review is recommended but not mandatory for all studies — only mandatory for comparative assertions intended for public disclosure.", B: "Correct. ISO 14044 requires a panel review with independent experts for publicly disclosed comparative assertions.", C: "Correct. An internal review by an uninvolved expert is the minimum review type.", D: "Correct. The review verifies methodological compliance, data quality, consistency, and transparency." }
+        fb: { A: "False. Critical review is recommended but not mandatory for all studies.", B: "Correct. ISO 14044 requires a panel review with independent experts for publicly disclosed comparative assertions.", C: "Correct. An internal review by an uninvolved expert is the minimum review type.", D: "Correct. The review verifies methodological compliance, data quality, consistency, and transparency." }
       },
       {
         stem: "Regarding EoL of multilayer packaging in LCA, which statements are true?",
@@ -1484,7 +1348,7 @@ const EXAMS = [
           { letter: "D", text: "Uncertainty analysis is mandatory under ISO 14044 for all LCA studies" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. Sensitivity analysis explores 'what if?' scenarios — varying parameters to see how conclusions change.", B: "Correct. Monte Carlo propagates statistical input uncertainty to output distributions.", C: "Correct. Testing cut-off vs system expansion is a classic sensitivity analysis.", D: "False. Uncertainty analysis is recommended but not mandatory under ISO 14044." }
+        fb: { A: "Correct. Sensitivity analysis explores 'what if?' scenarios.", B: "Correct. Monte Carlo propagates statistical input uncertainty to output distributions.", C: "Correct. Testing cut-off vs system expansion is a classic sensitivity analysis.", D: "False. Uncertainty analysis is recommended but not mandatory under ISO 14044." }
       },
       {
         stem: "Regarding life cycle stages of a rooftop PV system, which statements are true?",
@@ -1495,7 +1359,7 @@ const EXAMS = [
           { letter: "D", text: "The GWP per kWh of PV electricity increases as the system ages because panels degrade" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. PV panels convert sunlight to electricity with no combustion or direct emissions.", B: "Correct. Inverters typically last 10–15 years; replacement within a 25-year lifetime is an inventory flow that must be included.", C: "Correct. CdTe panels and older c-Si panels with lead-based solders contain hazardous substances requiring careful EoL management.", D: "False. GWP/kWh = total lifetime GWP / total lifetime electricity. Panel degradation reduces annual output slightly but adds no GHG emissions — the ratio stays approximately constant." }
+        fb: { A: "Correct. PV panels convert sunlight to electricity with no combustion or direct emissions.", B: "Correct. Inverters typically last 10–15 years; replacement within a 25-year lifetime must be included.", C: "Correct. CdTe panels and older c-Si panels with lead-based solders contain hazardous substances.", D: "False. Panel degradation reduces annual output slightly but adds no GHG emissions — GWP/kWh stays approximately constant." }
       },
       {
         stem: "In the manufacturing of PV systems, why does the electricity grid mix used in silicon purification strongly affect the GWP of PV electricity?",
@@ -1506,7 +1370,7 @@ const EXAMS = [
           { letter: "D", text: "A PV system manufactured with 100% renewable electricity would have near-zero GWP per kWh" }
         ],
         answers: { A: false, B: true, C: true, D: true },
-        fb: { A: "False. PV modules produce electricity during operation — they do not consume it.", B: "Correct. Siemens process for silicon purification consumes ~100–200 kWh/kg Si; a coal grid makes this very carbon-intensive.", C: "Correct. With zero operational emissions, all GWP comes from manufacturing, transport, and EoL.", D: "Correct. With renewable manufacturing electricity, embodied carbon in silicon and metals approaches near-zero." }
+        fb: { A: "False. PV modules produce electricity during operation — they do not consume it.", B: "Correct. Siemens process for silicon purification consumes ~100–200 kWh/kg Si; a coal grid makes this very carbon-intensive.", C: "Correct. With zero operational emissions, all GWP comes from manufacturing, transport, and EoL.", D: "Correct. With renewable manufacturing electricity, embodied carbon approaches near-zero." }
       }
     ]
   },
@@ -1541,16 +1405,16 @@ const EXAMS = [
         <line x1="68" y1="58" x2="72" y2="58" stroke="#999" stroke-width="1"/>
         <text x="280" y="186" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666">kg CO₂-eq / m² floor area — illustrative values</text>
       </svg>`,
-      figureCaption: "Figure 1 – GWP comparison of reinforced concrete (RC) and cross-laminated timber (CLT) per m² of floor area. A1-A3 = production only; A1-C4 = cradle-to-grave.",
-      body: `<p>The construction sector accounts for approximately 38% of global CO₂ emissions. A study compared a reinforced concrete (RC) and a cross-laminated timber (CLT) structural frame for a 6-storey office building, FU: <em>"structural system providing 1 m² of usable floor area for 50 years."</em></p>
-      <p><strong>Reinforced Concrete (RC):</strong> cement production (clinker calcination) and steel reinforcement are the dominant GWP contributors. High embodied carbon but excellent durability and fire resistance.</p>
+      figureCaption: "Figure 1 – GWP comparison of reinforced concrete (RC) and cross-laminated timber (CLT) per m² of floor area.",
+      body: `<p>A study compared a reinforced concrete (RC) and a cross-laminated timber (CLT) structural frame for a 6-storey office building. FU: <em>"structural system providing 1 m² of usable floor area for 50 years."</em></p>
+      <p><strong>Reinforced Concrete (RC):</strong> cement production (clinker calcination) and steel reinforcement are the dominant GWP contributors.</p>
       <p><strong>Cross-Laminated Timber (CLT)</strong> has three distinct carbon characteristics in LCA:</p>
       <ul>
-        <li><strong>Biogenic carbon sequestration:</strong> under EN 15804+A2, CO₂ absorbed during tree growth is recorded as a negative emission in A1 (−1 kg CO₂-eq/kg CO₂ sequestered) and released at EoL (+1 kg CO₂-eq).</li>
+        <li><strong>Biogenic carbon sequestration:</strong> under EN 15804+A2, CO₂ absorbed during tree growth is recorded as a negative emission in A1 and released at EoL.</li>
         <li><strong>Substitution benefit:</strong> replaces high-emission concrete and steel.</li>
         <li><strong>EoL uncertainty:</strong> if timber is incinerated at EoL, the sequestered carbon is released and the net biogenic benefit over the lifecycle is approximately zero.</li>
       </ul>
-      <p>CLT shows significantly lower GWP in production (A1-A3). The cradle-to-grave advantage depends critically on the EoL scenario for biogenic carbon.</p>`,
+      <p>CLT shows significantly lower GWP in production (A1-A3). The cradle-to-grave advantage depends critically on the EoL scenario for biogenic carbon.</p>`
     },
     caseB: {
       label: "CASE STUDY B",
@@ -1559,20 +1423,16 @@ const EXAMS = [
         <rect width="560" height="185" fill="white"/>
         <text x="280" y="15" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c" font-weight="bold">WWTP Process Chain and Key Environmental Flows</text>
         <rect x="15" y="28" width="75" height="38" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="52" y="44" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Preliminary</text>
-        <text x="52" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">treatment</text>
+        <text x="52" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Preliminary treatment</text>
         <line x1="90" y1="47" x2="110" y2="47" stroke="#1a3a5c" stroke-width="1" marker-end="url(#aw5)"/>
         <rect x="110" y="28" width="75" height="38" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="147" y="44" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Biological</text>
-        <text x="147" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">treatment</text>
+        <text x="147" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Biological treatment</text>
         <line x1="185" y1="47" x2="205" y2="47" stroke="#1a3a5c" stroke-width="1" marker-end="url(#aw5)"/>
         <rect x="205" y="28" width="75" height="38" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="242" y="44" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Sludge</text>
-        <text x="242" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">digestion</text>
+        <text x="242" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Sludge digestion</text>
         <line x1="280" y1="47" x2="300" y2="47" stroke="#1a3a5c" stroke-width="1" marker-end="url(#aw5)"/>
         <rect x="300" y="28" width="75" height="38" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1.5"/>
-        <text x="337" y="44" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">CHP /</text>
-        <text x="337" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Biogas</text>
+        <text x="337" y="47" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">CHP / Biogas</text>
         <line x1="147" y1="28" x2="147" y2="15" stroke="#c0392b" stroke-width="1" stroke-dasharray="3,2"/>
         <text x="160" y="13" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">N₂O, CH₄ direct emissions</text>
         <line x1="337" y1="28" x2="337" y2="15" stroke="#2d6a4f" stroke-width="1" stroke-dasharray="3,2"/>
@@ -1581,20 +1441,19 @@ const EXAMS = [
         <text x="280" y="106" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#856404" font-weight="bold">FU: treatment of 1 m³ of municipal wastewater to EU discharge standards</text>
         <text x="280" y="120" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">Key: aeration energy (GWP) vs N₂O from biological treatment (GWP100=265)</text>
         <text x="280" y="134" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">System expansion: biogas CHP provides credit for avoided grid electricity</text>
-        <text x="280" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666" font-style="italic">Energy-positive WWTPs (biogas &gt; consumption) can achieve net negative GWP in energy category</text>
+        <text x="280" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666" font-style="italic">Energy-positive WWTPs (biogas > consumption) can achieve net negative GWP in energy category</text>
         <defs><marker id="aw5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#1a3a5c"/></marker></defs>
       </svg>`,
-      figureCaption: "Figure 2 – WWTP process chain with key environmental flows. Direct N₂O (GWP=265) from biological treatment and biogas-to-CHP credit via system expansion are the most critical LCA parameters.",
-      body: `<p>Municipal wastewater treatment plants (WWTPs) provide an essential environmental service — removing nutrients and organic matter to protect receiving water bodies — but are also significant energy consumers and GHG emitters.</p>
-      <p>A study compared a conventional activated sludge WWTP with an advanced plant incorporating enhanced nutrient removal and biogas-to-CHP. FU: <strong>"treatment of 1 m³ of municipal wastewater to EU urban wastewater directive discharge standards."</strong></p>
+      figureCaption: "Figure 2 – WWTP process chain with key environmental flows.",
+      body: `<p>A study compared a conventional activated sludge WWTP with an advanced plant incorporating enhanced nutrient removal and biogas-to-CHP. FU: <strong>"treatment of 1 m³ of municipal wastewater to EU urban wastewater directive discharge standards."</strong></p>
       <p>Key environmental flows:</p>
       <ul>
         <li><strong>Electricity consumption:</strong> aeration accounts for ~60% of plant electricity — the main GWP contributor via grid electricity.</li>
         <li><strong>Direct N₂O emissions:</strong> from nitrification/denitrification in biological treatment. GWP₁₀₀ = 265. Even small N₂O emissions can dominate the climate impact of the entire plant.</li>
         <li><strong>Biogas:</strong> anaerobic sludge digestion produces biogas (CH₄ + CO₂). Converted to electricity and heat via CHP, it avoids grid electricity — a credit applied through system expansion.</li>
-        <li><strong>Sludge land application:</strong> can contribute to eutrophication (P, N leaching) but provides a nutrient recycling benefit (avoided fertiliser production under system expansion).</li>
+        <li><strong>Sludge land application:</strong> can contribute to eutrophication (P, N leaching) but provides a nutrient recycling benefit.</li>
       </ul>
-      <p>Energy-positive WWTPs — producing more energy from biogas than they consume — are achievable and show significantly improved LCA performance.</p>`,
+      <p>Energy-positive WWTPs — producing more energy from biogas than they consume — are achievable and show significantly improved LCA performance.</p>`
     },
     questions: [
       {
@@ -1606,7 +1465,7 @@ const EXAMS = [
           { letter: "D", text: "Biogenic carbon sequestration means CLT always has lower GWP than RC on a cradle-to-grave basis" }
         ],
         answers: { A: true, B: false, C: true, D: false },
-        fb: { A: "Correct. EN 15804+A2 requires biogenic carbon accounting: uptake in A1 as −1 kg CO₂-eq per kg CO₂ sequestered.", B: "False. The biogenic benefit depends entirely on EoL — if timber is incinerated, the CO₂ is released and the net biogenic benefit is zero.", C: "Correct. Uptake (−CO₂) in A1 and release (+CO₂) at EoL cancel out to approximately zero net biogenic GWP.", D: "False. Whether CLT has lower GWP than RC on a cradle-to-grave basis depends on EoL scenario, design, and how biogenic carbon is accounted." }
+        fb: { A: "Correct. EN 15804+A2 requires biogenic carbon accounting: uptake in A1 as −1 kg CO₂-eq per kg CO₂ sequestered.", B: "False. The biogenic benefit depends entirely on EoL — if timber is incinerated, the CO₂ is released and the net biogenic benefit is zero.", C: "Correct. Uptake (−CO₂) in A1 and release (+CO₂) at EoL cancel out to approximately zero net biogenic GWP.", D: "False. Whether CLT has lower GWP than RC on a cradle-to-grave basis depends on EoL scenario and how biogenic carbon is accounted." }
       },
       {
         stem: "In the WWTP LCA, direct N₂O emissions from biological treatment are important because:",
@@ -1617,7 +1476,7 @@ const EXAMS = [
           { letter: "D", text: "Reducing aeration intensity always eliminates N₂O emissions in the biological treatment stage" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. GWP₁₀₀(N₂O)=265 means 1 kg N₂O = 265 kg CO₂-eq — a small fugitive emission has disproportionate climate impact.", B: "Correct. Incomplete nitrification/denitrification under certain oxygen conditions is the main N₂O source in WWTPs.", C: "Correct. N₂O released from aeration basins directly to atmosphere is a classic elementary flow in WWTP LCA.", D: "False. Reducing aeration can actually increase N₂O production under certain dissolved oxygen conditions." }
+        fb: { A: "Correct. GWP₁₀₀(N₂O)=265 means 1 kg N₂O = 265 kg CO₂-eq.", B: "Correct. Incomplete nitrification/denitrification is the main N₂O source in WWTPs.", C: "Correct. N₂O released from aeration basins directly to atmosphere is a classic elementary flow.", D: "False. Reducing aeration can actually increase N₂O production under certain dissolved oxygen conditions." }
       },
       {
         stem: "In the WWTP LCA, biogas converted to electricity via CHP is handled through system expansion. Which statements are true?",
@@ -1639,7 +1498,7 @@ const EXAMS = [
           { letter: "D", text: "Embodied carbon is always larger than operational carbon for all building types" }
         ],
         answers: { A: true, B: false, C: true, D: false },
-        fb: { A: "Correct. Embodied carbon = GHG from all physical material flows (A1-A3, A4-A5, B2-B5, C1-C4) excluding operational energy (B6).", B: "False. Embodied carbon is an LCA concept about cumulative GHG emissions, not a physical description of CO₂ within crystal structures.", C: "Correct. As operational emissions approach zero in NZEB buildings, embodied carbon's relative share increases — sometimes 50–80% of lifecycle GWP.", D: "False. For poorly insulated buildings, operational carbon dominates; for NZEB, embodied carbon dominates." }
+        fb: { A: "Correct. Embodied carbon = GHG from all physical material flows (A1-A3, A4-A5, B2-B5, C1-C4) excluding operational energy (B6).", B: "False. Embodied carbon is an LCA concept about cumulative GHG emissions, not a physical description.", C: "Correct. As operational emissions approach zero in NZEB buildings, embodied carbon's relative share increases.", D: "False. For poorly insulated buildings, operational carbon dominates; for NZEB, embodied carbon dominates." }
       },
       {
         stem: "In LCA, which statements about system boundary definition are true?",
@@ -1661,7 +1520,7 @@ const EXAMS = [
           { letter: "D", text: "The choice of sludge management route is a key sensitivity parameter in WWTP LCA" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. Phosphorus and nitrogen in sludge can leach into water bodies, contributing to eutrophication.", B: "Correct. System expansion credits avoided mineral fertiliser production (Haber-Bosch nitrogen, phosphate mining).", C: "False. Sludge incineration eliminates eutrophication risk but generates GHG emissions, air pollutants, and ash. It shifts impacts, not eliminates them.", D: "Correct. Sludge EoL is one of the most influential methodological choices in WWTP LCA." }
+        fb: { A: "Correct. Phosphorus and nitrogen in sludge can leach into water bodies.", B: "Correct. System expansion credits avoided mineral fertiliser production.", C: "False. Sludge incineration eliminates eutrophication risk but generates GHG emissions and air pollutants — it shifts impacts.", D: "Correct. Sludge EoL is one of the most influential methodological choices in WWTP LCA." }
       },
       {
         stem: "The substitution approach (system expansion) in LCA of multi-output systems:",
@@ -1672,7 +1531,7 @@ const EXAMS = [
           { letter: "D", text: "The choice of the substituted product has no influence on results" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. System expansion adds the displaced product's production to the boundary so its impacts can be subtracted.", B: "Correct. Net impact = system impacts MINUS avoided product impacts — can yield net negative results in some categories.", C: "Correct. ISO 14044 hierarchy places system expansion above both physical and economic allocation.", D: "False. The choice of substituted product is critical and one of the largest sources of variability in system expansion." }
+        fb: { A: "Correct. System expansion adds the displaced product's production to the boundary so its impacts can be subtracted.", B: "Correct. Net impact = system impacts MINUS avoided product impacts.", C: "Correct. ISO 14044 hierarchy places system expansion above both physical and economic allocation.", D: "False. The choice of substituted product is critical and one of the largest sources of variability in system expansion." }
       },
       {
         stem: "In a cradle-to-grave LCA of a CLT office building (50-year lifetime), which phases typically contribute most to total GWP?",
@@ -1683,7 +1542,7 @@ const EXAMS = [
           { letter: "D", text: "End-of-life (C1-C4) is typically the smallest contributor to total GWP in building LCA" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. For highly energy-efficient buildings, embodied carbon (A1-A3) can represent 50–80% of lifecycle GWP.", B: "False. For conventional buildings, B6 dominates; for NZEB, A1-A3 dominates. The statement is too absolute.", C: "Correct. Improving energy efficiency reduces B6 while A1-A3 stays roughly constant — increasing its relative share.", D: "Correct. EoL typically contributes only 5–15% of total building GWP." }
+        fb: { A: "Correct. For highly energy-efficient buildings, embodied carbon (A1-A3) can represent 50–80% of lifecycle GWP.", B: "False. For conventional buildings B6 dominates; for NZEB, A1-A3 dominates.", C: "Correct. Improving energy efficiency reduces B6 while A1-A3 stays roughly constant.", D: "Correct. EoL typically contributes only 5–15% of total building GWP." }
       },
       {
         stem: "Regarding the functional unit '1 m² of floor area for 50 years' for the RC vs CLT comparison, which statements are true?",
@@ -1694,12 +1553,12 @@ const EXAMS = [
           { letter: "D", text: "If CLT requires more material volume per m² than RC, this must be reflected in the reference flow" }
         ],
         answers: { A: false, B: true, C: true, D: true },
-        fb: { A: "False. The FU establishes the function but does not guarantee equivalence — fire resistance and structural performance differ and may require additional compensating measures.", B: "Correct. Different materials require different quantities per m² to achieve the same structural function.", C: "Correct. 1 kg of structural material ignores the actual function — CLT and RC have very different structural efficiency per kg.", D: "Correct. If CLT requires more volume, the reference flow in kg or m³ will differ accordingly." }
+        fb: { A: "False. The FU establishes the function but does not guarantee equivalence — fire resistance and structural performance may require additional compensating measures.", B: "Correct. Different materials require different quantities per m² to achieve the same structural function.", C: "Correct. 1 kg of structural material ignores the actual function.", D: "Correct. If CLT requires more volume, the reference flow in kg or m³ will differ accordingly." }
       }
     ]
   },
   {
-    id: 7,
+    id: 6,
     title: "Printed Circuit Boards & Paper Production",
     topics: "E-waste LCA · Toxicity · Kraft paper · Biogenic carbon · Co-products",
     caseA: {
@@ -1728,11 +1587,11 @@ const EXAMS = [
         <text x="280" y="160" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#666" font-style="italic">Key insight: dominant hotspot differs by impact category</text>
         <text x="280" y="174" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666">Electricity dominates GWP; lead dominates Human Toxicity</text>
       </svg>`,
-      figureCaption: "Figure 1 – GWP vs Human Toxicity (CTUh) hotspots in PCB production. Electricity dominates GWP; lead in solder dominates Human Toxicity — confirming the need for multi-category LCIA.",
+      figureCaption: "Figure 1 – GWP vs Human Toxicity (CTUh) hotspots in PCB production.",
       body: `<p>Printed Circuit Boards (PCBs) are the foundation of all modern electronics. Despite small mass, PCBs have a disproportionately large footprint per unit mass due to complex materials and energy-intensive manufacturing.</p>
       <p>Key components: <strong>FR4 substrate</strong> (fibreglass-epoxy with brominated flame retardants), <strong>copper layers</strong> (energy-intensive mining and refining), <strong>solder</strong> (tin-lead historically; EU RoHS 2002 restricted lead, driving a shift to lead-free Sn-Ag-Cu with lower toxicity but higher GWP due to silver), and <strong>electronic components</strong>.</p>
-      <p>LCA results differ dramatically between categories. For <strong>GWP</strong>, manufacturing electricity dominates; for <strong>human toxicity</strong>, lead (even in residual amounts) dominates due to its very high characterisation factor in USEtox — persistent, bioaccumulative, neurologically toxic at very low concentrations.</p>
-      <p>End-of-Life is critical: informal e-waste recycling by open burning releases brominated dioxins, furans, lead, and cadmium — highly toxic elementary flows creating human toxicity impacts far exceeding formal recycling scenarios.</p>`,
+      <p>LCA results differ dramatically between categories. For <strong>GWP</strong>, manufacturing electricity dominates; for <strong>human toxicity</strong>, lead dominates due to its very high characterisation factor in USEtox — persistent, bioaccumulative, neurologically toxic at very low concentrations.</p>
+      <p>End-of-Life is critical: informal e-waste recycling by open burning releases brominated dioxins, furans, lead, and cadmium — highly toxic elementary flows creating human toxicity impacts far exceeding formal recycling scenarios.</p>`
     },
     caseB: {
       label: "CASE STUDY B",
@@ -1743,25 +1602,21 @@ const EXAMS = [
         <rect x="10" y="22" width="540" height="110" rx="3" fill="none" stroke="#2d6a4f" stroke-width="1.5" stroke-dasharray="5,3"/>
         <text x="20" y="34" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Cradle-to-gate (mill gate)</text>
         <rect x="20" y="40" width="70" height="38" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1"/>
-        <text x="55" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Forest</text>
-        <text x="55" y="68" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">mgmt.</text>
+        <text x="55" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Forest mgmt.</text>
         <line x1="55" y1="40" x2="55" y2="28" stroke="#2d6a4f" stroke-width="1" stroke-dasharray="2,2"/>
         <text x="62" y="27" font-family="JetBrains Mono, monospace" font-size="7" fill="#2d6a4f">-CO₂</text>
         <line x1="90" y1="59" x2="110" y2="59" stroke="#2d6a4f" stroke-width="1" marker-end="url(#ap6)"/>
         <rect x="110" y="40" width="70" height="38" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="145" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Kraft</text>
-        <text x="145" y="68" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">pulping</text>
+        <text x="145" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Kraft pulping</text>
         <line x1="180" y1="59" x2="200" y2="59" stroke="#1a3a5c" stroke-width="1" marker-end="url(#ap6)"/>
         <rect x="200" y="40" width="70" height="38" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="235" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Bleaching</text>
+        <text x="235" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Bleaching</text>
         <line x1="270" y1="59" x2="290" y2="59" stroke="#1a3a5c" stroke-width="1" marker-end="url(#ap6)"/>
         <rect x="290" y="40" width="70" height="38" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1"/>
-        <text x="325" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Paper</text>
-        <text x="325" y="68" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">machine</text>
+        <text x="325" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Paper machine</text>
         <line x1="360" y1="59" x2="380" y2="59" stroke="#1a3a5c" stroke-width="1" marker-end="url(#ap6)"/>
         <rect x="380" y="40" width="70" height="38" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1.5"/>
-        <text x="415" y="56" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Paper</text>
-        <text x="415" y="68" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">(product)</text>
+        <text x="415" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Paper (product)</text>
         <text x="145" y="90" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#856404">Black liquor → energy credit</text>
         <line x1="145" y1="78" x2="145" y2="88" stroke="#856404" stroke-width="1" stroke-dasharray="2,2"/>
         <rect x="10" y="142" width="540" height="32" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1"/>
@@ -1769,11 +1624,11 @@ const EXAMS = [
         <text x="280" y="168" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Choice of allocation method significantly affects reported GWP of paper</text>
         <defs><marker id="ap6" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#1a3a5c"/></marker></defs>
       </svg>`,
-      figureCaption: "Figure 2 – Kraft paper production chain from forest to mill gate. Black liquor, tall oil, and bark are co-products requiring allocation decisions that significantly affect the reported GWP of paper.",
-      body: `<p>Paper and paperboard production involves complex environmental interactions. The dominant process for virgin fibre paper is <strong>kraft (sulphate) pulping</strong>: wood chips are cooked with sodium hydroxide and sodium sulphide to dissolve lignin and separate cellulose fibres. The FU was: <strong>"1 tonne of uncoated fine paper (80 g/m²) at mill gate."</strong></p>
-      <p>Key co-products requiring allocation: <strong>black liquor</strong> (combusted in the recovery boiler for energy — makes mills partially self-sufficient), <strong>tall oil</strong> (chemical feedstock), and <strong>bark</strong> (biomass fuel). Choices between mass, energy, and economic allocation can significantly affect reported paper GWP.</p>
-      <p><strong>Forest carbon</strong> complexity: sustainably managed forests maintaining constant carbon stock can be considered carbon-neutral for harvested biomass. If forest carbon stocks decline, a net carbon debt exists. FSC/PEFC certification does not automatically guarantee carbon neutrality.</p>
-      <p>At end-of-life, paper can be recycled (reducing virgin fibre demand), composted (releasing CO₂), or landfilled (potentially sequestering biogenic carbon in anaerobic conditions for long periods). These EoL scenarios produce very different LCA results.</p>`,
+      figureCaption: "Figure 2 – Kraft paper production chain from forest to mill gate.",
+      body: `<p>The dominant process for virgin fibre paper is <strong>kraft (sulphate) pulping</strong>. The FU was: <strong>"1 tonne of uncoated fine paper (80 g/m²) at mill gate."</strong></p>
+      <p>Key co-products requiring allocation: <strong>black liquor</strong> (combusted in the recovery boiler for energy), <strong>tall oil</strong> (chemical feedstock), and <strong>bark</strong> (biomass fuel). Choices between mass, energy, and economic allocation can significantly affect reported paper GWP.</p>
+      <p><strong>Forest carbon</strong> complexity: sustainably managed forests maintaining constant carbon stock can be considered carbon-neutral for harvested biomass. FSC/PEFC certification does not automatically guarantee carbon neutrality.</p>
+      <p>At end-of-life, paper can be recycled, composted, or landfilled (potentially sequestering biogenic carbon in anaerobic conditions for long periods).</p>`
     },
     questions: [
       {
@@ -1785,7 +1640,7 @@ const EXAMS = [
           { letter: "D", text: "USEtox characterisation factors for lead are high because lead is persistent, bioaccumulative, and toxic at low concentrations" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. Relying on GWP alone misses the toxicity burden of lead — the dominant health concern for electronics.", B: "False. For electronics, human toxicity and ecotoxicity from metals are often the most significant categories.", C: "Correct. Multi-category LCA reveals the full profile and avoids problem-shifting.", D: "Correct. Lead persists in the environment, bioaccumulates, and causes neurological damage at very low exposure levels." }
+        fb: { A: "Correct. Relying on GWP alone misses the toxicity burden of lead.", B: "False. For electronics, human toxicity and ecotoxicity from metals are often the most significant categories.", C: "Correct. Multi-category LCA reveals the full profile and avoids problem-shifting.", D: "Correct. Lead persists in the environment, bioaccumulates, and causes neurological damage at very low exposure levels." }
       },
       {
         stem: "Regarding the shift from tin-lead to lead-free solder (RoHS directive), which LCA statements are true?",
@@ -1807,7 +1662,7 @@ const EXAMS = [
           { letter: "D", text: "Ignore black liquor as an internal energy flow with no environmental relevance to the final paper product" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. System expansion (ISO 14044 first preference) — avoided fossil electricity is included and subtracted.", B: "Correct. Energy content allocation is a valid physical allocation method (ISO 14044 second preference).", C: "Correct. Subdivision into sub-processes avoids allocation entirely — ISO 14044 first preference.", D: "False. Black liquor has significant economic and energy value — it is a genuine co-product requiring explicit allocation or system expansion." }
+        fb: { A: "Correct. System expansion (ISO 14044 first preference) — avoided fossil electricity is included and subtracted.", B: "Correct. Energy content allocation is a valid physical allocation method.", C: "Correct. Subdivision into sub-processes avoids allocation entirely — ISO 14044 first preference.", D: "False. Black liquor has significant economic and energy value — it is a genuine co-product requiring explicit allocation or system expansion." }
       },
       {
         stem: "Regarding forest carbon accounting in paper LCA, which statements are true?",
@@ -1818,7 +1673,7 @@ const EXAMS = [
           { letter: "D", text: "Paper landfilled in anaerobic conditions may sequester biogenic carbon for decades, potentially resulting in net negative GWP at EoL" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. In a steady-state forest, growth = harvest — net biogenic contribution over time is zero.", B: "Correct. A declining forest carbon stock means more CO₂ is released than absorbed — the harvested biomass carries a net carbon debt.", C: "False. FSC/PEFC certifies management practices, NOT carbon neutrality. Carbon stock change must be assessed separately.", D: "Correct. Anaerobic landfill conditions can preserve cellulose from decomposition for decades — effectively long-term biogenic carbon storage." }
+        fb: { A: "Correct. In a steady-state forest, growth = harvest — net biogenic contribution over time is zero.", B: "Correct. A declining forest carbon stock means more CO₂ is released than absorbed.", C: "False. FSC/PEFC certifies management practices, NOT carbon neutrality.", D: "Correct. Anaerobic landfill conditions can preserve cellulose from decomposition for decades." }
       },
       {
         stem: "Informal e-waste recycling (burning PCBs) has dramatically higher human toxicity impacts than formal recycling because:",
@@ -1829,7 +1684,7 @@ const EXAMS = [
           { letter: "D", text: "Some LCIA methods use spatially differentiated characterisation factors that can account for different fate and exposure conditions" }
         ],
         answers: { A: true, B: false, C: true, D: true },
-        fb: { A: "Correct. Open burning releases brominated dioxins, furans, lead, and cadmium directly to air and soil with no abatement.", B: "False. Population density is not the mechanism in standard LCA — characterisation factors are based on fate, exposure, and effect modelling.", C: "Correct. Dioxins/furans have among the highest CTUh values in USEtox — tiny mass emissions produce enormous human toxicity impacts.", D: "Correct. Spatially differentiated LCIA methods can account for local fate, exposure, and effect differences." }
+        fb: { A: "Correct. Open burning releases brominated dioxins, furans, lead, and cadmium directly to air and soil with no abatement.", B: "False. Population density is not the mechanism in standard LCA.", C: "Correct. Dioxins/furans have among the highest CTUh values in USEtox.", D: "Correct. Spatially differentiated LCIA methods can account for local fate, exposure, and effect differences." }
       },
       {
         stem: "In ISO 14044, the Goal and Scope definition must include:",
@@ -1840,7 +1695,7 @@ const EXAMS = [
           { letter: "D", text: "The complete list of characterisation factors for all selected impact categories" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. Intended application and audience shape all subsequent methodological choices.", B: "Correct. FU and reference flow are fundamental mandatory elements.", C: "Correct. System boundary definition and cut-off criteria are mandatory scope elements.", D: "False. Characterisation factors are part of LCIA, not Goal and Scope. The scope specifies which method will be used, not the detailed CFs." }
+        fb: { A: "Correct. Intended application and audience shape all subsequent methodological choices.", B: "Correct. FU and reference flow are fundamental mandatory elements.", C: "Correct. System boundary definition and cut-off criteria are mandatory scope elements.", D: "False. Characterisation factors are part of LCIA, not Goal and Scope." }
       },
       {
         stem: "Regarding paper recycling and its LCA implications, which statements are true?",
@@ -1851,7 +1706,7 @@ const EXAMS = [
           { letter: "D", text: "Recycled paper always has lower GWP than virgin paper regardless of the electricity mix used in de-inking" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. Cellulose fibres shorten with each cycle — paper fibres are typically recycled 5–7 times.", B: "Correct. Under cut-off, recycled fibres are burden-free; the previous user bore the EoL burden.", C: "Correct. Kraft pulping is very water-intensive; recycled fibre production requires significantly less process water.", D: "False. If de-inking electricity comes from a carbon-intensive grid, recycled paper can have higher GWP than virgin paper made with renewables." }
+        fb: { A: "Correct. Cellulose fibres shorten with each cycle — paper fibres are typically recycled 5–7 times.", B: "Correct. Under cut-off, recycled fibres are burden-free.", C: "Correct. Kraft pulping is very water-intensive; recycled fibre production requires significantly less process water.", D: "False. If de-inking electricity comes from a carbon-intensive grid, recycled paper can have higher GWP than virgin paper made with renewables." }
       },
       {
         stem: "The characterisation factor (CF) for a substance in an impact category is correctly described as:",
@@ -1862,7 +1717,7 @@ const EXAMS = [
           { letter: "D", text: "Characterisation factors are fixed constants that never change as scientific understanding evolves" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. CFs are relative to a reference substance (CO₂ for GWP, SO₂ for AP) — enabling aggregation of heterogeneous emissions.", B: "Correct. CFs derive from atmospheric chemistry, ecosystem fate models, and epidemiology.", C: "Correct. GWP₁₀₀ = integrated radiative forcing of X over 100 years / that of CO₂ over 100 years.", D: "False. CFs are updated as science advances — IPCC revises GWP values with each Assessment Report; USEtox and ReCiPe are periodically updated." }
+        fb: { A: "Correct. CFs are relative to a reference substance (CO₂ for GWP, SO₂ for AP).", B: "Correct. CFs derive from atmospheric chemistry, ecosystem fate models, and epidemiology.", C: "Correct. GWP₁₀₀ = integrated radiative forcing of X over 100 years / that of CO₂ over 100 years.", D: "False. CFs are updated as science advances — IPCC revises GWP values with each Assessment Report." }
       },
       {
         stem: "In an LCA of a newspaper (including printing), the use phase is typically excluded. Which justification is correct?",
@@ -1873,7 +1728,7 @@ const EXAMS = [
           { letter: "D", text: "Excluding the use phase is consistent with a cradle-to-grave boundary where use-phase flows are zero" }
         ],
         answers: { A: true, B: true, C: false, D: false },
-        fb: { A: "Correct. Unlike electronics, reading a newspaper does not consume material or energy attributable to the product itself.", B: "Correct. Lighting for reading is part of the reader's general energy use — by ISO 14044 cut-off criteria, not attributed to the newspaper.", C: "False. ISO 14044 does not prohibit any phase — inclusion/exclusion is based on goal and scope and materiality.", D: "False. Excluding use-phase flows is consistent with cradle-to-grave where use flows are zero — not cradle-to-gate, which would also exclude EoL." }
+        fb: { A: "Correct. Unlike electronics, reading a newspaper does not consume material or energy attributable to the product itself.", B: "Correct. Lighting for reading is part of the reader's general energy use — not attributed to the newspaper.", C: "False. ISO 14044 does not prohibit any phase — inclusion/exclusion is based on goal and scope.", D: "False. Excluding use-phase flows is consistent with cradle-to-grave where use flows are zero — not cradle-to-gate." }
       }
     ]
   },
@@ -1891,34 +1746,30 @@ const EXAMS = [
         <line x1="70" y1="155" x2="530" y2="155" stroke="#999" stroke-width="1"/>
         <rect x="90" y="43" width="80" height="112" fill="#c0392b" opacity="0.85"/>
         <text x="130" y="38" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#c0392b">~11</text>
-        <text x="130" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Grey H₂</text>
-        <text x="130" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">(SMR, no CCS)</text>
+        <text x="130" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Grey H₂ (SMR, no CCS)</text>
         <rect x="210" y="95" width="80" height="60" fill="#856404" opacity="0.85"/>
         <text x="250" y="90" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#856404">~4</text>
-        <text x="250" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Blue H₂</text>
-        <text x="250" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">(SMR + CCS)</text>
+        <text x="250" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Blue H₂ (SMR + CCS)</text>
         <rect x="330" y="146" width="80" height="9" fill="#2e6da4"/>
         <text x="370" y="141" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#2e6da4">~0.9</text>
-        <text x="370" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Green H₂</text>
-        <text x="370" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">(electrolysis, wind)</text>
+        <text x="370" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Green H₂ (wind)</text>
         <rect x="450" y="149" width="60" height="6" fill="#2d6a4f"/>
         <text x="480" y="144" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#2d6a4f">~0.5</text>
-        <text x="480" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Green H₂</text>
-        <text x="480" y="180" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">(electrolysis, solar)</text>
+        <text x="480" y="170" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#555">Green H₂ (solar)</text>
         <text x="58" y="158" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">0</text>
         <text x="58" y="108" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">5</text>
         <text x="58" y="58" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="8" fill="#999">10</text>
         <line x1="68" y1="108" x2="72" y2="108" stroke="#999" stroke-width="1"/>
         <line x1="68" y1="58" x2="72" y2="58" stroke="#999" stroke-width="1"/>
       </svg>`,
-      figureCaption: "Figure 1 – GWP of hydrogen production routes. Grey H₂ (SMR, no CCS) has the highest GWP. Green H₂ from renewable electrolysis achieves near-zero GWP.",
-      body: `<p>Hydrogen is a key energy carrier for decarbonising hard-to-electrify sectors (steelmaking, long-haul transport, ammonia). Its environmental performance depends entirely on the production route. Three routes are classified by colour:</p>
+      figureCaption: "Figure 1 – GWP of hydrogen production routes.",
+      body: `<p>Hydrogen is a key energy carrier for decarbonising hard-to-electrify sectors. Its environmental performance depends entirely on the production route:</p>
       <ul>
-        <li><strong>Grey hydrogen:</strong> Steam Methane Reforming (SMR) of natural gas without CCS. Reaction: CH₄ + 2H₂O → CO₂ + 4H₂. GWP ≈ 9–12 kg CO₂-eq/kg H₂, driven by direct CO₂ and methane leakage (GWP₁₀₀ = 28).</li>
-        <li><strong>Blue hydrogen:</strong> SMR with CCS capturing 85–95% of CO₂. GWP ≈ 2–5 kg CO₂-eq/kg H₂. Methane leakage upstream is a critical parameter — even 1–2% leakage significantly increases GWP.</li>
-        <li><strong>Green hydrogen:</strong> electrolysis of water (H₂O → H₂ + ½O₂) powered by renewable electricity. GWP ≈ 0.5–2 kg CO₂-eq/kg H₂. With offshore wind (~10 g CO₂-eq/kWh), GWP reaches 0.5 kg CO₂-eq/kg H₂.</li>
+        <li><strong>Grey hydrogen:</strong> Steam Methane Reforming (SMR) of natural gas without CCS. GWP ≈ 9–12 kg CO₂-eq/kg H₂.</li>
+        <li><strong>Blue hydrogen:</strong> SMR with CCS capturing 85–95% of CO₂. GWP ≈ 2–5 kg CO₂-eq/kg H₂. Methane leakage upstream is a critical parameter.</li>
+        <li><strong>Green hydrogen:</strong> electrolysis of water (H₂O → H₂ + ½O₂) powered by renewable electricity. GWP ≈ 0.5–2 kg CO₂-eq/kg H₂.</li>
       </ul>
-      <p>Beyond GWP, green hydrogen LCA must account for <strong>platinum group metals (PGM)</strong> in PEM electrolysers — iridium and platinum contribute to mineral resource depletion. GWP alone gives a misleading picture: green hydrogen has low GWP but non-trivial impacts in mineral resource categories.</p>`,
+      <p>Beyond GWP, green hydrogen LCA must account for <strong>platinum group metals (PGM)</strong> in PEM electrolysers — iridium and platinum contribute to mineral resource depletion. GWP alone gives a misleading picture.</p>`
     },
     caseB: {
       label: "CASE STUDY B",
@@ -1927,37 +1778,32 @@ const EXAMS = [
         <rect width="560" height="190" fill="white"/>
         <text x="280" y="14" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1a3a5c" font-weight="bold">Plastic EoL Pathways — LCA Comparison</text>
         <rect x="10" y="22" width="125" height="140" rx="3" fill="#e8eff6" stroke="#1a3a5c" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <text x="72" y="36" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Mechanical</text>
-        <text x="72" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">recycling</text>
+        <text x="72" y="42" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#1a3a5c">Mechanical recycling</text>
         <text x="72" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#2d6a4f">→ secondary polymer</text>
         <text x="72" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#856404">downcycling (A &lt; 1)</text>
         <text x="72" y="130" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">Quality loss/cycle</text>
         <rect x="148" y="22" width="125" height="140" rx="3" fill="#d4edda" stroke="#2d6a4f" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <text x="210" y="36" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Chemical</text>
-        <text x="210" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">recycling</text>
+        <text x="210" y="42" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#2d6a4f">Chemical recycling</text>
         <text x="210" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#2d6a4f">→ monomers or oil</text>
         <text x="210" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#2d6a4f">closed-loop (A = 1)</text>
         <text x="210" y="130" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#2d6a4f">Higher energy input</text>
         <rect x="286" y="22" width="120" height="140" rx="3" fill="#fff3cd" stroke="#856404" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <text x="346" y="36" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">Energy</text>
-        <text x="346" y="48" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">recovery</text>
+        <text x="346" y="42" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#856404">Energy recovery</text>
         <text x="346" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#856404">→ avoided grid elec.</text>
         <text x="346" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#856404">(system expansion)</text>
         <text x="346" y="130" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">All C released as CO₂</text>
         <rect x="420" y="22" width="125" height="140" rx="3" fill="#fdecea" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <text x="482" y="36" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Landfill</text>
-        <text x="482" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">No material/</text>
-        <text x="482" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">energy credit</text>
-        <text x="482" y="130" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">Long-term</text>
-        <text x="482" y="142" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">leachate risk</text>
+        <text x="482" y="42" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#c0392b">Landfill</text>
+        <text x="482" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">No material/ energy credit</text>
+        <text x="482" y="130" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#c0392b">Long-term leachate risk</text>
         <text x="280" y="178" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#666" font-style="italic">Results depend on quality factor A, grid mix, and impact categories prioritised</text>
       </svg>`,
-      figureCaption: "Figure 2 – Four EoL pathways for post-consumer plastics in LCA. Mechanical recycling (downcycling, A < 1), chemical recycling (closed-loop potential, A = 1), energy recovery (incineration + CHP), and landfill.",
+      figureCaption: "Figure 2 – Four EoL pathways for post-consumer plastics in LCA.",
       body: `<p>About 400 million tonnes of plastic are produced annually, with only ~9% recycled globally. LCA is essential for comparing EoL pathways.</p>
-      <p><strong>Mechanical recycling:</strong> shredding, washing, re-pelletising into secondary polymer. Energy-efficient but results in <em>downcycling</em> — quality reduction factor A (0 ≤ A ≤ 1) reflects how much secondary material substitutes virgin. For post-consumer HDPE, A ≈ 0.8; for mixed contaminated plastics, A may be as low as 0.3.</p>
-      <p><strong>Chemical recycling</strong> (depolymerisation, pyrolysis): breaks polymers to monomers or chemical feedstocks. Can achieve A = 1 (closed-loop) but is more energy-intensive and at varying commercial maturity.</p>
+      <p><strong>Mechanical recycling:</strong> shredding, washing, re-pelletising into secondary polymer. Energy-efficient but results in <em>downcycling</em> — quality reduction factor A (0 ≤ A ≤ 1).</p>
+      <p><strong>Chemical recycling</strong> (depolymerisation, pyrolysis): breaks polymers to monomers or chemical feedstocks. Can achieve A = 1 (closed-loop) but is more energy-intensive.</p>
       <p><strong>Energy recovery</strong> (incineration with CHP): under system expansion, avoided grid electricity provides a credit. However, all carbon in plastic is released as CO₂.</p>
-      <p>The key LCA question — which pathway has lowest net environmental impact? — depends on the quality of secondary material, the electricity grid mix, and the impact categories prioritised.</p>`,
+      <p>The key LCA question — which pathway has lowest net environmental impact? — depends on the quality of secondary material, the electricity grid mix, and the impact categories prioritised.</p>`
     },
     questions: [
       {
@@ -1969,7 +1815,7 @@ const EXAMS = [
           { letter: "D", text: "Methane leakage rate is a key sensitivity parameter in blue hydrogen LCA" }
         ],
         answers: { A: true, B: true, C: false, D: true },
-        fb: { A: "Correct. CCS captures 85–95% of reformation CO₂, substantially reducing direct emissions.", B: "Correct. Even 1–2% methane leakage adds ~0.28–0.56 kg CO₂-eq/kg H₂ just from fugitive CH₄.", C: "False. With offshore wind or solar, green H₂ can reach 0.5–1 kg CO₂-eq/kg H₂ — lower than blue H₂ at 2–5 kg CO₂-eq/kg H₂.", D: "Correct. Methane leakage rate is the most critical uncertain parameter in blue H₂ LCA." }
+        fb: { A: "Correct. CCS captures 85–95% of reformation CO₂.", B: "Correct. Even 1–2% methane leakage adds ~0.28–0.56 kg CO₂-eq/kg H₂ just from fugitive CH₄.", C: "False. With offshore wind or solar, green H₂ can reach 0.5–1 kg CO₂-eq/kg H₂ — lower than blue H₂ at 2–5 kg CO₂-eq/kg H₂.", D: "Correct. Methane leakage rate is the most critical uncertain parameter in blue H₂ LCA." }
       },
       {
         stem: "In the LCA of green hydrogen from PEM electrolysis, which impact categories beyond GWP are significant?",
@@ -1980,7 +1826,7 @@ const EXAMS = [
           { letter: "D", text: "Green hydrogen has no environmental impacts beyond GWP because it uses renewable electricity" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. PEM electrolysers use iridium and platinum — critical raw materials with high mineral depletion impacts.", B: "Correct. Electrolysis stoichiometry requires ~9 kg water per kg H₂ — relevant in water-scarce regions.", C: "Correct. Large-scale solar PV occupies significant land area, contributing to the land use impact category.", D: "False. Mineral resource depletion (PGMs), water consumption, land use, and ecotoxicity from PGM mining are all relevant." }
+        fb: { A: "Correct. PEM electrolysers use iridium and platinum — critical raw materials with high mineral depletion impacts.", B: "Correct. Electrolysis stoichiometry requires ~9 kg water per kg H₂.", C: "Correct. Large-scale solar PV occupies significant land area.", D: "False. Mineral resource depletion, water consumption, land use, and ecotoxicity are all relevant." }
       },
       {
         stem: "In the open-loop recycling formula for plastic, the quality factor A (0 ≤ A ≤ 1) represents:",
@@ -1991,7 +1837,7 @@ const EXAMS = [
           { letter: "D", text: "Downcycling (A < 1) means secondary material only partially replaces virgin, reducing the environmental benefit" }
         ],
         answers: { A: false, B: true, C: true, D: true },
-        fb: { A: "False. The recycling rate R is the fraction actually recycled. A is the quality parameter, independent of the collection rate.", B: "Correct. A = 0.8 means the secondary material replaces 80% of the function that virgin material would provide.", C: "Correct. A = 1 implies the recycled material is functionally identical to virgin — true for aluminium, glass, and some depolymerisation routes.", D: "Correct. When A < 1, the credit for recycling is proportionally reduced — the environmental benefit is smaller than in closed-loop." }
+        fb: { A: "False. The recycling rate R is the fraction actually recycled. A is the quality parameter, independent of the collection rate.", B: "Correct. A = 0.8 means the secondary material replaces 80% of the function that virgin material would provide.", C: "Correct. A = 1 implies the recycled material is functionally identical to virgin.", D: "Correct. When A < 1, the credit for recycling is proportionally reduced." }
       },
       {
         stem: "In the SMR reaction for grey hydrogen (CH₄ + 2H₂O → CO₂ + 4H₂), which LCA statements are true?",
@@ -2013,7 +1859,7 @@ const EXAMS = [
           { letter: "D", text: "The comparison between the two EoL routes is independent of the carbon intensity of the electricity grid" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. System expansion credits incineration for avoided production of equivalent grid electricity.", B: "Correct. Secondary PET replaces virgin PET (saving ~3.4 kg CO₂-eq/kg) — generally greater than the electricity credit from incineration.", C: "Correct. As the grid decarbonises, the avoided-emission credit shrinks, shifting the balance toward recycling.", D: "False. Grid mix affects both routes — incineration through its energy credit, recycling through production energy. Grid mix is a critical sensitivity parameter." }
+        fb: { A: "Correct. System expansion credits incineration for avoided production of equivalent grid electricity.", B: "Correct. Secondary PET replaces virgin PET — generally greater benefit than the electricity credit from incineration.", C: "Correct. As the grid decarbonises, the avoided-emission credit shrinks, shifting the balance toward recycling.", D: "False. Grid mix affects both routes — it is a critical sensitivity parameter." }
       },
       {
         stem: "Regarding circular economy and LCA methodology, which statements are true?",
@@ -2024,7 +1870,7 @@ const EXAMS = [
           { letter: "D", text: "Extending product lifetime is always the most environmentally beneficial circular economy strategy for all product types" }
         ],
         answers: { A: true, B: false, C: true, D: false },
-        fb: { A: "Correct. LCA is a key tool for quantifying and comparing environmental performance of circular economy strategies.", B: "False. Standard attributional LCA does not automatically model circular loops — additional choices (open-loop allocation, system expansion) are needed.", C: "Correct. Under system expansion, product reuse credits the system for avoiding new product production.", D: "False. For products with high operational impacts (e.g., inefficient old appliances), extending lifetime can be worse than replacement with a more efficient product." }
+        fb: { A: "Correct. LCA is a key tool for quantifying and comparing environmental performance of circular economy strategies.", B: "False. Standard attributional LCA does not automatically model circular loops — additional choices are needed.", C: "Correct. Under system expansion, product reuse credits the system for avoiding new product production.", D: "False. For products with high operational impacts (e.g., inefficient old appliances), extending lifetime can be worse than replacement." }
       },
       {
         stem: "In LCA of a hydrogen fuel cell vehicle vs conventional petrol, which statements are true?",
@@ -2035,7 +1881,7 @@ const EXAMS = [
           { letter: "D", text: "The functional unit for comparing hydrogen vs petrol vehicles should be 'per vehicle produced' for fair comparison" }
         ],
         answers: { A: true, B: true, C: true, D: false },
-        fb: { A: "Correct. Green hydrogen combustion in a fuel cell produces only water vapour — near-zero direct GHG.", B: "Correct. Fuel cell stacks require platinum group metals — contributing to GWP (mining/refining) and mineral resource depletion.", C: "Correct. Grey H₂ at ~11 kg CO₂-eq/kg H₂, used at ~1 kg H₂/100 km, gives ~110 g CO₂-eq/km — comparable to a modern petrol car.", D: "False. 'Per vehicle produced' ignores transport service delivered. The correct FU is 'per km of passenger transport' or 'per vehicle-km'." }
+        fb: { A: "Correct. Green hydrogen combustion in a fuel cell produces only water vapour — near-zero direct GHG.", B: "Correct. Fuel cell stacks require platinum group metals.", C: "Correct. Grey H₂ at ~11 kg CO₂-eq/kg H₂, used at ~1 kg H₂/100 km, gives ~110 g CO₂-eq/km — comparable to a modern petrol car.", D: "False. The correct FU is 'per km of passenger transport' or 'per vehicle-km'." }
       },
       {
         stem: "In ISO 14044, the 'consistency check' during interpretation requires:",
@@ -2046,7 +1892,7 @@ const EXAMS = [
           { letter: "D", text: "The consistency check is the same as the uncertainty analysis" }
         ],
         answers: { A: true, B: false, C: true, D: false },
-        fb: { A: "Correct. The consistency check verifies internal methodological coherence — the same rules applied everywhere.", B: "False. Verifying data completeness is the completeness check — a separate check in the interpretation phase.", C: "Correct. In comparative LCA, inconsistent methodological choices between the two systems introduce bias.", D: "False. The consistency check is a qualitative methodological review; uncertainty analysis (Monte Carlo) is a quantitative statistical tool." }
+        fb: { A: "Correct. The consistency check verifies internal methodological coherence.", B: "False. Verifying data completeness is the completeness check — a separate check.", C: "Correct. In comparative LCA, inconsistent methodological choices between the two systems introduce bias.", D: "False. The consistency check is a qualitative methodological review; uncertainty analysis is a quantitative statistical tool." }
       },
       {
         stem: "The SMR hydrogen LCA involves the upstream natural gas supply chain. Which statements are true?",
@@ -2057,9 +1903,8 @@ const EXAMS = [
           { letter: "D", text: "Upstream methane leakage released directly to atmosphere from pipelines is an elementary flow" }
         ],
         answers: { A: true, B: true, C: true, D: true },
-        fb: { A: "Correct. Fugitive methane from gas infrastructure is a significant and uncertain upstream impact.", B: "Correct. GWP₂₀(CH₄) = 86 vs GWP₁₀₀(CH₄) = 28 — using 20-year timeframe weights methane ~3× more heavily.", C: "Correct. The natural gas supply chain (extraction, processing, pipeline) is typically background data from Ecoinvent.", D: "Correct. Methane released directly to atmosphere from leaking pipelines without subsequent human transformation is an elementary flow by ISO 14044." }
+        fb: { A: "Correct. Fugitive methane from gas infrastructure is a significant and uncertain upstream impact.", B: "Correct. GWP₂₀(CH₄) = 86 vs GWP₁₀₀(CH₄) = 28 — using 20-year timeframe weights methane ~3× more heavily.", C: "Correct. The natural gas supply chain is typically background data from Ecoinvent.", D: "Correct. Methane released directly to atmosphere from leaking pipelines is an elementary flow by ISO 14044." }
       }
-    ]
     ]
   }
 ];
