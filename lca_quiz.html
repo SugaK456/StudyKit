@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LCA Quiz — Politecnico di Milano</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #181818;
+    --surface2: #222222;
+    --border: #2e2e2e;
+    --accent: #c8f060;
+    --accent-dim: #8aaa2e;
+    --text: #e8e8e0;
+    --text-muted: #666;
+    --text-dim: #999;
+    --correct: #4caf7d;
+    --wrong: #e05252;
+    --correct-bg: #1a2e22;
+    --wrong-bg: #2e1a1a;
+    --radius: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .logo span { color: var(--text-muted); }
+  .header-score {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    display: none;
+  }
+  .header-score.visible { display: block; }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  /* HOME SCREEN */
+  #home-screen { animation: fadeIn 0.4s ease; }
+  .home-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+  .home-subtitle {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 3rem;
+  }
+  .sets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .set-card {
+    background: var(--surface);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .set-card:hover { background: var(--surface2); }
+  .set-card.completed { background: var(--surface); }
+  .set-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+  .set-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+  }
+  .set-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .set-score-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    display: none;
+  }
+  .set-score-badge.show { display: block; }
+  .badge-pass { background: var(--correct-bg); color: var(--correct); border: 1px solid var(--correct); }
+  .badge-fail { background: var(--wrong-bg); color: var(--wrong); border: 1px solid var(--wrong); }
+
+  .info-bar {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+  .info-item { font-size: 13px; color: var(--text-dim); }
+  .info-item strong { color: var(--text); font-weight: 500; }
+
+  /* QUIZ SCREEN */
+  #quiz-screen { display: none; animation: fadeIn 0.3s ease; }
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .back-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    letter-spacing: 0.05em;
+  }
+  .back-btn:hover { color: var(--text); }
+  .progress-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .progress-bar {
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    margin-bottom: 2.5rem;
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    border-radius: 1px;
+  }
+  .question-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+  .question-text {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 2rem;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: #444;
+    background: var(--surface2);
+  }
+  .option-btn:disabled { cursor: default; }
+  .option-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    min-width: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .option-btn.correct {
+    background: var(--correct-bg);
+    border-color: var(--correct);
+  }
+  .option-btn.correct .option-letter { color: var(--correct); }
+  .option-btn.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--wrong);
+  }
+  .option-btn.wrong .option-letter { color: var(--wrong); }
+  .option-btn.reveal-correct {
+    border-color: var(--correct);
+    opacity: 0.6;
+  }
+
+  .feedback-box {
+    display: none;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    border-left: 3px solid;
+    margin-bottom: 1.5rem;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .feedback-box.show { display: block; animation: slideUp 0.25s ease; }
+  .feedback-box.correct-fb {
+    background: var(--correct-bg);
+    border-color: var(--correct);
+    color: #8dd9b0;
+  }
+  .feedback-box.wrong-fb {
+    background: var(--wrong-bg);
+    border-color: var(--wrong);
+    color: #e8a0a0;
+  }
+  .feedback-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+  .correct-fb .feedback-label { color: var(--correct); }
+  .wrong-fb .feedback-label { color: var(--wrong); }
+
+  .next-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--accent);
+    color: #0f0f0f;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    display: none;
+    transition: opacity 0.15s;
+  }
+  .next-btn:hover { opacity: 0.85; }
+  .next-btn.show { display: block; }
+
+  /* RESULTS SCREEN */
+  #results-screen { display: none; animation: fadeIn 0.3s ease; }
+  .results-header { margin-bottom: 2.5rem; }
+  .results-score-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 64px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .score-pass { color: var(--correct); }
+  .score-fail { color: var(--wrong); }
+  .score-partial { color: var(--accent); }
+  .results-subtitle {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 2rem;
+  }
+  .results-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .summary-cell {
+    background: var(--surface);
+    padding: 1rem;
+    text-align: center;
+  }
+  .summary-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 24px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .summary-label { font-size: 12px; color: var(--text-muted); }
+  .num-correct { color: var(--correct); }
+  .num-wrong { color: var(--wrong); }
+  .num-total { color: var(--text); }
+
+  .review-list { margin-bottom: 2rem; }
+  .review-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .review-item {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+  .review-item.ri-correct { border-color: var(--correct); background: var(--correct-bg); }
+  .review-item.ri-wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+  .review-q { color: var(--text-dim); margin-bottom: 6px; line-height: 1.4; }
+  .review-a { font-weight: 500; }
+  .ri-correct .review-a { color: var(--correct); }
+  .ri-wrong .review-a { color: var(--wrong); }
+  .review-correct-ans { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
+
+  .results-actions { display: flex; gap: 10px; }
+  .action-btn {
+    flex: 1;
+    padding: 0.85rem;
+    border-radius: var(--radius);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: opacity 0.15s;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+  }
+  .action-btn:hover { opacity: 0.8; }
+  .action-btn.primary {
+    background: var(--accent);
+    color: #0f0f0f;
+    border-color: var(--accent);
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    main { padding: 1.5rem 1rem 3rem; }
+    header { padding: 1rem; }
+    .home-title { font-size: 22px; }
+    .results-score-display { font-size: 48px; }
+    .results-summary { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">LCA_QUIZ<span>.polimi</span></div>
+  <div class="header-score" id="header-score"></div>
+</header>
+
+<main>
+
+<!-- HOME -->
+<div id="home-screen">
+  <h1 class="home-title">Simulazione<br>esame LCA</h1>
+  <p class="home-subtitle">21 set × 9 domande — 1 punto per risposta esatta</p>
+  <div class="sets-grid" id="sets-grid"></div>
+  <div class="info-bar">
+    <div class="info-item">Corso <strong>LCA &amp; Materiali</strong></div>
+    <div class="info-item">Riferimento <strong>ISO 14040/14044</strong></div>
+    <div class="info-item">Tot. domande <strong>189</strong></div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goHome()">← TORNA AI SET</button>
+    <div class="progress-info" id="progress-info">1 / 9</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="question-label" id="question-label">DOMANDA 1</div>
+  <div class="question-text" id="question-text"></div>
+  <div class="options" id="options"></div>
+  <div class="feedback-box" id="feedback-box">
+    <div class="feedback-label" id="feedback-label"></div>
+    <div id="feedback-text"></div>
+  </div>
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">PROSSIMA DOMANDA →</button>
+</div>
+
+<!-- RESULTS -->
+<div id="results-screen">
+  <div class="results-header">
+    <div class="results-score-display" id="score-display"></div>
+    <div class="results-subtitle" id="results-subtitle"></div>
+  </div>
+  <div class="results-summary">
+    <div class="summary-cell"><span class="summary-num num-correct" id="r-correct">0</span><span class="summary-label">Corrette</span></div>
+    <div class="summary-cell"><span class="summary-num num-wrong" id="r-wrong">0</span><span class="summary-label">Errate</span></div>
+    <div class="summary-cell"><span class="summary-num num-total">9</span><span class="summary-label">Totale</span></div>
+  </div>
+  <div class="review-list">
+    <div class="review-title">RIEPILOGO RISPOSTE</div>
+    <div id="review-items"></div>
+  </div>
+  <div class="results-actions">
+    <button class="action-btn" onclick="retrySet()">RIPROVA SET</button>
+    <button class="action-btn primary" onclick="goHome()">ALTRI SET →</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+const SETS = [
+  {
+    title: "Framework LCA e fasi ISO",
+    topic: "ISO 14040/44, goal & scope, fasi LCA",
+    questions: [
+      {
+        q: "Secondo ISO 14040:2006, quante sono le fasi fondamentali del framework LCA?",
+        opts: ["3 fasi: inventario, valutazione impatti, interpretazione","4 fasi: goal & scope, LCI, LCIA, interpretazione","5 fasi: goal, scope, inventario, caratterizzazione, interpretazione","2 fasi: inventario e valutazione impatti"],
+        correct: 1,
+        fb: "ISO 14040 definisce esattamente 4 fasi iterative: (1) Goal & Scope Definition, (2) Life Cycle Inventory Analysis (LCI), (3) Life Cycle Impact Assessment (LCIA), (4) Interpretation. Le frecce bidirezionali tra le fasi indicano che il processo è iterativo e non strettamente lineare."
+      },
+      {
+        q: "Cosa definisce l'unità funzionale in uno studio LCA?",
+        opts: ["Il confine geografico del sistema analizzato","La quantificazione della funzione del sistema, usata come riferimento per tutti i flussi","Il tipo di database utilizzato per i dati di background","Il numero di processi inclusi nel sistema prodotto"],
+        correct: 1,
+        fb: "L'unità funzionale quantifica la funzione del sistema prodotto e serve da riferimento per normalizzare tutti gli input/output dell'inventario. Esempio: '1 m² di superficie verniciata con protezione 10 anni'. Senza un'unità funzionale ben definita, il confronto tra sistemi alternativi è privo di significato."
+      },
+      {
+        q: "Quale delle seguenti affermazioni sul 'system boundary' è corretta secondo ISO 14044?",
+        opts: ["Il confine di sistema include solo i processi di produzione primaria","Il confine di sistema deve includere obbligatoriamente tutte le fasi del ciclo di vita senza eccezioni","Il confine di sistema definisce quali processi unitari sono inclusi nello studio e deve essere giustificato","Il confine di sistema coincide sempre con lo scenario cradle-to-grave"],
+        correct: 2,
+        fb: "Il confine di sistema delimita quali processi unitari fanno parte del sistema prodotto. La sua definizione deve essere esplicitata e giustificata nel goal & scope. È possibile adottare confini parziali (gate-to-gate, cradle-to-gate) purché coerenti con l'obiettivo dello studio. L'esclusione di processi deve essere documentata e la loro rilevanza valutata."
+      },
+      {
+        q: "In uno studio LCA comparativo destinato alla comunicazione pubblica (es. EPD), cosa richiede obbligatoriamente ISO 14044?",
+        opts: ["La revisione critica da parte di un panel di esperti indipendenti","L'uso esclusivo del database Ecoinvent","L'adozione dello scenario cradle-to-grave","La normalizzazione obbligatoria dei risultati LCIA"],
+        correct: 0,
+        fb: "ISO 14044 richiede che gli studi LCA comparativi divulgati pubblicamente siano sottoposti a critical review da parte di un panel di almeno 3 esperti indipendenti. Per studi non comparativi, la revisione critica è raccomandata ma non obbligatoria. Questo requisito tutela la credibilità e la correttezza metodologica degli studi usati in comunicazione esterna."
+      },
+      {
+        q: "Quale scenario copre le emissioni 'dalla culla al cancello' (cradle-to-gate)?",
+        opts: ["Dall'estrazione delle materie prime fino alla fine vita del prodotto","Dall'estrazione delle materie prime fino all'uscita dallo stabilimento di produzione","Dall'ingresso in stabilimento fino alla consegna al cliente","Dall'uso del prodotto fino allo smaltimento finale"],
+        correct: 1,
+        fb: "Cradle-to-gate (dalla culla al cancello) include tutte le fasi dall'estrazione delle materie prime fino all'uscita dal cancello dello stabilimento produttivo, escludendo uso ed end-of-life. È comune per le Dichiarazioni Ambientali di Prodotto (EPD) di materiali da costruzione (EN 15804) e serve come base per calcoli downstream."
+      },
+      {
+        q: "Il 'flusso di riferimento' (reference flow) in LCA è:",
+        opts: ["Il flusso energetico principale del processo produttivo","La quantità di prodotto necessaria per soddisfare l'unità funzionale","Il flusso elementare con impatto maggiore nella categoria principale","Il primo flusso inserito nel database di inventario"],
+        correct: 1,
+        fb: "Il reference flow è la quantità specifica di prodotto necessaria per realizzare l'unità funzionale. Ad esempio, se l'UF è '1 m² di superficie verniciata', il reference flow potrebbe essere '0.15 kg di vernice'. Distinguere UF (funzione) da reference flow (quantità di prodotto) è fondamentale per il corretto calcolo degli inventari."
+      },
+      {
+        q: "Cosa si intende per 'processo unitario' nell'ambito della LCI?",
+        opts: ["L'insieme di tutti i processi inclusi nel sistema prodotto","Il più piccolo elemento del sistema prodotto per cui sono quantificati gli input/output","Un processo che produce esclusivamente un solo output","Il processo con il maggiore impatto ambientale dello studio"],
+        correct: 1,
+        fb: "Il processo unitario (unit process) è l'elemento minimo del sistema prodotto per cui vengono raccolti e quantificati gli input (materiali, energia, acqua) e gli output (prodotti, emissioni, rifiuti). La somma e il collegamento di tutti i processi unitari costituisce il sistema prodotto complessivo."
+      },
+      {
+        q: "Secondo la norma EN 15804 per i prodotti da costruzione, le fasi del ciclo di vita sono denominate con lettere. Quale sequenza è corretta?",
+        opts: ["A (produzione) → B (uso) → C (fine vita) → D (oltre confine)","P (produzione) → U (uso) → E (end-of-life) → R (recupero)","A1-A3 (produzione) → A4-A5 (cantiere) → B (uso) → C (fine vita) → D (benefici)","M (manifattura) → L (logistica) → O (operazione) → W (rifiuti)"],
+        correct: 2,
+        fb: "EN 15804 struttura il ciclo di vita in moduli: A1-A3 (estrazione MP, trasporto, manifattura), A4-A5 (trasporto al cantiere, posa), B1-B7 (uso, manutenzione, riparazioni, sostituzioni, uso energia/acqua), C1-C4 (demolizione, trasporto, trattamento rifiuti, smaltimento), D (benefici e carichi al di là del confine di sistema — riciclaggio, recupero energetico)."
+      },
+      {
+        q: "In una LCA, i 'flussi elementari' sono definiti come:",
+        opts: ["Flussi tra processi unitari all'interno del sistema prodotto","Materiali o energia estratti dall'ambiente o rilasciati nell'ambiente senza trasformazione umana precedente","I dati di input ricavati esclusivamente da misurazioni dirette in campo","Flussi di prodotti intermedi tra fornitori e acquirenti"],
+        correct: 1,
+        fb: "I flussi elementari (elementary flows) attraversano il confine sistema-ecosfera: includono risorse estratte dall'ambiente naturale (materie prime, acqua, suolo, minerali) ed emissioni rilasciate nell'ambiente (CO₂, NOx, metalli pesanti in acqua o suolo). Si distinguono dai flussi di prodotto (product flows) che attraversano confini tra processi unitari all'interno o tra sistemi prodotto."
+      }
+    ]
+  },
+  {
+    title: "Life Cycle Inventory (LCI)",
+    topic: "Raccolta dati, tipi di flussi, qualità dati",
+    questions: [
+      {
+        q: "Quale dei seguenti NON è un criterio di qualità dei dati previsto da ISO 14044?",
+        opts: ["Rappresentatività temporale","Rappresentatività geografica","Costo di acquisizione dei dati","Completezza"],
+        correct: 2,
+        fb: "ISO 14044 identifica criteri di qualità tra cui: rappresentatività temporale, geografica e tecnologica, precisione, completezza, consistenza, riproducibilità, fonti e incertezza. Il costo di acquisizione è una considerazione pratica ma non è un criterio di qualità normativo. La matrice pedigree (DQI) utilizzata in Ecoinvent valuta questi criteri su scala 1-5."
+      },
+      {
+        q: "Nella matrice pedigree utilizzata in Ecoinvent per la Data Quality Indicator (DQI), quali sono le dimensioni valutate?",
+        opts: ["Precisione, completezza, coerenza, riproducibilità, rappresentatività geografica","Affidabilità, completezza, correlazione temporale, correlazione geografica, correlazione tecnologica","Accuratezza, precisione, risoluzione, sensibilità, incertezza sistematica","Validità, verificabilità, tracciabilità, aggiornamento, peer review"],
+        correct: 1,
+        fb: "La matrice pedigree di Ecoinvent valuta 5 indicatori DQI: (1) Reliability — affidabilità della fonte, (2) Completeness — completezza della copertura, (3) Temporal correlation — correlazione temporale, (4) Geographical correlation — correlazione geografica, (5) Technological correlation — correlazione tecnologica. Ogni indicatore riceve un punteggio 1-5 (1=migliore). La formula DQR combina questi punteggi in un indice sintetico."
+      },
+      {
+        q: "Cos'è un 'dato di foreground' in una LCA?",
+        opts: ["Un dato proveniente da database commerciali come Ecoinvent","Un dato raccolto direttamente dai processi primari oggetto dello studio","Un dato generico rappresentativo di un settore industriale","Un dato calcolato tramite modellazione e non misurato"],
+        correct: 1,
+        fb: "I dati di foreground (o primari) sono raccolti direttamente per i processi specifici dello studio — attraverso misurazioni, schede tecniche dei produttori, fatture energetiche, ecc. I dati di background (secondari) provengono da database (Ecoinvent, GaBi, ELCD) e rappresentano processi generici upstream. La qualità dei dati di foreground è determinante per la credibilità dello studio."
+      },
+      {
+        q: "La 'sensitivity analysis' nell'LCI ha lo scopo principale di:",
+        opts: ["Calcolare l'incertezza statistica di tutti i dati di input","Verificare come la variazione di parametri chiave influenza i risultati finali","Identificare i processi con il maggiore impatto ambientale assoluto","Confrontare diversi metodi di caratterizzazione LCIA"],
+        correct: 1,
+        fb: "La sensitivity analysis valuta la robustezza dei risultati verificando quanto variano le conclusioni al variare dei parametri più incerti o influenti (es. mix energetico, fattori di allocazione, confini di sistema). Permette di identificare i parametri critici e di comunicare la stabilità delle conclusioni. Si distingue dalla uncertainty analysis (Monte Carlo) che quantifica la distribuzione statistica dell'incertezza."
+      },
+      {
+        q: "Quale database LCA contiene dati strutturati secondo un modello 'unit process' con catene di fornitori fino all'estrazione delle risorse naturali?",
+        opts: ["GaBi (Sphera)","ELCD (European Life Cycle Database)","Ecoinvent","SimaPro"],
+        correct: 2,
+        fb: "Ecoinvent (Swiss Centre for Life Cycle Inventories) è il database più utilizzato a livello globale. Contiene oltre 18.000 dataset strutturati come processi unitari con catene di upstream completamente modellate fino all'estrazione delle risorse. Supporta modelli attributional (cut-off, APOS) e consequential. SimaPro e GaBi sono software LCA che possono integrare Ecoinvent come database."
+      },
+      {
+        q: "In una LCA, il 'cut-off system model' di Ecoinvent tratta i materiali riciclati secondo quale principio?",
+        opts: ["I materiali riciclati portano con sé tutti gli impatti del processo di riciclo precedente","I materiali riciclati entrano nel sistema senza oneri (burden-free) da processi upstream","Gli impatti del riciclo sono ripartiti al 50% tra produttore e utilizzatore","I materiali riciclati sono esclusi dal sistema prodotto e non computati"],
+        correct: 1,
+        fb: "Nel modello cut-off di Ecoinvent, i materiali riciclati sono disponibili burden-free: non portano con sé gli impatti del ciclo di vita precedente del materiale. Il produttore del rifiuto si assume tutti gli impatti di smaltimento; il riciclatore riceve il materiale 'gratis'. In alternativa, il modello APOS (Allocation at the Point of Substitution) distribuisce i carichi tra produttore del rifiuto e riciclatore."
+      },
+      {
+        q: "Cosa misura il Data Quality Rating (DQR) calcolato dalla formula DQR = (ReL + C + TiC + GiC + TeC) / 5?",
+        opts: ["La percentuale di dati primari rispetto ai dati secondari","Un punteggio medio di qualità sui 5 indicatori pedigree (1=alta qualità, 5=bassa qualità)","Il numero di processi unitari con dati verificati da terze parti","Il grado di copertura temporale del dataset rispetto all'anno di riferimento"],
+        correct: 1,
+        fb: "Il DQR è la media aritmetica dei 5 punteggi pedigree: Reliability, Completeness, Temporal Correlation, Geographical Correlation, Technological Correlation. Punteggi bassi (vicino a 1) indicano alta qualità dei dati; punteggi alti (vicino a 5) indicano bassa qualità. Il DQR consente di confrontare la qualità complessiva di diversi dataset e di identificare le aree dove è necessario migliorare la raccolta dati."
+      },
+      {
+        q: "Quale delle seguenti è una corretta distinzione tra dati 'specifici per sito' e dati 'generici'?",
+        opts: ["I dati specifici per sito sono sempre più accurati; i dati generici sono sempre meno accurati","I dati specifici per sito si riferiscono a un impianto o processo reale; i dati generici rappresentano medie di settore o paese","I dati generici si usano solo per il foreground; i dati specifici per sito si usano solo per il background","I dati generici sono obbligatoriamente verificati da ISO; i dati specifici per sito no"],
+        correct: 1,
+        fb: "I dati site-specific sono misurati o raccolti direttamente presso uno specifico impianto/azienda e hanno alta rappresentatività tecnologica ma richiedono accesso diretto. I dati generici (da database) rappresentano medie settoriali, nazionali o regionali e hanno minore rappresentatività specifica ma alta disponibilità. La scelta tra i due dipende dall'obiettivo dello studio, dalla fase del ciclo di vita e dalle risorse disponibili."
+      },
+      {
+        q: "In LCA, la 'Monte Carlo analysis' è utilizzata per:",
+        opts: ["Ottimizzare i confini di sistema attraverso iterazioni successive","Quantificare l'incertezza dei risultati tramite simulazione stocastica degli input","Confrontare diversi scenari di fine vita in modo deterministico","Calcolare i fattori di caratterizzazione per le categorie di impatto"],
+        correct: 1,
+        fb: "L'analisi Monte Carlo è una tecnica di propagazione dell'incertezza: si assegnano distribuzioni statistiche (normale, log-normale, uniforme) ai parametri di input incerti e si eseguono migliaia di simulazioni con valori campionati casualmente. Il risultato è una distribuzione di probabilità degli output che quantifica l'incertezza totale del sistema. È lo strumento standard per l'uncertainty analysis in LCA (richiesto da ISO 14044 per studi comparativi)."
+      }
+    ]
+  },
+  {
+    title: "Multifunzionalità e Allocazione",
+    topic: "Processi multifunzionali, strategie ISO 14044",
+    questions: [
+      {
+        q: "Secondo ISO 14044, qual è la gerarchia di preferenza per gestire la multifunzionalità?",
+        opts: ["Allocazione economica → allocazione fisica → system expansion","System expansion (o suddivisione) → allocazione fisica → allocazione economica","Allocazione economica → system expansion → allocazione fisica","Allocazione fisica → allocazione economica → system expansion"],
+        correct: 1,
+        fb: "ISO 14044 stabilisce una gerarchia precisa: (1) Suddivisione del processo o system expansion (evitare l'allocazione) — preferita perché non introduce fattori arbitrari; (2) Allocazione basata su relazioni fisiche causali (massa, volume, energia); (3) Allocazione basata su altri criteri (es. valore economico) solo quando i criteri fisici non sono applicabili. L'ordine riflette la crescente arbitrarietà del metodo."
+      },
+      {
+        q: "Un processo produce simultaneamente 100 kg di prodotto A e 40 kg di sottoprodotto B. Con l'allocazione in massa, quale frazione degli impatti è attribuita al prodotto A?",
+        opts: ["40%","71.4%","100%","50%"],
+        correct: 1,
+        fb: "Allocazione in massa: massa totale = 100 + 40 = 140 kg. Frazione per A = 100/140 = 0.714 = 71.4%. Frazione per B = 40/140 = 28.6%. Il criterio fisico (massa) è applicabile quando esiste una relazione causale tra la massa dei co-prodotti e gli impatti ambientali del processo. Se invece gli impatti sono più legati al contenuto energetico (es. raffineria), si usa l'allocazione energetica."
+      },
+      {
+        q: "La 'system expansion' come metodo per evitare l'allocazione consiste in:",
+        opts: ["Espandere i confini di sistema per includere tutte le fasi del ciclo di vita","Aggiungere al sistema il processo che produce il sottoprodotto altrimenti ottenuto da un'altra fonte, e sottrarne gli impatti","Dividere fisicamente il processo multifunzionale in sotto-processi indipendenti","Aumentare l'unità funzionale per coprire tutte le funzioni del sistema"],
+        correct: 1,
+        fb: "La system expansion amplia il confine del sistema: si include il processo alternativo che produce la funzione del co-prodotto (es. se il co-prodotto sostituisce l'elettricità da rete, si include la produzione evitata di quella elettricità) e si sottraggono gli impatti corrispondenti. Il risultato è che il sistema principale 'riceve credito' per il co-prodotto. È il metodo preferito da ISO 14044 ma richiede la definizione di un prodotto sostituto rappresentativo (substitution product)."
+      },
+      {
+        q: "In quale dei seguenti casi l'allocazione economica è preferibile all'allocazione in massa?",
+        opts: ["Quando i co-prodotti hanno la stessa massa ma prezzi di mercato molto diversi","Quando lo studio è destinato a una comunicazione interna aziendale","Quando i co-prodotti sono tutti rifiuti senza valore di mercato","Quando il processo è gate-to-gate e non cradle-to-grave"],
+        correct: 0,
+        fb: "L'allocazione economica è preferibile quando i co-prodotti hanno valori economici molto diversi che riflettono meglio il 'motivo' per cui il processo è condotto rispetto alla massa. Ad esempio, in una raffineria che produce benzina e bitume con masse simili ma prezzi molto diversi, l'allocazione economica cattura meglio la causalità economica del processo. Tuttavia, i prezzi di mercato sono volatili e dipendono da fattori esterni, il che riduce la riproducibilità nel tempo."
+      },
+      {
+        q: "Cosa si intende per 'processo aperto di riciclo' (open-loop recycling) in LCA?",
+        opts: ["Un processo di riciclo in cui il materiale riciclato rientra nello stesso sistema prodotto","Un processo di riciclo in cui il materiale riciclato viene utilizzato in un sistema prodotto diverso","Un processo di riciclo non soggetto ad allocazione secondo ISO 14044","Un processo di riciclo con perdite di materiale superiori al 50%"],
+        correct: 1,
+        fb: "Nel closed-loop recycling il materiale riciclato rientra nello stesso ciclo di vita (es. alluminio da lattine → nuove lattine). Nell'open-loop recycling il materiale transita verso un sistema prodotto diverso (es. carta da ufficio → cartone ondulato). L'open-loop richiede una scelta allocativa: ISO 14044 suggerisce l'allocazione basata sul numero di usi futuri o su proprietà fisiche, ed è regolamentato in dettaglio in ISO 14049."
+      },
+      {
+        q: "Un impianto di cogenerazione produce 1 MWh di elettricità e 2 MWh di calore. Gli impatti totali sono 500 kg CO₂-eq. Con allocazione energetica, quanta CO₂-eq è attribuita all'elettricità?",
+        opts: ["250 kg CO₂-eq","166.7 kg CO₂-eq","333.3 kg CO₂-eq","500 kg CO₂-eq"],
+        correct: 1,
+        fb: "Allocazione energetica: energia totale = 1 + 2 = 3 MWh. Frazione elettricità = 1/3 = 33.3%. Impatti elettricità = 500 × 1/3 = 166.7 kg CO₂-eq. Impatti calore = 500 × 2/3 = 333.3 kg CO₂-eq. L'allocazione energetica è spesso preferita per la cogenerazione perché gli impatti termici del combustibile sono fisicamente correlati all'energia prodotta, a differenza dell'allocazione in massa (kg vapore vs kWh) che sarebbe fisicamente incongruente."
+      },
+      {
+        q: "Nel caso di un processo che genera un co-prodotto classificato come 'rifiuto' secondo la normativa locale, come suggerisce ISO 14044 di procedere?",
+        opts: ["Il rifiuto riceve sempre quota zero degli impatti del processo produttivo","Il rifiuto riceve una quota degli impatti proporzionale alla sua massa","Gli impatti del trattamento del rifiuto sono assegnati al processo che lo genera","Dipende: se il rifiuto ha valore di mercato può essere trattato come co-prodotto"],
+        correct: 2,
+        fb: "ISO 14044 indica che un output classificato come rifiuto non genera co-prodotto: il processo che genera il rifiuto si assume tutti gli impatti incluso il costo del trattamento/smaltimento del rifiuto stesso. La classificazione 'rifiuto' vs 'co-prodotto' ha quindi importanti implicazioni allocative. La distinzione è talvolta contestabile (es. ceneri volanti, fanghi) e richiede giudizio critico nella definizione del goal & scope."
+      },
+      {
+        q: "In un sistema di co-produzione tra DEC (dietil carbonato) e GC (glicerolo carbonato) da bioetanolo e CO₂, la scelta del metodo di allocazione influenza principalmente:",
+        opts: ["Solo il risultato della categoria di impatto 'consumo d'acqua'","La distribuzione degli impatti tra i due co-prodotti e quindi il profilo ambientale di ciascuno","Solo il confronto con sistemi cradle-to-gate","La scelta del database di background da utilizzare"],
+        correct: 1,
+        fb: "In sistemi di co-produzione, il metodo allocativo scelta (massa, energia, valore economico, system expansion) ridistribuisce gli impatti totali del processo tra i co-prodotti. Questo cambia il profilo ambientale di ciascun prodotto — talvolta in modo drammatico. È uno dei punti di maggiore variabilità metodologica in LCA: studi sullo stesso sistema con metodi allocativi diversi possono portare a conclusioni opposte, da cui l'importanza dell'analisi di sensibilità sull'allocazione."
+      },
+      {
+        q: "Qual è il principale vantaggio della suddivisione del processo (subdivision) rispetto all'allocazione in un sistema multifunzionale?",
+        opts: ["Riduce il numero di processi unitari da modellare","Evita completamente l'introduzione di fattori di allocazione potenzialmente arbitrari","Permette di usare dati di background generici senza adattamenti","È computazionalmente più semplice da implementare nei software LCA"],
+        correct: 1,
+        fb: "La suddivisione del processo consiste nel separare fisicamente un processo multifunzionale nei suoi sotto-processi elementari, ciascuno responsabile di un singolo output. In questo modo non si introduce nessun fattore allocativo arbitrario: ogni sotto-processo porta i propri impatti reali. Il problema è che spesso la suddivisione non è tecnicamente possibile perché i processi sono fisicamente inseparabili (es. cogenerazione, distillazione frazionata)."
+      }
+    ]
+  },
+  {
+    title: "LCIA — Classificazione e Caratterizzazione",
+    topic: "Metodi LCIA, categorie di impatto, fattori di caratterizzazione",
+    questions: [
+      {
+        q: "Nella fase LCIA, la 'classificazione' consiste in:",
+        opts: ["Il calcolo degli indicatori di categoria moltiplicando i flussi per i fattori di caratterizzazione","L'assegnazione dei flussi dell'inventario alle rispettive categorie di impatto ambientale","L'ordinamento delle categorie di impatto per rilevanza","La conversione degli impatti in unità monetarie per la comparazione"],
+        correct: 1,
+        fb: "La classificazione è il primo passaggio della LCIA: si assegna ogni flusso elementare dell'inventario alla/alle categorie di impatto rilevanti (un flusso può contribuire a più categorie — ad esempio il SO₂ contribuisce sia all'acidificazione che alle particelle). La fase successiva, la caratterizzazione, moltiplica ogni flusso per il suo fattore di caratterizzazione (CF) per ottenere il contributo in unità equivalenti dell'indicatore di categoria."
+      },
+      {
+        q: "Il fattore di caratterizzazione per il CO₂ nella categoria 'Climate Change' secondo IPCC AR5 (100 anni) vale:",
+        opts: ["1 kg CO₂-eq (per definizione)","28 kg CO₂-eq","298 kg CO₂-eq","0 — il CO₂ naturale non è incluso"],
+        correct: 0,
+        fb: "Il CO₂ è il gas di riferimento per la categoria climate change: il suo GWP100 è definito = 1 kg CO₂-eq. Il CH₄ ha GWP100 = 28 (IPCC AR5) e il N₂O ha GWP100 = 265. I fattori di caratterizzazione del GWP riflettono il forcing radiativo integrato su 100 anni relativo alla CO₂. Il GWP a 20 anni dà pesi più alti al CH₄ rispetto al GWP100."
+      },
+      {
+        q: "Quale metodo LCIA valuta gli impatti sia a livello di 'midpoint' che di 'endpoint'?",
+        opts: ["CML-IA (Università di Leiden)","TRACI (US EPA)","ReCiPe","EDIP 2003"],
+        correct: 2,
+        fb: "ReCiPe è il metodo che integra sia la valutazione midpoint (18 categorie, es. GWP, AP, EP, ODP) che endpoint (3 aree di danno: Human Health, Ecosystems, Resource Scarcity), con 3 prospettive culturali: Hierarchist (H, default), Individualist (I, breve termine), Egalitarian (E, lungo termine). CML-IA è solo midpoint; TRACI è solo midpoint per il contesto nordamericano; EDIP è solo midpoint per contesto europeo."
+      },
+      {
+        q: "In ReCiPe, le tre 'aree di protezione' a livello endpoint sono:",
+        opts: ["Clima, Biodiversità, Salute","Human Health, Ecosystems, Resource Scarcity","Acqua, Aria, Suolo","Specie, Popolazioni, Ecosistemi"],
+        correct: 1,
+        fb: "ReCiPe endpoint aggrega gli impatti in 3 aree di danno: (1) Human Health — misurata in DALY (Disability-Adjusted Life Years); (2) Ecosystems — misurata in species·year (perdita di specie per anno); (3) Resource Scarcity — misurata in USD aggiuntivi per estrazione futura. Questa aggregazione consente il confronto tra categorie eterogenee ma introduce incertezza e scelte di valore nei pesi relativi."
+      },
+      {
+        q: "Cosa misura il DALY (Disability-Adjusted Life Year) come indicatore endpoint in LCIA?",
+        opts: ["Il numero di anni di vita persi o vissuti con disabilità a causa di un impatto sulla salute","Il costo economico delle malattie causate dall'inquinamento industriale","La concentrazione ambientale di sostanze tossiche che causano malattie","Il numero di decessi prematuri per milione di persone esposte"],
+        correct: 0,
+        fb: "DALY = YLL + YLD, dove YLL (Years of Life Lost) rappresenta la mortalità prematura e YLD (Years Lived with Disability) la morbilità ponderata per la gravità della disabilità. Sviluppato dall'OMS, è l'unità standard in LCIA per quantificare i danni alla salute umana. Permette di confrontare impatti eterogenei (cancro, malattie respiratorie, neurotossicità) in un'unica unità."
+      },
+      {
+        q: "Nel metodo CML-IA, la categoria 'Abiotic Depletion Potential' (ADP) misura:",
+        opts: ["L'esaurimento delle risorse biologiche rinnovabili","L'esaurimento delle risorse minerali e fossili non rinnovabili, riferito all'antimonio (Sb)","La perdita di biodiversità nelle aree di estrazione mineraria","Il consumo di acqua in regioni con stress idrico"],
+        correct: 1,
+        fb: "L'ADP (Abiotic Resource Depletion Potential) nel metodo CML quantifica il consumo di risorse abiotiche (minerali, metalli, combustibili fossili) in kg Sb-eq (antimonio equivalente), scelto come riferimento perché riflette la scarsità relativa. Si distingue ADP elements (minerali) e ADP fossil (MJ, energia fossile). È importante in LCA di prodotti elettronici e infrastrutture con alto contenuto metallico."
+      },
+      {
+        q: "La 'normalizzazione' in LCIA consiste in:",
+        opts: ["La conversione di tutti i flussi in unità di massa (kg)","La divisione dei risultati di caratterizzazione per un valore di riferimento (es. impatti pro capite annuali europei)","L'eliminazione delle categorie di impatto con contributo inferiore al 5%","La pesatura dei risultati normalizzati secondo coefficienti di rilevanza politica"],
+        correct: 1,
+        fb: "La normalizzazione divide i risultati di caratterizzazione di ciascuna categoria per un valore di riferimento (tipicamente gli impatti annuali totali di una regione o popolazione, es. EU-27 pro capite/anno). Permette di capire l'entità relativa degli impatti e di confrontare categorie con unità diverse. È un passaggio opzionale secondo ISO 14044. Non va confusa con la pesatura (weighting), che è il passo successivo e assegna importanza relativa tra categorie."
+      },
+      {
+        q: "In LCIA, cosa distingue un approccio 'problem-oriented' (midpoint) da uno 'damage-oriented' (endpoint)?",
+        opts: ["Il midpoint usa solo dati primari; l'endpoint usa solo dati di database","Il midpoint quantifica gli impatti a metà del meccanismo causale; l'endpoint quantifica il danno finale alle aree di protezione","Il midpoint è obbligatorio per ISO 14044; l'endpoint è solo opzionale","Il midpoint è più incerto scientificamente; l'endpoint è scientificamente più rigoroso"],
+        correct: 1,
+        fb: "Midpoint: si valuta l'impatto a un punto intermedio della catena causale ambientale — più vicino all'emissione, scientificamente più robusto ma meno comprensibile ai decisori (es. kg SO₂-eq per acidificazione). Endpoint: si valuta il danno finale alle aree di protezione — più comprensibile (DALYs, perdita di specie) ma con maggiore incertezza di modellazione data la lunghezza della catena causale. La scelta dipende dallo scopo e dall'audience dello studio."
+      },
+      {
+        q: "Quale categoria di impatto LCIA è principalmente influenzata dalle emissioni di NOx e NH₃?",
+        opts: ["Climate change","Stratospheric ozone depletion","Eutrophication","Photochemical oxidant creation"],
+        correct: 2,
+        fb: "L'eutrofizzazione (sia terrestre che acquatica) è principalmente guidata da composti azotati (NOx, NH₃, nitrati) e fosfati. NOx e NH₃ si depositano negli ecosistemi causando eccesso di nutrienti. Va però notato che NOx contribuisce anche alla formazione di ozono fotochimico (POCP) e acidificazione; NH₃ contribuisce all'acidificazione. Questa multi-appartenenza ai flussi è gestita nella fase di classificazione."
+      }
+    ]
+  },
+  {
+    title: "LCIA Avanzata — ReCiPe e metodi complessi",
+    topic: "ReCiPe, prospettive culturali, aggregazione endpoint",
+    questions: [
+      {
+        q: "Le tre prospettive culturali di ReCiPe (H, I, E) differiscono principalmente per:",
+        opts: ["Il numero di categorie midpoint incluse nel calcolo","L'orizzonte temporale e le assunzioni sulle soglie di danno e capacità di adattamento","Il database di background (Ecoinvent vs GaBi) raccomandato","La lingua in cui sono pubblicati i fattori di caratterizzazione"],
+        correct: 1,
+        fb: "Le prospettive culturali riflettono diversi paradigmi di rischio: (H) Hierarchist — orizzonte 100 anni, equilibrio tra breve e lungo termine, default scientifico; (I) Individualist — breve termine, fiducia nell'adattamento tecnologico, esclude impatti incerti a lungo termine; (E) Egalitarian — lunghissimo termine, massima precauzione, include tutti gli impatti anche quelli molto incerti. La prospettiva H è la più usata nella pratica."
+      },
+      {
+        q: "ReCiPe 2016 include quante categorie di impatto a livello midpoint?",
+        opts: ["11 categorie","18 categorie","22 categorie","7 categorie"],
+        correct: 1,
+        fb: "ReCiPe 2016 (aggiornamento rispetto alla versione 2008) include 18 categorie midpoint: Global Warming, Stratospheric Ozone Depletion, Ionizing Radiation, Ozone Formation (Human Health), Fine Particulate Matter Formation, Ozone Formation (Terrestrial Ecosystems), Terrestrial Acidification, Freshwater Eutrophication, Marine Eutrophication, Terrestrial Ecotoxicity, Freshwater Ecotoxicity, Marine Ecotoxicity, Human Carcinogenic Toxicity, Human Non-Carcinogenic Toxicity, Land Use, Mineral Resource Scarcity, Fossil Resource Scarcity, Water Consumption."
+      },
+      {
+        q: "La 'pesatura' (weighting) in LCIA è descritta da ISO 14044 come:",
+        opts: ["Obbligatoria per tutti gli studi destinati alla comunicazione esterna","Un passaggio opzionale e non raccomandato per studi comparativi pubblici","Il metodo preferito rispetto alla normalizzazione","Obbligatoria solo quando si usa il metodo ReCiPe endpoint"],
+        correct: 1,
+        fb: "ISO 14044 definisce la pesatura come un passaggio opzionale della LCIA e ne sconsiglia esplicitamente l'uso in studi comparativi con divulgazione pubblica, perché introduce giudizi di valore soggettivi sull'importanza relativa delle categorie ambientali. Quando usata, la pesatura deve essere trasparente sui criteri adottati (panel di esperti, preferenze sociali, distanza-dall'obiettivo). La normalizzazione invece è solo operazione matematica senza giudizi di valore."
+      },
+      {
+        q: "Il PDF (Potentially Disappeared Fraction) come indicatore endpoint in ReCiPe misura:",
+        opts: ["La percentuale di specie potenzialmente estinte in via permanente","La frazione di specie che potenzialmente scompare da un'area a causa di un cambiamento ambientale, per unità di area e tempo","La percentuale di biomassa perduta per unità di emissione inquinante","Il numero di specie endemiche minacciate per kg di sostanza emessa"],
+        correct: 1,
+        fb: "PDF (Potentially Disappeared Fraction of species) è l'indicatore per gli impatti sull'ecosistema in ReCiPe endpoint: esprime la frazione di specie che potenzialmente scompare da un'area come conseguenza di un cambiamento ambientale (acidificazione, eutrofizzazione, land use, ecotossicità). L'unità è PDF·m²·yr. Si calcola come: impatto = CF × emissione, con CF espresso in PDF·m²·yr per unità di flusso. Non implica estinzione permanente ma 'scomparsa locale'."
+      },
+      {
+        q: "In quale fase obbligatoria della LCIA rientra il calcolo degli 'indicatori di categoria'?",
+        opts: ["Classificazione","Caratterizzazione","Normalizzazione","Pesatura"],
+        correct: 1,
+        fb: "Il calcolo degli indicatori di categoria (category indicators) avviene nella fase di caratterizzazione: ogni flusso elementare classificato viene moltiplicato per il suo fattore di caratterizzazione (CF) e i contributi vengono sommati per ottenere il risultato della categoria. Classificazione e caratterizzazione sono le due fasi obbligatorie della LCIA secondo ISO 14044; normalizzazione, raggruppamento e pesatura sono opzionali."
+      },
+      {
+        q: "Cosa distingue un meccanismo di impatto 'seriale' da uno 'parallelo' nella LCIA?",
+        opts: ["Il meccanismo seriale considera solo emissioni dirette; il parallelo anche le emissioni indirette","Nel meccanismo seriale più fattori di stress contribuiscono alla stessa categoria attraverso percorsi indipendenti; nel parallelo attraverso una catena sequenziale","Nel meccanismo seriale un flusso causa impatti in sequenza attraverso una catena causale; nel meccanismo parallelo più flussi diversi contribuiscono alla stessa categoria attraverso percorsi indipendenti","Il meccanismo seriale è proprio del midpoint; il parallelo è proprio dell'endpoint"],
+        correct: 2,
+        fb: "Nel meccanismo seriale (o a catena) un flusso causa impatti attraverso una sequenza di reazioni ambientali: es. SO₂ → deposizione acida → acidificazione suolo → perdita di specie. Nel meccanismo parallelo più flussi diversi contribuiscono alla stessa categoria attraverso percorsi causali indipendenti: es. SO₂, NOx e HCl contribuiscono tutti all'acidificazione tramite meccanismi chimici diversi. La comprensione del meccanismo è fondamentale per definire i fattori di caratterizzazione."
+      },
+      {
+        q: "Cosa rappresenta il 'sorting' (raggruppamento) nelle fasi opzionali della LCIA?",
+        opts: ["L'eliminazione delle categorie di impatto con valori trascurabili","L'ordinamento o raggruppamento delle categorie di impatto secondo criteri qualitativi (es. rilevanza politica, tipo di impatto)","La conversione di tutti i risultati in unità monetarie","La media pesata dei risultati di normalizzazione"],
+        correct: 1,
+        fb: "Il sorting (raggruppamento) è un passaggio opzionale LCIA che organizza le categorie di impatto secondo criteri qualitativi o nominali: es. raggruppamento per tipo di danno (salute umana, ecosistemi, risorse), per rilevanza politica (categorie prioritarie UE), per confidenza scientifica. Non implica aggregazione numerica (che è invece la pesatura). Aiuta la comunicazione dei risultati e la prioritizzazione degli impatti da gestire."
+      },
+      {
+        q: "Il metodo CML-IA (Centrum voor Milieukunde Leiden) è classificato come:",
+        opts: ["Un metodo endpoint orientato al danno alle aree di protezione","Un metodo midpoint orientato ai problemi ambientali (problem-oriented)","Un metodo ibrido midpoint-endpoint con 3 prospettive culturali","Un metodo specifico per la valutazione dei soli impatti tossicologici"],
+        correct: 1,
+        fb: "CML-IA è un metodo LCIA midpoint (problem-oriented) sviluppato dall'Università di Leiden (Olanda). Include categorie come ADP, GWP, ODP, AP, EP, POCP, HTP, FAETP, MAETP, TETP, con fattori di caratterizzazione aggiornati periodicamente. È particolarmente diffuso in Europa e richiesto da alcune EPD program operator. Non produce risultati endpoint — per quelli occorre ReCiPe o altri metodi."
+      },
+      {
+        q: "In uno studio LCA con risultati ReCiPe midpoint, si osserva che la categoria 'Freshwater Eutrophication' è dominante. A quale tipo di emissione è principalmente attribuibile?",
+        opts: ["Emissioni di SO₂ e NOx in aria","Emissioni di fosforo (P) in corpi d'acqua dolce","Emissioni di CO₂ e CH₄ in aria","Emissioni di metalli pesanti nel suolo"],
+        correct: 1,
+        fb: "La Freshwater Eutrophication in ReCiPe è dominata dalle emissioni di fosforo (P) nei corpi d'acqua dolce — il fosforo è il nutriente limitante negli ecosistemi d'acqua dolce. L'unità è kg P-eq. La Marine Eutrophication è invece dominata dalle emissioni di azoto (N). Questa distinzione acquatica (freshwater vs marine) riflette la diversa chimica degli ecosistemi: negli oceani è l'azoto a limitare la crescita algale, nei laghi è il fosforo."
+      }
+    ]
+  },
+  {
+    title: "End-of-Life e Riciclo",
+    topic: "Scenari EoL, closed-loop, open-loop, ISO 14044",
+    questions: [
+      {
+        q: "In LCA, la 'recyclability' di un materiale si riferisce a:",
+        opts: ["La percentuale di materiale effettivamente riciclata a livello globale","La capacità tecnica del materiale di essere riciclato, indipendentemente dai tassi di raccolta effettivi","Il contenuto di materiale riciclato presente nel prodotto in ingresso","Il numero di cicli di riciclo possibili prima del degrado totale"],
+        correct: 1,
+        fb: "La recyclability è una proprietà tecnica intrinseca del materiale: indica se può fisicamente e chimicamente essere riciclato. È distinta dal recycled content (contenuto effettivo di riciclato nel prodotto) e dal recycling rate (tasso di raccolta e riciclo effettivo nel sistema reale). In LCA queste tre grandezze hanno implicazioni diverse: la recyclability influenza la modellazione dello scenario EoL, il recycled content influenza gli impatti upstream."
+      },
+      {
+        q: "Nella formula ISO per l'allocazione nel closed-loop recycling: I = (1-R) × V + R × E_EoL, cosa rappresenta R?",
+        opts: ["Il rapporto tra il valore economico del materiale riciclato e vergine","La frazione di materiale che viene effettivamente riciclata alla fine vita","La qualità del materiale riciclato rispetto al materiale vergine","Il numero di cicli di vita già completati dal materiale"],
+        correct: 1,
+        fb: "Nella formula closed-loop: I = (1-R)×E_V + R×E_EoL, dove: I = impatto allocato al prodotto, R = recycling rate (frazione riciclata), E_V = impatto del materiale vergine, E_EoL = impatto del processo di riciclo alla fine vita. La formula distribuisce l'impatto tra il materiale vergine (quota non riciclata) e il processo di riciclo. La logica è che il prodotto si assume il beneficio del riciclo (minore E_V) proporzionalmente alla quota riciclata."
+      },
+      {
+        q: "Nella formula open-loop con recycled content: I = (1-R₁)×E_V + R₁×E_R + (1-R₂)×E_W, cosa rappresenta il fattore A nella formula completa con sostituzione?",
+        opts: ["La percentuale di impurità nel materiale riciclato","Il fattore di qualità che esprime quanto il materiale riciclato sostituisce il vergine","Il costo del processo di riciclo per kg di materiale","Il numero di cicli di vita del materiale considerati"],
+        correct: 1,
+        fb: "Nella formula open-loop completa con sostituzione: Q_in/Q_out = R×(1-A)×E_V, il fattore A (0≤A≤1) esprime la qualità relativa del materiale secondario rispetto al primario — ovvero quanto il riciclato può sostituire il vergine in applicazioni equivalenti. A=1 significa piena sostituzione (qualità identica); A=0 significa nessuna sostituzione (downcycling totale). È un parametro critico perché fortemente influenza i benefici attribuiti al riciclo."
+      },
+      {
+        q: "Il 'downcycling' in LCA si riferisce a:",
+        opts: ["Il riciclo di materiali con perdita di qualità, che porta a prodotti di minor valore","Il recupero energetico come alternativa al riciclo meccanico","Il riciclo chimico (depolimerizzazione) di materiali plastici","Il riutilizzo di componenti senza trasformazione del materiale"],
+        correct: 0,
+        fb: "Il downcycling è il riciclo in cui il materiale risultante ha qualità inferiore rispetto al materiale originale: es. carta da stampa → cartone ondulato, PET bottiglie → fibre tessili, acciaio di alta qualità → acciaio generico. In LCA, il downcycling ha implicazioni allocative importanti: il materiale secondario sostituisce parzialmente il vergine (A<1), riducendo i benefici del riciclo rispetto al closed-loop. Si contrappone all'upcycling, dove la qualità aumenta."
+      },
+      {
+        q: "Nell'esempio ISO 14049 dell'alluminio in closed-loop, se R=90%, E_V=10 kg CO₂-eq/kg, E_EoL=0.5 kg CO₂-eq/kg, qual è l'impatto I per 1 kg di alluminio?",
+        opts: ["1.45 kg CO₂-eq","10 kg CO₂-eq","0.5 kg CO₂-eq","5.45 kg CO₂-eq"],
+        correct: 0,
+        fb: "I = (1-R)×E_V + R×E_EoL = (1-0.9)×10 + 0.9×0.5 = 0.1×10 + 0.9×0.5 = 1.0 + 0.45 = 1.45 kg CO₂-eq/kg. L'alto tasso di riciclo (90%) riduce significativamente l'impatto rispetto al materiale interamente vergine (10 kg CO₂-eq/kg). Questo illustra l'importanza dell'infrastruttura di raccolta e riciclo: lo stesso alluminio con R=0% avrebbe impatto 10 kg CO₂-eq/kg."
+      },
+      {
+        q: "Secondo ISO 14044, quale criterio dovrebbe essere preferito per l'allocazione nel riciclo open-loop quando è possibile applicarlo?",
+        opts: ["Il valore economico dei materiali primari e secondari","Il numero di usi futuri del materiale nel sistema prodotto di destinazione","La massa del materiale riciclato rispetto al totale trattato","La distanza geografica tra il sito di produzione e quello di riciclo"],
+        correct: 1,
+        fb: "ISO 14044 (sez. 4.3.4.3) indica che per l'open-loop recycling si dovrebbe preferire l'allocazione basata sul numero di utilizzi futuri — il principio è che gli impatti vengono distribuiti equamente tra tutti i cicli di vita del materiale. Come alternativa si usano le proprietà fisiche (massa, energia, qualità). L'allocazione economica è l'ultima risorsa. Nella pratica, molti studi usano approcci empirici o convenzioni di settore (es. cut-off per Ecoinvent)."
+      },
+      {
+        q: "In uno scenario LCA per un edificio, la fase C3 secondo EN 15804 si riferisce a:",
+        opts: ["La demolizione e decostruzione dell'edificio","Il trattamento dei rifiuti da costruzione (waste processing) per il recupero","Il trasporto dei materiali di demolizione al sito di trattamento","Lo smaltimento finale dei materiali non recuperabili in discarica"],
+        correct: 1,
+        fb: "Secondo EN 15804/15978, i moduli C della fase End-of-Life sono: C1 = demolizione/decostruzione (compreso il consumo energetico); C2 = trasporto dei materiali di demolizione; C3 = waste processing per il recupero/riciclo (es. frantumazione calcestruzzo, separazione metalli); C4 = smaltimento finale (discarica, incenerimento senza recupero). Il modulo D cattura i benefici/carichi netti oltre il confine di sistema (es. crediti da riciclo, recupero energetico)."
+      },
+      {
+        q: "Cosa si intende per 'recycled content' (contenuto di riciclato) in un prodotto LCA?",
+        opts: ["La percentuale del prodotto che può essere riciclata alla fine vita","La frazione di input del processo produttivo proveniente da materiale secondario (riciclato)","Il numero di volte che il materiale è già stato riciclato prima dell'uso attuale","Il rapporto tra impatti del riciclo e impatti della produzione da vergine"],
+        correct: 1,
+        fb: "Il recycled content (o secondary material content) è la quota di input al processo di produzione proveniente da materiali secondari (riciclati), in contrasto con materiali vergini (primari). Influenza gli impatti upstream: sostituendo materiale vergine con riciclato si riducono gli impatti di estrazione e raffinazione. Non va confuso con la recyclability (capacità futura di riciclo) né con il recycling rate (tasso di riciclo reale del sistema)."
+      },
+      {
+        q: "Nell'analisi LCA del tappo di sughero da champagne (caso studio), quale fase del ciclo di vita risulta tipicamente dominante per l'impatto di global warming?",
+        opts: ["La fase di fine vita (smaltimento in discarica)","La fase di estrazione del sughero dalla quercia da sughero","La fase di trasporto dal Portogallo ai produttori di champagne","La fase di uso (durante la conservazione del vino)"],
+        correct: 1,
+        fb: "Nell'LCA del sughero, la fase di estrazione dalla foresta di querce da sughero è complessa: da un lato richiede energia per la raccolta, lavorazione e trasporto; dall'altro il sughero è un materiale biogenico che sequestra CO₂ durante la crescita. Il bilancio dipende dal metodo di contabilizzazione del carbonio biogenico. In molti studi la produzione della materia prima domina, mentre il fine vita (incenerimento, liberazione CO₂ biogenica) è contabilizzato separatamente."
+      }
+    ]
+  },
+  {
+    title: "Confini di sistema e scenari",
+    topic: "System boundaries, cradle-to-x, EN 15804, EN 50693",
+    questions: [
+      {
+        q: "Quale delle seguenti affermazioni descrive correttamente lo scenario 'gate-to-gate'?",
+        opts: ["Include tutte le fasi dal fornitore di materie prime alla consegna al cliente finale","Include solo i processi interni a un singolo stabilimento produttivo, escludendo upstream e downstream","Include la fase d'uso ma esclude la fase di produzione","Include l'estrazione delle materie prime ma esclude la fase di fine vita"],
+        correct: 1,
+        fb: "Gate-to-gate è il confine più ristretto: include solo i processi all'interno di uno stabilimento produttivo, dal 'cancello d'entrata' delle materie prime al 'cancello d'uscita' del prodotto finito. Non include upstream (estrazione MP, fornitori) né downstream (distribuzione, uso, EoL). È utile per valutazioni interne di processo e per costruire moduli LCI da integrare in analisi più ampie, ma non è sufficiente per confronti tra prodotti."
+      },
+      {
+        q: "Nella norma EN 50693:2019 per prodotti elettronici, il 'PSR' (Product Specific Requirements) definisce:",
+        opts: ["Le specifiche di smontaggio per il fine vita del prodotto","Le regole specifiche per categoria di prodotto che definiscono il confine di sistema, i dati da raccogliere e le assunzioni da applicare","I requisiti minimi di efficienza energetica durante la fase d'uso","I parametri di sicurezza elettrica del prodotto"],
+        correct: 1,
+        fb: "Il PSR (Product Specific Requirements) in EN 50693 è il documento di categoria che specifica le regole LCA per un tipo particolare di prodotto elettronico: confini di sistema, processi inclusi/esclusi, dati di background da usare, scenari d'uso, metodologie allocative. Equivale concettualmente alle PCR (Product Category Rules) nel sistema EPD. Garantisce comparabilità degli studi LCA all'interno della stessa categoria di prodotto."
+      },
+      {
+        q: "In una LCA di edificio secondo EN 15978, il modulo B6 si riferisce a:",
+        opts: ["Manutenzione ordinaria dell'edificio","Uso operativo di energia (riscaldamento, raffreddamento, illuminazione)","Sostituzione di componenti durante la vita utile","Uso operativo di acqua"],
+        correct: 1,
+        fb: "Secondo EN 15978/EN 15804, i moduli B della fase d'uso sono: B1=uso (emissioni da materiali in opera), B2=manutenzione, B3=riparazione, B4=sostituzione, B5=ristrutturazione, B6=uso operativo di energia, B7=uso operativo di acqua. B6 è spesso il modulo dominante in edifici residenziali, includendo energia per HVAC, illuminazione, ascensori. La riduzione degli impatti B6 è l'obiettivo principale degli standard di efficienza energetica (NZEB, Passivhaus)."
+      },
+      {
+        q: "Perché è importante la definizione esplicita del 'cut-off' per i processi di trasporto nei confini di sistema?",
+        opts: ["Perché il trasporto non contribuisce mai significativamente agli impatti totali","Perché criteri di cut-off diversi (es. includo solo trasporto >100 km) possono alterare significativamente i risultati e la comparabilità","Perché il trasporto è sempre incluso automaticamente dai database LCA","Perché il trasporto è normato separatamente da ISO 14083 e non rientra in ISO 14044"],
+        correct: 1,
+        fb: "I criteri di cut-off (massa, energia, rilevanza degli impatti) per includere o escludere processi come il trasporto devono essere esplicitati nel goal & scope. In prodotti con supply chain globali, il trasporto può contribuire significativamente (es. 10-30% del GWP per prodotti importati da Asia). Criteri diversi tra studi comparativi alterano la comparabilità. ISO 14044 richiede che i processi esclusi siano documentati e la loro rilevanza valutata."
+      },
+      {
+        q: "Nel caso studio del tunnel stradale norvegese in LCA, quale fase del ciclo di vita domina tipicamente gli impatti di global warming?",
+        opts: ["La fase di demolizione alla fine vita","La fase di costruzione (materiali e attività di scavo)","La fase operativa (uso dei veicoli nel tunnel)","La fase di manutenzione periodica delle superfici"],
+        correct: 1,
+        fb: "Nei tunnel stradali, la fase di costruzione (materials production + construction activities) tipicamente domina il GWP — il consumo di calcestruzzo, acciaio e cemento è imponente, così come lo scavo e le attività di getto. La fase operativa dipende molto dall'intensità del traffico e dall'illuminazione/ventilazione, ma la vita utile molto lunga (>100 anni) diluisce questi impatti per anno. La fase EoL è spesso esclusa o stimata con incertezza elevata."
+      },
+      {
+        q: "Cosa si intende per 'espansione del confine di sistema' applicata agli aggregati riciclati da C&D (Construction & Demolition)?",
+        opts: ["L'inclusione del trasporto degli aggregati dal sito di demolizione all'impianto di trattamento","Il fatto che il sistema includa sia la produzione degli aggregati riciclati sia la produzione evitata di aggregati vergini","L'aggiunta della fase di uso nelle pavimentazioni stradali al confine del sistema","La considerazione di tutti i siti di demolizione in un paese come parte del sistema"],
+        correct: 1,
+        fb: "Nel caso degli aggregati da C&D, la system expansion include nel confine sia il processo di produzione degli aggregati riciclati (frantumazione del calcestruzzo demolito) sia il sistema alternativo che produce aggregati naturali vergini. Gli impatti del sistema alternativo evitato vengono sottratti (credito). Questo approccio è preferito all'allocazione in massa perché riflette la reale sostituzione di mercato e non introduce fattori arbitrari. La scelta del 'sistema sostituto' è critica."
+      },
+      {
+        q: "In una LCA di facciata ETICS (External Thermal Insulation Composite System), perché è importante considerare la fase B6 (uso energetico)?",
+        opts: ["Perché ETICS consuma energia elettrica durante il funzionamento","Perché la funzione isolante di ETICS riduce il fabbisogno energetico dell'edificio, determinando impatti evitati significativi durante tutta la vita utile","Perché la manutenzione di ETICS richiede energia per le riparazioni","Perché i materiali di ETICS emettono VOC durante la fase d'uso che richiedono ventilazione forzata"],
+        correct: 1,
+        fb: "ETICS migliora le prestazioni termiche dell'involucro, riducendo il fabbisogno di riscaldamento/raffreddamento (B6). Su una vita utile di 30-50 anni, i risparmi energetici cumulativi possono ampiamente compensare gli impatti di produzione (A1-A3). Questo rende fondamentale l'analisi dell'intero ciclo di vita (cradle-to-grave o cradle-to-cradle): una valutazione solo cradle-to-gate sovrastimerebbe l'impatto netto di ETICS rispetto a facciate non isolate."
+      },
+      {
+        q: "Quale delle seguenti è una corretta applicazione del criterio di 'mass cut-off' nella definizione dei confini di sistema?",
+        opts: ["Si escludono tutti i processi che non emettono direttamente CO₂","Si escludono i processi i cui input/output rappresentano meno di una soglia percentuale (es. 1%) della massa totale del sistema, purché non abbiano rilevanza ambientale nota","Si escludono tutti i trasporti inferiori a 50 km","Si escludono i processi con dati di qualità DQR > 3"],
+        correct: 1,
+        fb: "Il mass cut-off è un criterio pragmatico per gestire la complessità del sistema prodotto: processi che contribuiscono meno di una soglia (tipicamente 1% della massa) possono essere esclusi se non si ritiene abbiano alta rilevanza ambientale per la categoria di impatto principale. ISO 14044 richiede però che: (a) i criteri di cut-off siano esplicitati, (b) la rilevanza ambientale dei processi esclusi sia valutata (un processo con massa trascurabile può avere alta rilevanza tossicologica), (c) la massa esclusa totale non superi il 5%."
+      },
+      {
+        q: "Nella LCA dell'inverter per veicoli elettrici (caso Nordelöf et al.), quale componente contribuisce maggiormente al Global Warming Potential nella fase di produzione?",
+        opts: ["Il condensatore elettrolitico","Il dissipatore termico in alluminio","I componenti in rame (sbarre, fili)","Il PCB (Printed Circuit Board) con componenti in acciaio"],
+        correct: 2,
+        fb: "Nello studio Nordelöf et al. sulla LCI dell'inverter EV, i componenti in rame (busbar, fili) dominano tipicamente il GWP nella produzione, seguiti dal dissipatore in alluminio. La produzione di rame è energeticamente intensa e comporta emissioni significative di CO₂. Questo è un risultato comune nelle LCA di sistemi elettronici: i metalli non ferrosi (Cu, Al) dominano le categorie di impatto di global warming e ADP rispetto ai componenti in acciaio/ferro."
+      }
+    ]
+  },
+  {
+    title: "Database e software LCA",
+    topic: "Ecoinvent, GaBi, ELCD, SimaPro, OpenLCA",
+    questions: [
+      {
+        q: "Cosa distingue il modello 'consequential' dal modello 'attributional' in Ecoinvent?",
+        opts: ["Il modello consequential usa solo dati di foreground; l'attributional usa solo dati di background","Il modello attributional descrive i flussi fisici medi di un sistema; il consequential modella le conseguenze marginali di una decisione","Il modello consequential include la fase d'uso; l'attributional la esclude","Il modello attributional è per studi cradle-to-gate; il consequential per cradle-to-grave"],
+        correct: 1,
+        fb: "Attributional LCA: fotografia statica del sistema — descrive i flussi medi associati a un prodotto in un sistema esistente; usa medie di mercato. Consequential LCA: modellazione dinamica — risponde a 'cosa succede se...'; usa tecnologie marginali (es. elettricità marginale, non mix medio). Il modello consequential di Ecoinvent usa fornitori a lungo termine (unconstrained markets), il cut-off non si applica, e i co-prodotti sono gestiti con system expansion. La scelta dipende dalla domanda di ricerca: inventario vs decisione."
+      },
+      {
+        q: "Quanti dataset (processi unitari) contiene approssimativamente Ecoinvent versione 3.x?",
+        opts: ["Circa 1.000 dataset","Circa 5.000 dataset","Circa 18.000 dataset","Circa 100.000 dataset"],
+        correct: 2,
+        fb: "Ecoinvent v3.x contiene oltre 18.000 dataset di processi unitari che coprono agricoltura, energia, trasporti, manifattura, costruzioni, trattamento rifiuti e molto altro, con copertura geografica globale (dati globali, nazionali, regionali). È il database LCA più completo e usato al mondo. GaBi (Sphera) è il principale competitore con una copertura simile ma struttura diversa; ELCD (European Life Cycle Database) è più limitato e gratuito."
+      },
+      {
+        q: "OpenLCA è uno strumento LCA open-source. Quale vantaggio principale offre rispetto a SimaPro o GaBi per un utente accademico?",
+        opts: ["Maggiore velocità di calcolo grazie a algoritmi proprietari","Accesso gratuito e interfaccia per importare database aperti come ELCD, senza costi di licenza","Integrazione nativa con Ecoinvent senza necessità di acquisto separato","Risultati LCIA automaticamente più accurati grazie all'AI integrata"],
+        correct: 1,
+        fb: "OpenLCA (GreenDelta) è gratuito e open-source: non ha costi di licenza software, può importare database aperti (ELCD, US-LCI) gratuitamente e database commerciali (Ecoinvent) se l'utente ha acquistato la licenza separatamente. Questo lo rende accessibile per la ricerca accademica e i Paesi in via di sviluppo. SimaPro e GaBi hanno licenze costose ma offrono interfacce più mature, supporto tecnico e database integrati. Per applicazioni professionali e aziendali dominano ancora SimaPro e GaBi."
+      },
+      {
+        q: "In Ecoinvent, la dicitura 'RoW' (Rest of World) in un dataset indica:",
+        opts: ["Il dataset è applicabile esclusivamente ai Paesi in via di sviluppo","Il dataset rappresenta una media globale pesata per la produzione mondiale","Il dataset copre geograficamente tutte le regioni non altrimenti specificate con dataset propri","Il dataset è basato su dati stimati per regioni con scarsa copertura statistica"],
+        correct: 2,
+        fb: "RoW (Rest of World) in Ecoinvent è la denominazione geografica per i dataset che coprono tutte le regioni del mondo per cui non esiste un dataset geograficamente specifico. Ad esempio, se Ecoinvent ha un dataset per 'produzione acciaio DE' (Germania) e 'produzione acciaio CN' (Cina), il dataset 'produzione acciaio RoW' copre tutti gli altri paesi. I dataset RoW usano tipicamente dati medi globali con esclusione delle regioni coperte specificamente."
+      },
+      {
+        q: "Cosa caratterizza il database ELCD (European Life Cycle Database) gestito dalla Commissione Europea?",
+        opts: ["È un database commerciale a pagamento con aggiornamenti annuali","È un database gratuito contenente dataset di processi chiave europei per energia, trasporti e materiali di base","È un database esclusivamente per il settore edilizio (EN 15804)","È un database di soli fattori di caratterizzazione LCIA senza dati di inventario"],
+        correct: 1,
+        fb: "ELCD (ora parte del Life Cycle Data Network, LCDN, della Commissione Europea) è un database gratuito e pubblico contenente dataset LCI per i principali processi europei: mix energetici, trasporti, materiali di base (acciaio, alluminio, plastica, carta). I dataset sono validati secondo la norma ISO 14044 e peer-reviewed. Ha una copertura molto più limitata di Ecoinvent (~500 dataset) ma è un riferimento importante per policy pubbliche e per studi con risorse limitate."
+      },
+      {
+        q: "Quale dei seguenti software LCA integra nativamente il modello di impatto AWARE per la categoria 'water scarcity'?",
+        opts: ["Solo SimaPro versione 9+","Diversi software LCA tra cui SimaPro, GaBi e OpenLCA, tramite l'importazione del metodo AWARE","Solo il software GaBi Professional","Il modello AWARE non è disponibile nei software LCA commerciali"],
+        correct: 1,
+        fb: "AWARE (Available WAter REmaining) è il metodo raccomandato dall'UNEP/SETAC Life Cycle Initiative per la water scarcity in LCIA. È disponibile come metodo importabile nella maggior parte dei principali software LCA (SimaPro, GaBi, OpenLCA) tramite i file dei metodi di caratterizzazione. Non è nativo di un singolo software ma distribuito come standard aperto. L'indicatore è m³ world-eq per m³ d'acqua consumata, pesato per lo stress idrico locale."
+      },
+      {
+        q: "In un'analisi LCA condotta con SimaPro, cosa consente la funzione 'network analysis'?",
+        opts: ["L'ottimizzazione automatica del confine di sistema per minimizzare il numero di processi","La visualizzazione grafica del contributo di ciascun processo alla categoria di impatto, tracciando i percorsi causali lungo la supply chain","Il calcolo automatico dei fattori di allocazione per sistemi multifunzionali","La comparazione automatica tra due prodotti con analisi statistica integrata"],
+        correct: 1,
+        fb: "La network analysis (o contribution tree) in SimaPro genera una rappresentazione visuale ad albero del sistema prodotto: mostra graficamente come ogni processo upstream contribuisce all'impatto totale della categoria analizzata. Permette di identificare visivamente gli hotspot e i percorsi causali dominanti nella supply chain. È uno strumento fondamentale per comunicare i risultati LCA a stakeholder non tecnici e per guidare le strategie di riduzione degli impatti."
+      },
+      {
+        q: "Cos'è una 'EPD' (Environmental Product Declaration) e a quale norma fa riferimento nel settore edile?",
+        opts: ["Un rapporto interno aziendale sulle emissioni di CO₂, basato su GRI Standards","Una dichiarazione ambientale verificata da terza parte che riporta i risultati LCA di un prodotto secondo EN 15804/ISO 14025","Un certificato di conformità alle norme di efficienza energetica degli edifici","Un database di impatti ambientali per materiali da costruzione gestito dall'Unione Europea"],
+        correct: 1,
+        fb: "L'EPD (Environmental Product Declaration) è una dichiarazione ambientale di tipo III secondo ISO 14025: basata su LCA, verificata da una terza parte indipendente (verifier), e pubblicata su un programma operator (es. IBU, EPD Italy, The International EPD System). Per i prodotti da costruzione la norma di riferimento è EN 15804 (armonizzazione europea), che definisce le regole PCR di base. Le EPD permettono confronti tra prodotti della stessa categoria funzionale e sono richieste da alcuni sistemi di rating verde (LEED, BREEAM)."
+      },
+      {
+        q: "In un'analisi hotspot condotta in LCA, cosa si identifica come 'hotspot'?",
+        opts: ["Un luogo geografico con alta concentrazione di emissioni industriali","Un processo o fase del ciclo di vita che contribuisce in modo sproporzionato agli impatti totali, su cui concentrare gli interventi di riduzione","Un parametro di input con alta incertezza che richiede raccolta dati aggiuntiva","Una categoria di impatto con risultati sopra la media di settore"],
+        correct: 1,
+        fb: "L'hotspot analysis identifica i processi, i materiali o le fasi del ciclo di vita che contribuiscono in modo dominante agli impatti totali — tipicamente >20-30% del totale in una o più categorie. Gli hotspot guidano le priorità di intervento: ha più senso ridurre l'impatto di un processo che contribuisce al 40% del GWP che ottimizzare un processo al 2%. L'hotspot analysis è il risultato pratico principale di molte LCA industriali e informa le decisioni di eco-design."
+      }
+    ]
+  },
+  {
+    title: "Casi studio LCA applicata",
+    topic: "Inverter EV, aggregati C&D, tunnel, sughero, pareti",
+    questions: [
+      {
+        q: "Nello studio LCA dell'inverter per veicoli elettrici (Nordelöf et al.), quale fase risulta dominante per il GWP se il veicolo è alimentato con mix elettrico europeo medio?",
+        opts: ["La fase di produzione dell'inverter","La fase di fine vita e riciclo dei componenti elettronici","La fase di uso (consumo energetico dell'inverter durante la vita del veicolo)","La fase di distribuzione e installazione nel veicolo"],
+        correct: 2,
+        fb: "Per componenti elettronici come l'inverter, la fase d'uso (energia consumata per le perdite elettriche durante il funzionamento) tipicamente domina il GWP sulla vita del veicolo (150.000+ km). Le perdite di efficienza dell'inverter si traducono in consumi aggiuntivi di elettricità, il cui impatto dipende dall'intensità carbonica del mix elettrico. Con mix molto rinnovabile, la produzione dei materiali (rame, alluminio, semiconduttori) diventa relativamente più importante."
+      },
+      {
+        q: "Nel caso studio degli aggregati riciclati da demolizioni C&D, quale fattore rende complessa la modellazione LCA rispetto agli aggregati naturali?",
+        opts: ["Gli aggregati riciclati hanno sempre maggiori impatti di trasporto rispetto ai naturali","La necessità di decidere come allocare gli impatti tra la fase di demolizione (che genera il rifiuto) e la fase di produzione degli aggregati riciclati (che lo valorizza)","Gli aggregati riciclati non possono essere modellati con database Ecoinvent","Gli aggregati riciclati non sono soggetti a normativa EN 15804"],
+        correct: 1,
+        fb: "La complessità principale è l'allocazione degli impatti tra il sistema di demolizione (che genera il rifiuto/co-prodotto) e il sistema di produzione degli aggregati riciclati. Con il modello cut-off (Ecoinvent), gli aggregati riciclati entrano burden-free → bassi impatti ma nessun credito alla demolizione. Con system expansion, si include la produzione evitata di aggregati naturali → crediti significativi. La scelta metodologica può invertire le conclusioni comparative."
+      },
+      {
+        q: "Nella LCA comparativa di pareti (LTF, AAC, MB) per un edificio residenziale, quale categoria di impatto è tipicamente dominata dalla fase di produzione dei materiali?",
+        opts: ["Global Warming Potential, dominato da emissioni di CO₂ da cemento e calcestruzzo","Water Scarcity, dominato dal consumo d'acqua durante la fase d'uso","Eutrophication, dominato da fertilizzanti usati nella produzione di lana di roccia","Ionizing Radiation, dominato dai materiali isolanti in polistirene"],
+        correct: 0,
+        fb: "Nelle LCA di pareti opache, il GWP nella fase di produzione (A1-A3) è dominato dalle emissioni di CO₂ del processo di produzione del cemento (clinkerizzazione a ~1450°C, reazione chimica CaCO₃→CaO+CO₂) e del calcestruzzo. I sistemi con alto contenuto di cemento (MB, muratura in blocchi) hanno tipicamente GWP più elevato in A1-A3 rispetto a sistemi a secco (LTF, Light Timber Frame) che usano legno (carbonio biogenico, sequestro CO₂). I confronti cambiano però se si include la fase operativa (B6)."
+      },
+      {
+        q: "Nella LCA del tappo in sughero vs tappo in plastica vs capsula a vite per bottiglia di vino, qual è la principale sfida metodologica del confronto?",
+        opts: ["I tre sistemi non sono confrontabili perché hanno masse molto diverse","La definizione dell'unità funzionale deve includere non solo la funzione di chiusura ma anche le proprietà organolettiche che influenzano la qualità del vino nel tempo","La mancanza di dati di background per il sughero nei principali database LCA","Il trasporto domina così tanto da rendere irrilevante la produzione del tappo"],
+        correct: 1,
+        fb: "La principale sfida è la definizione dell'unità funzionale: i tre sistemi di chiusura hanno la stessa funzione fisica (chiudere la bottiglia) ma diversi effetti sulla qualità del vino nel tempo. Il sughero permette microossigenazione (benefica per invecchiamento), la capsula a vite è ermetica. Una UF che includa 'mantenere la qualità organolettica del vino per X anni' è più completa ma molto più difficile da quantificare. Studi diversi con UF diverse portano a conclusioni diverse."
+      },
+      {
+        q: "Nella LCA di un sistema di facciata ventilata rispetto a ETICS, quale parametro della fase d'uso (B) è più critico per determinare quale sistema ha minore impatto complessivo?",
+        opts: ["Il numero di interventi di manutenzione previsti durante la vita utile","Il risparmio energetico in riscaldamento e raffreddamento derivante dalle diverse prestazioni di isolamento termico","La resistenza agli agenti atmosferici che determina la durata utile","Il costo di sostituzione dei pannelli di facciata ogni 20 anni"],
+        correct: 1,
+        fb: "Il risparmio energetico in operazione (B6) è il fattore determinante: le differenze nelle prestazioni di isolamento termico tra i due sistemi si traducono in diversi fabbisogni di riscaldamento/raffreddamento lungo tutta la vita utile (40-60 anni). Un sistema con migliore prestazione termica avrà minori impatti B6 che possono compensare ampiamente i maggiori impatti di produzione A1-A3. Questo rende l'analisi cradle-to-grave indispensabile per confronti di sistemi di involucro."
+      },
+      {
+        q: "Nel caso studio del vetro riciclato come aggregato leggero per calcestruzzo, quale proprietà del vetro è rilevante per la modellazione LCA dell'end-of-life?",
+        opts: ["Il colore del vetro (trasparente vs colorato) che determina la qualità degli aggregati","Il fatto che il vetro può essere teoricamente riciclato infinite volte senza degrado qualitativo, influenzando il fattore A nell'open-loop","La temperatura di fusione del vetro che determina il consumo energetico del riciclo","Il peso specifico del vetro che determina l'allocazione in massa con altri materiali da demolizione"],
+        correct: 1,
+        fb: "Il vetro è un materiale con alta recyclability teorica: può essere rifuso e rilavorato indefinitamente senza degrado chimico significativo (fattore A vicino a 1 in open-loop). In pratica, il downcycling avviene quando vetro di diversi colori si contamina (fattore A ridotto). L'uso come aggregato per calcestruzzo è downcycling (A<1): il vetro non sostituisce completamente un materiale vergine equivalente. Questa distinzione è critica per quantificare correttamente i benefici EoL nella formula open-loop."
+      },
+      {
+        q: "Nel sistema di co-produzione DEC/GC da bioetanolo e CO₂ (caso studio), la scelta di includere o escludere le emissioni di CO₂ biogenica influenza principalmente:",
+        opts: ["Solo la categoria di impatto 'water consumption'","La categoria 'climate change': la CO₂ biogenica può essere considerata neutrale o avere diverso trattamento rispetto alla CO₂ fossile","La categoria 'eutrophication' a causa dei fertilizzanti usati nella coltivazione della biomassa","La categoria 'acidification' a causa delle emissioni di SOx nella combustione della biomassa"],
+        correct: 1,
+        fb: "Il trattamento della CO₂ biogenica è una delle questioni più controverse in LCA: la CO₂ biogenica rilasciata dalla combustione/decomposizione di biomassa può essere considerata 'climaticamente neutra' (se si assume che la CO₂ assorbita dalla pianta durante la crescita bilanci le emissioni alla combustione) oppure contabilizzata separatamente. Diverse norme (EN 16449, IPCC, GHG Protocol) hanno approcci diversi. In un sistema da bioetanolo, questa scelta può cambiare significativamente il GWP del prodotto."
+      },
+      {
+        q: "Nella LCA comparativa tra pareti in muratura (MB) e pareti a telaio leggero in legno (LTF), quale fattore rende il confronto particolarmente sensibile all'orizzonte temporale?",
+        opts: ["Il legno ha un ciclo di produzione annuale, la muratura è pluriennale","Il legno sequestra CO₂ biogenica durante la crescita, con benefici che si manifestano su orizzonti temporali lunghi e dipendono dal destino del legno alla fine vita","La muratura ha costi di manutenzione che variano significativamente nel tempo","Il legno è soggetto a obsolescenza tecnologica, la muratura no"],
+        correct: 1,
+        fb: "Il legno strutturale contiene carbonio biogenico sequestrato dalla foresta: durante la vita utile dell'edificio, questo carbonio è stoccato e non emesso. Alla fine vita, il destino del legno (riciclo, incenerimento con recupero energetico, discarica) determina se e quando il CO₂ biogenico viene rilasciato. Con orizzonti temporali brevi (<50 anni), il sequestro non viene 'scaricato' e il LTF appare molto favorevole. Con orizzonti lunghi o se il legno è incenerito, il beneficio si riduce. Questo è un tema metodologico aperto in LCA del settore forestale."
+      },
+      {
+        q: "Quale delle seguenti è la principale conclusione che emerge dalla sensitivity analysis nella LCA di un inverter per veicoli elettrici rispetto al mix elettrico?",
+        opts: ["Il mix elettrico non influenza significativamente i risultati perché l'inverter consuma poca energia","Con un mix elettrico ad alta quota rinnovabile, gli impatti della fase d'uso si riducono drasticamente e la fase di produzione dei materiali diventa dominante","L'inverter ha sempre impatti maggiori della batteria indipendentemente dal mix elettrico","La sensitivity analysis non è applicabile a prodotti con alta componente metallica"],
+        correct: 1,
+        fb: "La sensitivity analysis sul mix elettrico è critica per componenti elettronici ad alta integrazione come gli inverter. Con mix ad alta intensità carbonica (>500 gCO₂/kWh), la fase d'uso domina il GWP. Con mix a bassa intensità (<100 gCO₂/kWh, scenari 2050 europei), gli impatti operativi si riducono di oltre l'80% e la produzione dei materiali (rame, alluminio, semiconduttori) diventa la fase dominante. Questo ha implicazioni dirette per le strategie di eco-design: in scenari futuri con energia pulita, il focus si sposta sull'efficienza dei materiali."
+      }
+    ]
+  },
+  {
+    title: "ISO 14044 — Requisiti metodologici",
+    topic: "Norme ISO, requisiti, critical review, dichiarazioni",
+    questions: [
+      {
+        q: "ISO 14040:2006 e ISO 14044:2006 differiscono principalmente per:",
+        opts: ["ISO 14040 è la norma per i prodotti; ISO 14044 è per i servizi","ISO 14040 definisce i principi e il framework generale LCA; ISO 14044 specifica i requisiti dettagliati e le linee guida per l'applicazione","ISO 14040 è la norma europea; ISO 14044 è la norma internazionale","ISO 14040 copre le fasi LCI e LCIA; ISO 14044 copre solo l'interpretazione"],
+        correct: 1,
+        fb: "ISO 14040 è la norma quadro: definisce i principi, il framework generale, la terminologia e gli usi possibili della LCA senza entrare nei dettagli applicativi. ISO 14044 è la norma operativa: specifica i requisiti dettagliati e le linee guida per condurre tutti gli aspetti di una LCA (goal & scope, LCI, LCIA, interpretazione, critical review, comunicazione dei risultati). Le due norme sono complementari e vanno usate congiuntamente."
+      },
+      {
+        q: "Quale dei seguenti elementi deve obbligatoriamente essere incluso nel 'Goal and Scope' di uno studio LCA secondo ISO 14044?",
+        opts: ["I fattori di caratterizzazione per tutte le categorie di impatto da analizzare","L'unità funzionale, il confine di sistema, i requisiti di qualità dei dati e le assunzioni principali","Il nome di tutti i fornitori primari inclusi nel sistema prodotto","La lista completa dei processi unitari con i relativi dataset di Ecoinvent"],
+        correct: 1,
+        fb: "Il goal & scope secondo ISO 14044 deve includere obbligatoriamente: (1) unità funzionale e reference flow, (2) sistema prodotto e confini di sistema, (3) criteri di cut-off, (4) procedure di allocazione, (5) metodologia LCIA e categorie di impatto selezionate, (6) requisiti di qualità dei dati, (7) assunzioni e limitazioni, (8) tipo di revisione critica, (9) tipo e formato del report. Questi elementi garantiscono trasparenza e riproducibilità dello studio."
+      },
+      {
+        q: "Cosa si intende per 'completeness check' nella fase di interpretazione secondo ISO 14044?",
+        opts: ["La verifica che tutti i dati dell'inventario siano stati misurati con strumentazione calibrata","La verifica che tutti i dati e le informazioni necessari per le conclusioni siano disponibili e completi","La verifica che il database utilizzato copra il 100% dei processi del sistema prodotto","La verifica che tutti i metodi LCIA siano stati applicati a tutte le categorie di impatto"],
+        correct: 1,
+        fb: "Il completeness check nella fase di interpretazione verifica che le informazioni disponibili (dati LCI, risultati LCIA, informazioni di qualità dei dati) siano sufficienti e complete per supportare le conclusioni e le raccomandazioni dello studio. Se dati rilevanti mancano o sono di qualità insufficiente, si riesamina il goal & scope o si raccolgono dati aggiuntivi. Si affianca al consistency check (coerenza interna del metodo) e al sensitivity check."
+      },
+      {
+        q: "In ISO 14044, la 'critical review' di tipo 'internal' è condotta da:",
+        opts: ["Una terza parte indipendente esterna all'organizzazione che commissiona lo studio","Un panel di almeno 3 esperti indipendenti nominati da un ente accreditato","Un esperto interno all'organizzazione committente, non coinvolto direttamente nello studio","Il comitato ISO di competenza per la categoria di prodotto analizzata"],
+        correct: 2,
+        fb: "ISO 14044 distingue tre tipi di critical review: (1) Internal review — condotta da un esperto interno all'organizzazione committente non direttamente coinvolto nello studio; (2) External review — condotta da un singolo esperto esterno all'organizzazione; (3) Review by interested parties — condotta da un panel che include stakeholder rilevanti (es. per studi LCA con claim comparativi divulgati pubblicamente). La scelta del tipo dipende dallo scopo e dall'uso previsto dello studio."
+      },
+      {
+        q: "Quale requisito di ISO 14044 si applica specificamente agli studi LCA con 'comparative assertions' destinate alla comunicazione pubblica?",
+        opts: ["L'uso obbligatorio del software SimaPro o GaBi","La revisione critica da parte di un panel indipendente e la divulgazione della metodologia completa","L'adozione obbligatoria dello scenario cradle-to-grave","L'uso esclusivo di dati primari senza ricorso a database commerciali"],
+        correct: 1,
+        fb: "Per le comparative assertions (affermazioni comparative) divulgate pubblicamente — es. 'il prodotto A ha minore impatto ambientale del prodotto B' — ISO 14044 richiede: (1) Critical review da panel indipendente; (2) il panel deve includere stakeholder rilevanti; (3) la metodologia deve essere completamente trasparente e divulgata. Questo requisito più stringente riflette il rischio di greenwashing e l'impatto potenziale su consumatori e mercato."
+      },
+      {
+        q: "Il principio di 'consistency' in ISO 14044 richiede che:",
+        opts: ["Tutti i dati dell'inventario siano raccolti con la stessa metodologia di misura","Le ipotesi, i metodi e i dati siano applicati in modo coerente durante tutto lo studio, in particolare nei confronti tra sistemi","I risultati siano gli stessi indipendentemente dal software LCA utilizzato","Il confine di sistema sia identico per tutti i prodotti inclusi in uno stesso studio comparativo"],
+        correct: 1,
+        fb: "Il principio di consistency (coerenza) è fondamentale per la validità dei confronti: ipotesi, metodi e dati devono essere applicati in modo uniforme e coerente in tutte le parti dello studio — soprattutto quando si confrontano due o più sistemi. Ad esempio, se si usa l'allocazione energetica per un sistema, deve essere usata la stessa per il sistema comparativo. Inconsistenze metodologiche rendono non significativo il confronto. ISO 14044 richiede che il 'consistency check' sia documentato nella fase di interpretazione."
+      },
+      {
+        q: "Cosa prevede ISO 14044 riguardo all'uso dei risultati LCA per il marketing ambientale?",
+        opts: ["I risultati LCA possono essere usati liberamente per qualsiasi claim di marketing senza restrizioni","I risultati LCA possono essere usati in marketing solo se verificati secondo ISO 14025 (EPD) o ISO 14021 (autodichiarazioni)","ISO 14044 non si esprime sull'uso in marketing, demandando completamente a ISO 14020 e ISO 14021","L'uso in marketing richiede la conversione dei risultati in un singolo punteggio ambientale normalizzato"],
+        correct: 1,
+        fb: "ISO 14044 (sez. 5.6) prevede che i risultati LCA usati in comunicazione pubblica e marketing siano soggetti a requisiti specifici di trasparenza, revisione critica e completezza dell'informazione. Per i claim di marketing, le norme di riferimento sono: ISO 14020 (principi generali), ISO 14021 (autodichiarazioni ambientali), ISO 14025 (dichiarazioni di tipo III/EPD). L'uso di risultati LCA parziali o selettivi in marketing senza contesto adeguato può configurare greenwashing."
+      },
+      {
+        q: "In ISO 14044, cosa si intende per 'scenario' nell'analisi LCA?",
+        opts: ["Una simulazione al computer dei processi fisici del ciclo di vita","Una descrizione di una situazione plausibile, usata per analizzare sistemi con processi che dipendono da scelte (es. mix energetico, scenario d'uso, end-of-life)","Un'alternativa di prodotto con cui confrontare il sistema principale","Un subset dell'inventario che esclude i processi di background"],
+        correct: 1,
+        fb: "Un scenario in LCA è una descrizione di una situazione plausibile e rappresentativa, usata per parametrizzare fasi del ciclo di vita soggette a variabilità o incertezza: es. scenario d'uso (utilizzo intensivo vs moderato), scenario energetico (mix europeo vs mix rinnovabile al 100%), scenario end-of-life (riciclo vs incenerimento vs discarica). L'analisi di scenario permette di valutare come le conclusioni cambiano in funzione di ipotesi diverse, ed è fondamentale per la robustezza dello studio."
+      },
+      {
+        q: "Quale delle seguenti affermazioni su ISO 14044 e la norma EN 15804 è corretta?",
+        opts: ["EN 15804 sostituisce completamente ISO 14044 per il settore delle costruzioni","EN 15804 è una norma di prodotto (PCR, Product Category Rules) che applica i principi di ISO 14044 al settore edilizio con requisiti specifici aggiuntivi","EN 15804 e ISO 14044 sono norme identiche con diverso numero di riferimento","EN 15804 si applica solo alla fase di produzione (A1-A3) e rimanda a ISO 14044 per le altre fasi"],
+        correct: 1,
+        fb: "EN 15804 è una norma di categoria prodotto (PCR di base) che specifica i requisiti per le EPD di prodotti da costruzione: applica ISO 14044 come norma di riferimento generale e aggiunge requisiti specifici del settore (struttura dei moduli A-D, scenari d'uso standardizzati, indicatori obbligatori, regole per carbonio biogenico, requisiti di dichiarazione dei risultati). Non sostituisce ISO 14044 ma la integra con requisiti settoriali."
+      }
+    ]
+  },
+  {
+    title: "Interpretazione e comunicazione LCA",
+    topic: "Hotspot analysis, sensitivity, conclusioni, reporting",
+    questions: [
+      {
+        q: "La fase di interpretazione in LCA secondo ISO 14044 include tre elementi principali. Quali sono?",
+        opts: ["Classificazione, caratterizzazione, normalizzazione","Identificazione degli aspetti significativi, valutazione (completezza, sensibilità, coerenza), conclusioni e raccomandazioni","Raccolta dati, validazione, aggregazione","Goal & scope, inventario, impatti"],
+        correct: 1,
+        fb: "La fase di interpretazione ISO 14044 comprende: (1) Identificazione degli aspetti significativi — hotspot analysis, processi/fasi/flussi dominanti; (2) Valutazione — completeness check (informazioni sufficienti?), sensitivity check (stabilità conclusioni?), consistency check (metodi coerenti?); (3) Conclusioni, limitazioni e raccomandazioni — in modo trasparente, documentando assunzioni e incertezze. L'interpretazione è iterativa con le altre fasi."
+      },
+      {
+        q: "In un report LCA, come deve essere presentata una 'comparative assertion' per essere conforme a ISO 14044?",
+        opts: ["Come un punteggio unico normalizzato che sintetizza tutti gli impatti in un numero","Con piena trasparenza metodologica, includendo le limitazioni dello studio, le ipotesi principali e il risultato della critical review","Come un semplice grafico a barre che confronta i totali di GWP dei due sistemi","Solo in forma di tabella con tutti i 18 indicatori ReCiPe senza commenti interpretativi"],
+        correct: 1,
+        fb: "Le comparative assertions richiedono secondo ISO 14044: (1) completa trasparenza metodologica (unità funzionale, confini, dati, allocazione); (2) report delle limitazioni; (3) dichiarazione delle ipotesi principali; (4) inclusione dei risultati della critical review da panel; (5) presentazione delle incertezze. Un confronto ridotto a un singolo numero o solo GWP sarebbe incompleto e potenzialmente fuorviante. La norma vuole prevenire confronti superficiali usati per greenwashing."
+      },
+      {
+        q: "Cosa indica un 'trade-off' tra categorie di impatto in LCA?",
+        opts: ["Un errore metodologico che richiede la revisione dei confini di sistema","Una situazione in cui un sistema ha impatti minori di un altro in alcune categorie ma maggiori in altre, rendendo non univoca la valutazione comparativa","La necessità di applicare la pesatura per aggregare i risultati","Un indicatore che i dati di inventario sono inconsistenti tra loro"],
+        correct: 1,
+        fb: "Il trade-off è una situazione molto comune in LCA comparativa: il sistema A è migliore di B per GWP ma peggiore per eutrophication, oppure A è migliore per climate change ma peggiore per ecotossicità. Questo impedisce una conclusione univoca 'A è sempre migliore di B' e richiede: (1) analisi del contesto e delle priorità ambientali rilevanti; (2) eventuale pesatura (con le sue limitazioni); (3) presentazione trasparente del trade-off senza nasconderlo. I trade-off sono uno dei motivi per cui le LCA raramente danno risposte semplici."
+      },
+      {
+        q: "In LCA, il 'rebound effect' si riferisce a:",
+        opts: ["Il ritorno degli impatti ambientali da processi EoL al sistema prodotto originale","Il fenomeno per cui miglioramenti di efficienza di un prodotto vengono parzialmente o totalmente annullati da un aumento dei consumi indotto dal risparmio economico","La retroazione tra fase d'uso e fase di produzione in sistemi prodotto complessi","L'effetto di rimbalzo dei valori di GWP dopo la normalizzazione"],
+        correct: 1,
+        fb: "Il rebound effect (effetto rimbalzo) è un fenomeno socioeconomico: un miglioramento dell'efficienza energetica riduce i costi operativi, il risparmio ottenuto viene reinvestito in più consumo (es. auto più efficiente → si percorrono più km). In LCA, questo effetto normalmente non è incluso nei confini del sistema tradizionale (approccio attributional), ma è rilevante in approcci consequential o nelle analisi di policy. Ignorarlo può portare a sovrastimare i benefici ambientali di prodotti più efficienti."
+      },
+      {
+        q: "Quale metrica è usata per esprimere i risultati di impatto sulla salute umana a livello endpoint in LCIA?",
+        opts: ["QALYs (Quality-Adjusted Life Years)","DALYs (Disability-Adjusted Life Years)","YLDs (Years Lived with Disability) isolati","HALYs (Health-Adjusted Life Years)"],
+        correct: 1,
+        fb: "In LCIA endpoint (ReCiPe, IMPACT 2002+, USEtox) l'impatto sulla salute umana è espresso in DALYs (Disability-Adjusted Life Years), metrica sviluppata dall'OMS per la valutazione del burden of disease. DALY = YLL (anni di vita persi per mortalità prematura) + YLD (anni vissuti con disabilità ponderati per gravità). I QALYs (Quality-Adjusted Life Years) sono usati in farmacoeconomia e health technology assessment ma non in LCIA standard."
+      },
+      {
+        q: "Perché la 'normalizzazione' può essere fuorviante se usata per prioritizzare le categorie di impatto?",
+        opts: ["Perché la normalizzazione elimina le differenze tra le categorie, rendendo tutti i valori uguali","Perché il valore di riferimento (es. impatti europei pro capite) può essere dominato da attività specifiche di quel paese, distorcendo l'importanza relativa delle categorie","Perché la normalizzazione è applicata solo alle categorie midpoint e non alle endpoint","Perché la normalizzazione aumenta l'incertezza dei risultati rispetto ai valori di caratterizzazione"],
+        correct: 1,
+        fb: "La normalizzazione divide i risultati per impatti di riferimento (es. EU totale annuo pro capite). Se il valore di riferimento europeo è dominato da certi settori (es. alta produzione di NOx agricolo in EU → alto valore di riferimento per eutrophication), una categoria può apparire 'non prioritaria' anche se per il sistema specifico è molto rilevante. Questo fenomeno di 'mascheramento' rende la normalizzazione uno strumento da usare con cautela e non come unico criterio di prioritizzazione."
+      },
+      {
+        q: "Qual è la principale differenza tra 'uncertainty analysis' e 'variability analysis' in LCA?",
+        opts: ["L'uncertainty analysis usa metodi statistici; la variability analysis usa solo giudizio esperto","L'uncertainty riguarda la mancanza di conoscenza precisa dei parametri (incertezza epistemica); la variability riguarda la reale variazione dei parametri nel mondo reale (variabilità intrinseca)","L'uncertainty analysis si applica solo ai dati di foreground; la variability ai dati di background","Non vi è differenza: i due termini sono sinonimi in LCA"],
+        correct: 1,
+        fb: "Uncertainty (incertezza): mancanza di conoscenza precisa di un valore che in realtà è determinato — es. fattore di emissione misurato con precisione limitata, dato da letteratura con intervallo di confidenza. Variability (variabilità): reale variazione di un parametro nello spazio o nel tempo — es. il mix energetico varia per paese e stagione, l'efficienza di un processo varia tra impianti. In LCA, entrambe contribuiscono all'incertezza dei risultati ma hanno origini diverse e richiedono trattamenti diversi (Monte Carlo per uncertainty; analisi di scenario per variability)."
+      },
+      {
+        q: "In un report LCA conforme a ISO 14044, le 'limitazioni dello studio' devono includere:",
+        opts: ["Solo i processi esclusi per il criterio di cut-off","I dati mancanti, le assunzioni non verificabili, i cut-off applicati, le limitazioni geografiche/temporali e qualsiasi elemento che riduca la rappresentatività o generalizzabilità dei risultati","Solo le categorie di impatto non calcolate per mancanza di fattori di caratterizzazione","La lista completa dei dataset con DQR > 3"],
+        correct: 1,
+        fb: "Le limitazioni di uno studio LCA documentano tutto ciò che riduce la completezza, la rappresentatività o la generalizzabilità dei risultati: dati non disponibili o sostituiti con proxy, assunzioni non verificabili, processi esclusi, limitazioni geografiche (dati non specifici per il paese), limitazioni temporali (dati datati), incertezze metodologiche non risolte. La dichiarazione trasparente delle limitazioni è essenziale per l'integrità scientifica e per guidare correttamente l'uso delle conclusioni."
+      },
+      {
+        q: "Il principio di 'transparency' in ISO 14040 richiede che uno studio LCA:",
+        opts: ["Sia condotto esclusivamente da organizzazioni con certificazione ISO 14001","Divulghi nella reportistica tutte le metodologie, assunzioni, dati e limitazioni in modo sufficientemente dettagliato da permettere la comprensione e la valutazione critica","Pubblichi obbligatoriamente tutti i dati primari dell'inventario in forma di dataset aperto","Adotti una metodologia standard internazionale senza variazioni locali o settoriali"],
+        correct: 1,
+        fb: "Il principio di trasparenza è uno dei principi fondamentali di ISO 14040 (insieme a comprehensiveness, consistency, reproducibility, functional unit): lo studio deve essere condotto e comunicato in modo che metodologie, dati, assunzioni e limitazioni siano sufficientemente documentati e chiari da permettere a un lettore qualificato di comprendere le conclusioni, valutarne la robustezza e identificarne i limiti. La trasparenza è la base della credibilità scientifica della LCA e prerequisito per qualsiasi confronto o critical review."
+      }
+    ]
+  }
+  ,{
+    title: "Ecoinvent — modelli e struttura",
+    topic: "Cut-off, APOS, consequential, dataset structure",
+    questions: [
+      {
+        q: "Nel modello APOS (Allocation at the Point of Substitution) di Ecoinvent, come vengono trattati i co-prodotti?",
+        opts: ["I co-prodotti entrano burden-free come nel cut-off","Gli impatti sono allocati tra prodotto principale e co-prodotti al punto di sostituzione con prodotti equivalenti di mercato","I co-prodotti ricevono sempre il 50% degli impatti del processo","I co-prodotti vengono esclusi dal sistema con un credito pari al loro valore energetico"],
+        correct: 1,
+        fb: "In APOS, gli impatti di un processo multifunzionale vengono allocati tra i co-prodotti al punto in cui ciascuno sostituisce un prodotto equivalente sul mercato. A differenza del cut-off (dove il riciclato entra burden-free), APOS distribuisce i carichi tra produttore e utilizzatore del materiale secondario. È il modello intermedio tra cut-off (attributional puro) e consequential (sostituzione marginale)."
+      },
+      {
+        q: "In Ecoinvent v3, cosa distingue un dataset 'system process' da un 'unit process'?",
+        opts: ["Il system process include solo i flussi elementari diretti; il unit process include anche quelli indiretti","Il system process è un processo aggregato con tutti gli upstream già inclusi; il unit process è il processo elementare non aggregato","Il system process è usato solo nel modello consequential; il unit process solo nel cut-off","Il system process richiede dati primari; il unit process usa solo dati di database"],
+        correct: 1,
+        fb: "Un unit process in Ecoinvent è il processo elementare con i suoi input/output diretti — richiede il calcolo della catena upstream per ottenere i flussi elementari totali. Un system process è il risultato dell'aggregazione dell'intero sistema upstream: contiene già tutti i flussi elementari calcolati. I system process sono computazionalmente più veloci ma non permettono analisi di contributo dettagliate lungo la supply chain."
+      },
+      {
+        q: "Perché il modello consequential di Ecoinvent usa le 'tecnologie marginali' invece delle medie di mercato?",
+        opts: ["Perché le medie di mercato sono disponibili solo per i paesi europei","Perché la domanda consequential è 'quale tecnologia risponde a un incremento marginale di domanda?', non 'qual è la tecnologia media attuale?'","Perché le tecnologie marginali hanno sempre impatti inferiori alle tecnologie medie","Perché ISO 14044 obbliga all'uso di tecnologie marginali per tutti gli studi LCA"],
+        correct: 1,
+        fb: "Il consequential LCA risponde a domande decisionali: 'se produco 1 unità in più di X, quali sono le conseguenze ambientali?'. La risposta corretta usa la tecnologia che effettivamente risponde all'incremento marginale di domanda — tipicamente l'impianto a costo marginale più basso. Usare una media di mercato sarebbe sbagliato perché la media non è la tecnologia che 'entra o esce' dal mercato in risposta alla decisione."
+      },
+      {
+        q: "Cosa indica la dicitura 'GLO' in un dataset Ecoinvent come 'electricity production, GLO'?",
+        opts: ["Il dataset è stato prodotto da un gruppo di lavoro globale di esperti","Il dataset rappresenta una media globale pesata per i volumi di produzione mondiali","Il dataset è applicabile esclusivamente ai paesi del G20","Il dataset usa solo dati di letteratura scientifica globale peer-reviewed"],
+        correct: 1,
+        fb: "GLO (Global) in Ecoinvent indica che il dataset rappresenta una media globale, tipicamente pesata per i volumi di produzione o consumo mondiali. Si usa quando non esiste un dataset geograficamente specifico. Va distinto da RoW (Rest of World, che esclude le regioni con dataset propri) e dai dataset nazionali (DE, CN, US) che rappresentano mix specifici per paese."
+      },
+      {
+        q: "Nel contesto Ecoinvent, cosa si intende per 'market activity'?",
+        opts: ["Un'attività commerciale che aggrega il mix di fornitori e include il trasporto medio al consumatore, senza trasformare il prodotto","Un processo produttivo con alta rilevanza economica sul mercato globale","Un dataset creato appositamente per studi LCA consequential","Un'attività di estrazione di risorse naturali destinata al commercio internazionale"],
+        correct: 0,
+        fb: "Una market activity in Ecoinvent modella il mercato di un prodotto: aggrega i contributi di tutti i fornitori (con i loro mix di mercato) e include il trasporto medio al consumatore. Non trasforma il prodotto ma ne riflette la composizione del mix di approvvigionamento. Si distingue dalla 'transforming activity'. Quando si usa un prodotto come input, si collega alla sua market activity, non direttamente al produttore specifico."
+      },
+      {
+        q: "Ecoinvent v3.0 (2013) ha introdotto quale cambiamento fondamentale rispetto alle versioni precedenti?",
+        opts: ["L'introduzione del primo dataset europeo per l'energia solare fotovoltaica","La separazione esplicita tra modelli di sistema (cut-off, APOS, consequential) e la riorganizzazione in unit processes con market activities","La riduzione del numero di dataset da 18.000 a 5.000 per migliorare la qualità","L'integrazione nativa con il software SimaPro come piattaforma ufficiale"],
+        correct: 1,
+        fb: "Ecoinvent v3.0 ha rappresentato una ristrutturazione fondamentale: ha introdotto la separazione esplicita tra modelli di sistema (cut-off, APOS, consequential), ha riorganizzato i dataset in unit processes con attributi geografici sistematici, e ha introdotto le market activities che modellano il mix di mercato. Prima della v3, Ecoinvent offriva solo un modello attributional con allocazione senza la distinzione tra modelli di sistema."
+      },
+      {
+        q: "In Ecoinvent, il 'linking' tra processi avviene automaticamente tramite:",
+        opts: ["Il software LCA dell'utente che costruisce manualmente le connessioni","Il sistema di nomenclatura degli scambi e delle unità geografiche che collegano output di un processo agli input di un altro","L'utente che specifica manualmente i fornitori per ogni input del processo","Un algoritmo di AI che ottimizza le connessioni per minimizzare gli impatti"],
+        correct: 1,
+        fb: "Il linking in Ecoinvent è basato sulla corrispondenza tra il nome dello scambio in output di un processo e il nome dello scambio in input di un altro, combinato con la geografia. Il sistema identifica automaticamente quale market activity fornisce un determinato input a un determinato processo nella sua regione geografica, permettendo la costruzione automatica delle catene di fornitura."
+      },
+      {
+        q: "Cosa rappresenta il 'pedigree score' di un dataset Ecoinvent e come viene usato nell'analisi Monte Carlo?",
+        opts: ["È un voto qualitativo senza impatto sui calcoli numerici di incertezza","È convertito in varianza aggiuntiva da sommare alla varianza analitica del dataset per l'analisi Monte Carlo","È usato solo per filtrare i dataset con qualità insufficiente prima dell'analisi","È un indicatore del numero di fonti bibliografiche usate per costruire il dataset"],
+        correct: 1,
+        fb: "Il pedigree score viene convertito quantitativamente: a ciascun punteggio DQI (1-5) corrisponde un fattore di varianza geometrica tabulato. Questa varianza aggiuntiva si somma alla varianza della misura analitica per ottenere la varianza totale del dataset. Durante l'analisi Monte Carlo, ogni parametro viene campionato da una distribuzione log-normale con questa varianza totale, propagando l'incertezza qualitativa dei dati nei risultati finali."
+      },
+      {
+        q: "Nel modello cut-off di Ecoinvent, il materiale riciclato in input a un processo di manifattura è caratterizzato come:",
+        opts: ["Materiale con tutti gli impatti della produzione vergine, ridotti del tasso di riciclo","Materiale burden-free: entra nel sistema senza oneri da processi upstream di raccolta e riciclo","Materiale con gli impatti del solo processo di riciclo (es. fusione, rifusione), esclusa la raccolta","Materiale con il 50% degli impatti del vergine per convenzione"],
+        correct: 1,
+        fb: "Nel modello cut-off, il materiale riciclato che entra come input è burden-free: l'utente del materiale secondario non si assume alcun onere per la raccolta, il trasporto e il trattamento a fine vita — questi sono tutti assegnati al sistema che genera il rifiuto. Il riciclatore riceve quindi il materiale 'gratis' in termini di impatti upstream. Questo modello incentiva il riciclo dal punto di vista del produttore del prodotto finale ma può sottovalutare gli impatti della raccolta differenziata."
+      }
+    ]
+  },{
+    title: "Categorie midpoint — calcoli e unità",
+    topic: "GWP, AP, EP, ODP, POCP — calcoli numerici",
+    questions: [
+      {
+        q: "Un processo emette 2 kg CH₄ e 100 kg CO₂. Usando GWP100 IPCC AR5 (CH₄=28), qual è il GWP totale in kg CO₂-eq?",
+        opts: ["102 kg CO₂-eq","128 kg CO₂-eq","156 kg CO₂-eq","228 kg CO₂-eq"],
+        correct: 2,
+        fb: "GWP totale = (2 kg CH₄ × 28) + (100 kg CO₂ × 1) = 56 + 100 = 156 kg CO₂-eq. Il metano ha un GWP100 di 28 secondo IPCC AR5. Con GWP20 (CH₄ = 86) il risultato sarebbe 272 kg CO₂-eq, mostrando come la scelta dell'orizzonte temporale cambi significativamente i risultati per sistemi con alte emissioni di CH₄."
+      },
+      {
+        q: "La categoria 'Ozone Depletion Potential' (ODP) usa come sostanza di riferimento:",
+        opts: ["CO₂ (anidride carbonica)","CFC-11 (triclorofluorometano, CCl₃F)","SO₂ (diossido di zolfo)","N₂O (protossido di azoto)"],
+        correct: 1,
+        fb: "L'ODP usa come riferimento il CFC-11 (triclorofluorometano), la sostanza che ha storicamente causato i maggiori danni allo strato di ozono stratosferico. L'ODP di CFC-11 = 1 per definizione. Altre sostanze: HCFC-22 ha ODP ≈ 0.055, N₂O ha ODP ≈ 0.017. Il Protocollo di Montreal ha eliminato le sostanze con ODP più elevato."
+      },
+      {
+        q: "Nel metodo CML-IA, la categoria POCP (Photochemical Oxidant Creation Potential) usa come sostanza di riferimento:",
+        opts: ["NO₂ (diossido di azoto)","O₃ (ozono)","C₂H₄ (etilene)","NMVOC (composti organici volatili non metanici)"],
+        correct: 2,
+        fb: "Il POCP in CML usa l'etilene (C₂H₄) come riferimento (POCP C₂H₄ = 1 per definizione). L'etilene è un precursore molto reattivo nella formazione di ozono troposferico tramite reazioni fotochimiche con NOx. In ReCiPe 2016 questa categoria è stata suddivisa in 'Ozone Formation, Human Health' e 'Ozone Formation, Terrestrial Ecosystems'."
+      },
+      {
+        q: "Quale delle seguenti sostanze ha il maggiore GWP100 tra quelle comunemente incontrate in LCA industriale?",
+        opts: ["CO₂ (anidride carbonica)","CH₄ (metano)","N₂O (protossido di azoto)","SF₆ (esafluoruro di zolfo)"],
+        correct: 3,
+        fb: "SF₆ ha GWP100 = 23.500 kg CO₂-eq/kg (IPCC AR5) — il più alto tra i gas comuni. È usato come isolante elettrico negli interruttori ad alta tensione. N₂O ha GWP100 = 265, CH₄ = 28, CO₂ = 1. I gas fluorurati hanno GWP elevati perché sono ottimi assorbitori di radiazione infrarossa con lunga vita atmosferica (SF₆: 3.200 anni)."
+      },
+      {
+        q: "Nel metodo ReCiPe 2016, la categoria 'Fine Particulate Matter Formation' (FPMF) include:",
+        opts: ["Solo la massa totale di PM2.5 emessa direttamente in atmosfera","Il danno potenziale da PM2.5 includendo anche i precursori gassosi (SO₂, NOx, NH₃) che formano particolato secondario","Il numero di decessi causati dall'inquinamento da polveri sottili","Il volume d'aria contaminata da PM2.5 sopra il limite OMS"],
+        correct: 1,
+        fb: "FPMF in ReCiPe include sia le emissioni dirette di PM2.5 sia i contributi dei precursori gassosi (SO₂, NOx, NH₃) che si convertono in particolato secondario in atmosfera. L'indicatore è kg PM2.5-eq. I fattori di caratterizzazione includono il fate factor (conversione da precursore a PM2.5) e l'exposure factor, ma non l'effect factor (presente solo a livello endpoint in DALYs)."
+      },
+      {
+        q: "Un processo emette 10 kg SO₂ e 5 kg NH₃. Usando AP CML (SO₂=1, NH₃=1.88), qual è l'AP totale?",
+        opts: ["15 kg SO₂-eq","19.4 kg SO₂-eq","14.4 kg SO₂-eq","9.4 kg SO₂-eq"],
+        correct: 1,
+        fb: "AP totale = (10 × 1) + (5 × 1.88) = 10 + 9.4 = 19.4 kg SO₂-eq. L'NH₃ ha AP > 1 perché si converte in acido nitrico in atmosfera contribuendo significativamente all'acidificazione. Il NOx ha AP ≈ 0.7 kg SO₂-eq/kg. L'AP CML è 'fate-independent': non distingue dove avviene la deposizione, a differenza del TAP di ReCiPe."
+      },
+      {
+        q: "Cosa si intende per 'fate factor' nel calcolo dei fattori di caratterizzazione midpoint in LCIA?",
+        opts: ["La percentuale di una sostanza che raggiunge il compartimento ambientale bersaglio","Il fattore che converte un'emissione nella variazione di concentrazione nell'ambiente ricevente, tenendo conto di trasporto, trasformazione e deposizione","La probabilità che una sostanza causi un effetto biologico osservabile","Il rapporto tra la tossicità di una sostanza e quella della sostanza di riferimento"],
+        correct: 1,
+        fb: "Il fate factor (FF) descrive come una sostanza emessa si distribuisce e trasforma nell'ambiente prima di raggiungere il recettore. Converte kg emessi in concentrazione nel compartimento bersaglio. Si distingue dall'exposure factor (EF, concentrazione→dose assorbita) e dall'effect factor (XF, dose→effetto biologico). CF = FF × EF × XF è il framework fondamentale dei modelli di caratterizzazione LCIA."
+      },
+      {
+        q: "La 'Terrestrial Acidification Potential' (TAP) in ReCiPe usa come sostanza di riferimento:",
+        opts: ["H₂SO₄ (acido solforico)","SO₂ (diossido di zolfo)","HNO₃ (acido nitrico)","NH₃ (ammoniaca)"],
+        correct: 1,
+        fb: "Il TAP in ReCiPe (e l'AP in CML) usa SO₂ come riferimento (TAP SO₂ = 1 kg SO₂-eq). L'acidificazione terrestre è causata da deposizione di SO₂, NOx e NH₃. I fattori di caratterizzazione TAP in ReCiPe sono geograficamente differenziati (dipendono dalla sensibilità degli ecosistemi locali) a differenza dell'AP aggregato di CML."
+      },
+      {
+        q: "Nella categoria 'Ionizing Radiation' in ReCiPe, l'unità dell'indicatore midpoint è:",
+        opts: ["Bq (Becquerel) per kg di sostanza radioattiva emessa","kBq U235-eq — kilobecquerel equivalente uranio-235","Sv (Sievert) come dose efficace alla popolazione","mGy (milligray) come dose assorbita dal tessuto bersaglio"],
+        correct: 1,
+        fb: "L'indicatore midpoint per Ionizing Radiation in ReCiPe è kBq U235-eq. I fattori di caratterizzazione convertono le emissioni di vari radionuclidi (Co-60, Cs-137, U-235, Rn-222) in equivalenti U235. A livello endpoint, l'impatto è espresso in DALYs attraverso modelli dose-risposta per le patologie radio-indotte."
+      }
+    ]
+  },{
+    title: "Eco-design e LCA decisionale",
+    topic: "DfE, eco-design, LCA comparativa, strategia",
+    questions: [
+      {
+        q: "Nell'eco-design, la LCA viene applicata con maggiore impatto in quale fase del processo di sviluppo prodotto?",
+        opts: ["Nella fase di produzione di massa, per ottimizzare i processi esistenti","Nella fase di concept design, quando le scelte progettuali determinano il 90% degli impatti del ciclo di vita","Nella fase di fine vita, per ottimizzare la gestione dei rifiuti","Nella fase di marketing, per comunicare i benefici ambientali"],
+        correct: 1,
+        fb: "La 'regola del 90%' dell'eco-design afferma che circa il 90% degli impatti ambientali viene determinato nelle fasi di concept design. Modificare un prodotto già in produzione è costoso e con margini limitati. Una LCA 'screening' applicata precocemente guida le scelte fondamentali prima che vengano cristallizzate nel progetto esecutivo."
+      },
+      {
+        q: "Cosa distingue una 'screening LCA' da una 'full LCA'?",
+        opts: ["La screening LCA usa solo dati primari; la full LCA usa solo dati di database","La screening LCA è una valutazione semplificata per identificare rapidamente hotspot; la full LCA è completa e rigorosa secondo ISO 14044","La screening LCA include solo GWP e AP; la full LCA include tutte le 18 categorie ReCiPe","La screening LCA è condotta internamente; la full LCA richiede sempre una terza parte"],
+        correct: 1,
+        fb: "La screening LCA è una valutazione rapida con dati semplificati, adatta alle fasi iniziali di design o per orientare la raccolta dati. Non è conforme a ISO 14044 nella sua forma più semplice ma è utile per la prioritizzazione. La full LCA è l'analisi completa conforme a ISO 14044, con raccolta dati sistematica, uncertainty analysis e critical review."
+      },
+      {
+        q: "In un'analisi LCA per una decisione 'make or buy', quale tipo di LCA è più appropriato?",
+        opts: ["LCA attributional, perché descrive meglio lo stato attuale del sistema","LCA consequential, perché modella le conseguenze marginali della decisione di spostare la produzione","LCA cradle-to-gate, perché esclude le variabili della fase d'uso","LCA gate-to-gate, perché analizza solo i processi interni rilevanti per la decisione"],
+        correct: 1,
+        fb: "Una decisione make-or-buy cambia la struttura della supply chain con conseguenze ambientali marginali. La LCA consequential è più appropriata perché modella quali processi entrano ed escono dal mercato. La LCA attributional fotografa lo stato medio attuale e non risponde alla domanda 'cosa succede se...?' che è alla base delle decisioni aziendali."
+      },
+      {
+        q: "La modellazione LCA della 'circular economy' presenta quale sfida principale?",
+        opts: ["I materiali circolari non possono essere modellati con i database LCA esistenti","La modellazione dei flussi circolari richiede scelte allocative complesse tra più cicli di vita con impatti distribuiti su sistemi prodotto diversi","La circular economy aumenta sempre gli impatti ambientali rispetto all'economia lineare","ISO 14040/14044 vieta l'uso della LCA per sistemi circolari"],
+        correct: 1,
+        fb: "La circular economy crea sistemi con flussi che attraversano confini di più sistemi prodotto. La sfida è come attribuire impatti e benefici del riciclo tra il sistema che genera il rifiuto e quello che lo valorizza. Le metodologie cut-off, system expansion e APOS danno risposte molto diverse, creando difficoltà di comparabilità tra studi."
+      },
+      {
+        q: "La strategia 'Design for Disassembly' (DfD) mira a ridurre gli impatti LCA principalmente in quale fase?",
+        opts: ["Fase A1-A3, riducendo gli scarti di lavorazione","Fase B2-B5, facilitando la riparazione","Fase C1 e C3, facilitando la separazione dei materiali per il riciclo","Fase B6, migliorando l'efficienza operativa"],
+        correct: 2,
+        fb: "La Design for Disassembly progetta il prodotto per facilitare lo smontaggio a fine vita: connessioni reversibili, materiali compatibili, accesso facilitato ai componenti. L'obiettivo è massimizzare il recupero di materiali di alta qualità (fattore A vicino a 1) in fase C1-C3, riducendo il downcycling."
+      },
+      {
+        q: "Cosa si intende per 'carbon footprint di prodotto' (CFP) e a quale norma ISO fa riferimento?",
+        opts: ["Un indicatore multi-categoria che include tutti gli impatti ambientali normalizzati per il GWP","Una valutazione parziale del ciclo di vita limitata alla categoria climate change, regolamentata da ISO 14067","Un certificato di neutralità carbonica basato su carbon offset","Un indicatore calcolato esclusivamente per la fase di produzione A1-A3"],
+        correct: 1,
+        fb: "La Carbon Footprint di Prodotto (CFP) è una LCA parziale focalizzata sulla categoria climate change: quantifica le emissioni GHG lungo il ciclo di vita in kg CO₂-eq. La norma di riferimento è ISO 14067:2018, che applica i principi di ISO 14044 con requisiti specifici per la quantificazione e comunicazione delle emissioni GHG. È diversa dalla carbon footprint aziendale (ISO 14064, GHG Protocol)."
+      },
+      {
+        q: "In LCA comparativa, quale variabile è critica per confrontare un prodotto A (alto impatto produzione, lunga vita, basso impatto d'uso) con un prodotto B (basso impatto produzione, corta vita, alto impatto d'uso)?",
+        opts: ["Il prezzo di mercato dei due prodotti","Il numero di anni di vita utile assunto e l'intensità di utilizzo","La disponibilità dei due prodotti nel mercato locale","Il paese di produzione dei due prodotti"],
+        correct: 1,
+        fb: "Questo trade-off dipende criticamente dall'orizzonte temporale e dallo scenario d'uso: il numero di sostituzioni del prodotto B cambia il bilancio totale. L'intensità d'uso (ore/giorno, cicli/anno) determina il peso degli impatti operativi. È il motivo per cui la definizione precisa dell'unità funzionale — inclusa la durata e il pattern d'uso — è fondamentale in LCA comparativa."
+      },
+      {
+        q: "Quale degli indicatori seguenti NON è calcolato dalla LCA ma è complementare per la valutazione di sostenibilità dei prodotti?",
+        opts: ["Global Warming Potential (GWP)","Life Cycle Cost (LCC) — costi economici lungo il ciclo di vita","Eutrophication Potential (EP)","Terrestrial Acidification Potential (TAP)"],
+        correct: 1,
+        fb: "Il Life Cycle Cost (LCC) analizza i costi economici usando la stessa struttura della LCA ma con un inventario monetario. Non è calcolato dalla LCA ambientale ma è integrato con essa nel framework LCSA (Life Cycle Sustainability Assessment), che combina LCA + LCC + Social LCA per i tre pilastri della sostenibilità."
+      },
+      {
+        q: "La strategia 'design for longevity' riduce gli impatti principalmente attraverso:",
+        opts: ["L'aumento della durata utile, riducendo la frequenza di sostituzione e ammortizzando gli impatti di produzione su più anni","La scelta di materiali più resistenti con maggiore densità energetica di produzione","L'ottimizzazione della fase d'uso per ridurre i consumi operativi","La scelta di materiali riciclabili al 100% indipendentemente dalla durata"],
+        correct: 0,
+        fb: "La design for longevity estende la vita utile: gli impatti di produzione (A1-A3) vengono distribuiti su un periodo più lungo, riducendo gli impatti per anno d'uso. È efficace quando la produzione domina il ciclo di vita. Va bilanciata con l'obsolescenza tecnologica: un prodotto durevole ma inefficiente può avere maggiori impatti operativi di uno nuovo più efficiente."
+      }
+    ]
+  },{
+    title: "Water footprint e scarsità idrica",
+    topic: "Water use, AWARE, scarsità idrica, blue/green water",
+    questions: [
+      {
+        q: "Nella terminologia della water footprint, cosa si intende per 'blue water'?",
+        opts: ["L'acqua marina usata nei processi industriali dopo desalinizzazione","L'acqua dolce di superficie e sotterranea prelevata e consumata nei processi produttivi","L'acqua piovana intercettata prima che raggiunga il suolo","L'acqua rilasciata come vapore nei processi di raffreddamento industriale"],
+        correct: 1,
+        fb: "Blue water = acqua dolce di superficie o sotterranea effettivamente consumata (evaporata, incorporata nel prodotto, trasferita). Green water = acqua piovana assorbita dal suolo e usata dalle piante (evapotraspirazione) — rilevante in agricoltura. Grey water = volume necessario per diluire gli inquinanti a standard accettabili. In LCIA si usa principalmente il consumo di blue water con ponderazione per scarsità idrica locale."
+      },
+      {
+        q: "Il metodo AWARE per la water scarcity calcola il suo fattore di caratterizzazione come:",
+        opts: ["Il rapporto tra consumo del processo e la portata annua media del bacino","Il rapporto tra la disponibilità d'acqua rimanente dopo usi umani e naturali e la disponibilità media mondiale, invertito","La concentrazione di inquinanti nell'acqua restituita rispetto a quella prelevata","Il costo economico del m³ d'acqua nella regione di consumo"],
+        correct: 1,
+        fb: "AWARE calcola: CF = (AMDavail)⁻¹ / (AMDavail,world)⁻¹, dove AMDavail è l'acqua disponibile rimanente per area dopo sottrarre i bisogni umani e degli ecosistemi. CF elevato = alta scarsità. Il risultato è in m³ world-eq per m³ consumato. AWARE è raccomandato dall'UNEP/SETAC Life Cycle Initiative come metodo di consenso per la water scarcity."
+      },
+      {
+        q: "Perché la sola quantità di acqua consumata (m³) non è un buon indicatore degli impatti idrici?",
+        opts: ["Perché il consumo d'acqua è sempre trascurabile rispetto agli altri impatti","Perché 1 m³ consumato in regione con alta disponibilità ha impatti trascurabili, mentre lo stesso m³ in regione arida può causare danni severi agli ecosistemi","Perché l'acqua si rinnova sempre attraverso il ciclo idrologico","Perché i software LCA non modellano correttamente i flussi idrici"],
+        correct: 1,
+        fb: "Il consumo idrico è un impatto 'location-dependent': 1 m³ in Norvegia (alta disponibilità) vs 1 m³ in Arabia Saudita (alta scarsità) hanno conseguenze radicalmente diverse. I metodi di water scarcity (AWARE, Pfister) ponderano il consumo per la scarsità locale, trasformando m³ fisici in m³ equivalenti di impatto. Ignorare la localizzazione porta a sottostimare gravemente gli impatti nei sistemi con supply chain in regioni aride."
+      },
+      {
+        q: "Quale settore produttivo contribuisce alla quota maggiore del consumo globale di blue water?",
+        opts: ["Industria manifatturiera (acciaio, chimica, carta)","Settore energetico (termoelettrico, idroelettrico)","Agricoltura (irrigazione)","Settore municipale (uso domestico)"],
+        correct: 2,
+        fb: "L'agricoltura rappresenta circa il 70% del prelievo di blue water globale (FAO), principalmente per l'irrigazione. Questo rende il settore agroalimentare il principale contributor alla water scarcity in LCA. Prodotti come cotone (~10.000 L/kg), manzo (~15.000 L/kg), caffè (~140 L per tazza) mostrano water footprints elevate dominate dalla fase agricola."
+      },
+      {
+        q: "Il 'water stress index' di Pfister et al. differisce da AWARE principalmente per:",
+        opts: ["Pfister considera solo l'acqua sotterranea; AWARE solo l'acqua superficiale","Pfister usa il rapporto prelievo/disponibilità (WTA) con una funzione logistica come CF; AWARE usa la disponibilità residua dopo usi umani e naturali","Pfister è applicabile solo a scala nazionale; AWARE a scala di bacino idrografico","Pfister include il green water; AWARE esclude il green water"],
+        correct: 1,
+        fb: "Pfister calcola il CF come funzione sigmoide del Water-To-Availability ratio (WTA = prelievo/disponibilità). AWARE calcola invece la disponibilità residua (AMDavail) dopo sottrarre i bisogni umani e degli ecosistemi acquatici. I due metodi possono dare risultati significativamente diversi in regioni con alta domanda ecosistemica. AWARE è ora il metodo raccomandato dalla comunità LCIA."
+      },
+      {
+        q: "Come viene tipicamente modellato il consumo d'acqua nella fase d'uso operativo di un edificio secondo EN 15804?",
+        opts: ["Non è mai incluso perché varia troppo con il comportamento degli occupanti","Il modulo B7 include il consumo d'acqua potabile con impatti calcolati usando il mix idrico locale e il trattamento delle acque reflue","È incluso automaticamente nel modulo B6 (energia operativa) senza separazione","È incluso solo per edifici industriali, non residenziali"],
+        correct: 1,
+        fb: "EN 15804/15978 include esplicitamente il modulo B7 per il consumo operativo d'acqua degli edifici. Considera il volume d'acqua potabile consumata, gli impatti del trattamento e distribuzione (basati sul mix idrico locale), e il trattamento delle acque reflue. Nei climi mediterranei, B7 può contribuire significativamente alla water scarcity, soprattutto per edifici con impianti irrigui."
+      },
+      {
+        q: "Quale dei seguenti prodotti ha tipicamente il maggiore water footprint per kg secondo la letteratura LCA?",
+        opts: ["Frumento (grano)","Pomodori freschi","Carne bovina","Riso"],
+        correct: 2,
+        fb: "La carne bovina ha tra le water footprint più elevate: circa 15.000-20.000 L/kg. Per confronto: grano ≈ 1.300 L/kg, riso ≈ 2.500 L/kg, pomodori ≈ 200 L/kg. Il motivo è l'inefficienza della conversione negli animali: servono circa 7 kg di cereali per 1 kg di carne bovina, moltiplicando la water footprint dei cereali."
+      },
+      {
+        q: "In LCIA, il 'freshwater consumption' differisce dal 'freshwater withdrawal' (prelievo) perché:",
+        opts: ["Il withdrawal include le perdite per evaporazione; il consumption le esclude","Il consumption è la quota di acqua prelevata che non ritorna al corpo idrico originale nello stesso bacino e periodo; il withdrawal è il totale prelevato","Il withdrawal è in m³; il consumption in m³ world-eq ponderati per scarsità","Il consumption include solo l'acqua incorporata nel prodotto; il withdrawal anche l'acqua di processo"],
+        correct: 1,
+        fb: "Il withdrawal è il volume totale prelevato, inclusa l'acqua restituita dopo uso. Il consumption è la quota che non ritorna nello stesso bacino nello stesso periodo: acqua evaporata, incorporata nel prodotto, trasferita in altri bacini. Solo il consumo causa effettiva scarsità idrica locale — motivo per cui i modelli di water scarcity usano il consumption, non il withdrawal."
+      },
+      {
+        q: "In LCA agricola, il consumo di 'green water' (acqua piovana) è tipicamente:",
+        opts: ["Incluso con lo stesso peso del blue water nel calcolo della water scarcity","Escluso o trattato separatamente perché non compete direttamente con altri usi idrici da falde o fiumi","Trattato come emissione in atmosfera e non come consumo di risorsa","Moltiplicato per un fattore di amplificazione per l'evapotraspirazione"],
+        correct: 1,
+        fb: "Il green water (pioggia evapotraspirata dalle colture) non viene prelevata da corpi idrici superficiali o sotterranei, quindi non compete direttamente con altri usi idrici umani. Per questo i metodi di water scarcity si concentrano sul blue water consumption. Il green water è rilevante per valutare il land use ma ha fattori di impatto distinti da quelli idrici."
+      }
+    ]
+  },{
+    title: "Social LCA e sostenibilità integrata",
+    topic: "S-LCA, LCSA, aspetti sociali, indicatori",
+    questions: [
+      {
+        q: "La 'Social LCA' (S-LCA) differisce dalla LCA ambientale principalmente per:",
+        opts: ["La S-LCA usa unità funzionali diverse per ogni categoria sociale","La S-LCA valuta gli impatti sugli stakeholder umani usando indicatori sociali invece di flussi fisici ambientali","La S-LCA è condotta solo da organizzazioni non governative","La S-LCA non usa confini di sistema ma analizza solo la produzione primaria"],
+        correct: 1,
+        fb: "La S-LCA (Social Life Cycle Assessment) applica la struttura metodologica della LCA (con UNEP/SETAC Guidelines 2020) per valutare gli impatti sociali lungo la supply chain. Le categorie sono sociali: salute e sicurezza dei lavoratori, diritti umani, equità di genere, condizioni di lavoro. Gli indicatori non sono in kg o J ma in ore di lavoro pericoloso, violazioni di diritti, ecc."
+      },
+      {
+        q: "Il framework LCSA (Life Cycle Sustainability Assessment) integra:",
+        opts: ["LCA + LCC + S-LCA per valutare simultaneamente dimensioni ambientali, economiche e sociali","LCA + Carbon Footprint + Water Footprint per i tre principali impatti ambientali","LCA + Analisi del rischio + LCC per valutazioni industriali complete","LCA + ISO 14001 + EMAS per sistemi di gestione integrati"],
+        correct: 0,
+        fb: "L'LCSA integra i tre pilastri della sostenibilità: LCA (impatti ambientali), LCC (dimensioni economiche), S-LCA (impatti sociali). Tutti e tre usano la stessa unità funzionale e gli stessi confini di sistema per garantire coerenza. La sfida principale è l'aggregazione dei risultati eterogenei delle tre componenti."
+      },
+      {
+        q: "Nelle linee guida UNEP/SETAC per la S-LCA (2020), le categorie principali di stakeholder sono:",
+        opts: ["Produttori, distributori, consumatori, regolatori","Workers, Local community, Society, Consumers, Value chain actors","Dipendenti diretti, lavoratori indiretti, comunità locali","Azionisti, lavoratori, clienti, fornitori"],
+        correct: 1,
+        fb: "Le UNEP/SETAC Guidelines 2020 identificano 5 categorie di stakeholder: (1) Workers, (2) Local Community, (3) Society, (4) Consumers, (5) Value Chain Actors. Per ogni categoria esistono sottocategorie di impatto sociale specifiche — es. per Workers: salute e sicurezza, orario di lavoro, lavoro minorile, libertà di associazione."
+      },
+      {
+        q: "In S-LCA, l'indicatore 'activity variable' è usato per:",
+        opts: ["Misurare la produttività economica dei lavoratori per unità di output","Normalizzare gli impatti sociali rispetto a un'unità di riferimento dell'attività produttiva, tipicamente le ore di lavoro","Classificare le attività produttive per rischio sociale","Calcolare il salario minimo di riferimento per ogni paese nella supply chain"],
+        correct: 1,
+        fb: "L'activity variable normalizza gli impatti sociali — tipicamente le ore di lavoro (worker hours) per processo. Se un processo impiega 100 ore lavorative e il tasso di infortuni del settore/paese è X per 1000 ore, il numero atteso di infortuni è proporzionale. Le ore di lavoro sono la variabile di attività più usata; alcune metodologie usano il valore aggiunto o il numero di lavoratori."
+      },
+      {
+        q: "Quale critica metodologica è riconosciuta della S-LCA rispetto alla LCA ambientale?",
+        opts: ["La S-LCA è computazionalmente troppo complessa per supply chain reali","Gli indicatori sociali sono spesso difficilmente quantificabili, meno standardizzati e più soggetti a giudizi di valore rispetto agli indicatori ambientali fisici","La S-LCA non ha basi normative, essendo priva di standard ISO o UNEP","La S-LCA può essere applicata solo a settori ad alto impiego di manodopera"],
+        correct: 1,
+        fb: "La S-LCA affronta sfide metodologiche significative: difficoltà di quantificazione di concetti sociali complessi, mancanza di fattori di caratterizzazione consolidati, alta variabilità contestuale degli impatti, disponibilità limitata di dati sociali per supply chain globali, difficoltà di aggregazione di metriche eterogenee. Queste limitazioni rendono la S-LCA meno matura metodologicamente della LCA ambientale."
+      },
+      {
+        q: "Il 'Life Cycle Costing' (LCC) in LCSA può essere di tre tipi principali. Quale classificazione è corretta?",
+        opts: ["LCC normativo, LCC attributional, LCC consequential","LCC convenzionale (costi interni), LCC ambientale (include costi esterni monetizzati), LCC societal (include tutti i costi pubblici)","LCC cradle-to-gate, LCC cradle-to-grave, LCC cradle-to-cradle","LCC produttore, LCC consumatore, LCC pubblico"],
+        correct: 1,
+        fb: "La classificazione Swarr et al.: (1) LCC convenzionale — costi interni al produttore e utilizzatore (CapEx, OpEx, fine vita); (2) LCC ambientale — aggiunge costi esterni ambientali monetizzati (es. costo sociale del carbonio); (3) LCC societal — include tutti i costi sociali e pubblici (sussidi, costi sanitari pubblici). Il LCC convenzionale è il più usato nell'industria; il LCC societal è usato nelle analisi di policy."
+      },
+      {
+        q: "Cosa si intende per 'decent work' nel contesto della S-LCA?",
+        opts: ["Un contratto di lavoro con durata minima di 1 anno definito dall'Unione Europea","Un insieme di principi che includono occupazione produttiva, diritti sul lavoro, protezione sociale e dialogo sociale, definiti dall'ILO","Un salario minimo pari al costo della vita locale, definito dalla Banca Mondiale","Un certificato di conformità agli standard lavorativi rilasciato dai ministeri del lavoro"],
+        correct: 1,
+        fb: "Il 'Decent Work Agenda' è stato lanciato dall'ILO (International Labour Organization) nel 1999. Include 4 pilastri: (1) occupazione produttiva; (2) diritti fondamentali sul lavoro (no lavoro minorile/forzato, libertà di associazione, non discriminazione); (3) protezione sociale; (4) dialogo sociale. È il riferimento principale per gli indicatori 'Workers' nella S-LCA."
+      },
+      {
+        q: "In un'analisi LCSA del settore tessile, dove si concentrano tipicamente i maggiori impatti sociali negativi?",
+        opts: ["Nella distribuzione e vendita al dettaglio nei paesi sviluppati","Nella produzione dei tessuti (filatura, tessitura, tintura) nelle supply chain di paesi a basso reddito","Nella fase d'uso (lavaggio, cura) da parte del consumatore finale","Nella fase di fine vita (raccolta differenziata, riciclo)"],
+        correct: 1,
+        fb: "L'industria tessile ha gravi criticità sociali nelle fasi di produzione localizzate in paesi a basso reddito (Bangladesh, Vietnam, Cambogia): rischi di lavoro minorile, ore eccessive, salari sotto il minimo vitale, sicurezza inadeguata. Il collasso del Rana Plaza (Bangladesh 2013) è l'esempio più tragico. Il settore tessile è un caso emblematico per l'LCSA e la 'social hot spot analysis'."
+      },
+      {
+        q: "Cosa si intende per 'social hotspot' in S-LCA?",
+        opts: ["Una regione con alta concentrazione di impianti industriali inquinanti","Un paese, settore o processo con alto rischio di impatti sociali negativi, identificato tramite database come SHDB","Un'azienda specifica con violazioni documentate dei diritti dei lavoratori","Un prodotto con alta visibilità mediatica per scandali sociali"],
+        correct: 1,
+        fb: "Il social hotspot è un nodo della supply chain (paese+settore) con elevata probabilità di impatti sociali negativi. Viene identificato tramite screening con database come SHDB (Social Hotspot Database) che combina dati ILO, Banca Mondiale e ONG per calcolare indici di rischio per lavoro minorile, lavoro forzato, infortuni, salario. Guida la raccolta dati dettagliata nelle aree più critiche."
+      }
+    ]
+  },{
+    title: "LCA settore energetico",
+    topic: "Energia rinnovabile, fossile, grid mix, EROI",
+    questions: [
+      {
+        q: "In una LCA di un impianto fotovoltaico, quale fase contribuisce di più al GWP?",
+        opts: ["La fase d'uso (manutenzione)","La produzione dei moduli fotovoltaici (celle al silicio, telaio in alluminio)","L'installazione e collegamento alla rete","La fine vita e smaltimento dei moduli"],
+        correct: 1,
+        fb: "Per i sistemi fotovoltaici, la produzione dei moduli (purificazione silicio policristallino, produzione telaio in alluminio) domina il GWP. La fase d'uso non produce emissioni dirette. Il GWP tipico del FV è 30-80 g CO₂-eq/kWh vs 800-1000 g CO₂-eq/kWh per il carbone, con la produzione che rappresenta >80% di tale valore."
+      },
+      {
+        q: "Cosa misura l'EROI (Energy Return On Investment)?",
+        opts: ["Il rendimento economico degli investimenti in energia rinnovabile","Il rapporto energia prodotta / energia investita per produrla: indicatore di sostenibilità energetica complementare alla LCA","La quota di energia rinnovabile nel mix elettrico nazionale","Un sinonimo di 'energia primaria non rinnovabile' calcolata nella LCA"],
+        correct: 1,
+        fb: "EROI = energia totale prodotta nel ciclo di vita / energia totale investita per costruire, operare e smantellare il sistema. Un EROI > 1 indica ritorno netto positivo. In LCA, il Cumulative Energy Demand (CED) misura il consumo totale ma non lo rapporta all'energia prodotta come fa l'EROI. Vento: EROI 20-30; fotovoltaico: 6-12; carbone: 50-80 storicamente."
+      },
+      {
+        q: "Nella LCA di un veicolo elettrico (EV) vs termico (ICE), quale fattore determina principalmente se l'EV è più vantaggioso per GWP?",
+        opts: ["La massa del veicolo","L'intensità carbonica del mix elettrico usato per la ricarica durante la fase d'uso","Il numero di cicli di ricarica della batteria","La dimensione del motore elettrico"],
+        correct: 1,
+        fb: "La LCA degli EV è dominata dal trade-off: alta intensità carbonica in produzione (batteria: 100-150 kg CO₂-eq/kWh) vs basse emissioni in uso. Con mix europeo medio (~300 gCO₂/kWh), l'EV supera l'ICE in 1-3 anni. Con mix a carbone (>700 gCO₂/kWh), l'EV potrebbe essere peggiore. Con mix rinnovabile (<50 gCO₂/kWh), l'EV è nettamente superiore."
+      },
+      {
+        q: "In LCA del gas naturale, quale fase contribuisce maggiormente al GWP oltre alla combustione?",
+        opts: ["Il trasporto via gasdotto per le pompe di compressione","Le perdite di metano lungo la catena di estrazione, trattamento e distribuzione (fugitive emissions)","La costruzione degli impianti di estrazione","Il trattamento delle acque di processo durante l'estrazione"],
+        correct: 1,
+        fb: "Le fugitive emissions di CH₄ durante estrazione, trattamento, trasporto e distribuzione sono critiche per il GWP: con GWP100 CH₄=28, tassi di perdita del 2-3% aumentano significativamente l'impatto. Per il gas da fracking, le stime di leakage sono più alte (2-8%) che per il gas convenzionale (1-3%). Con GWP20 (CH₄=86), l'effetto è ancora più marcato."
+      },
+      {
+        q: "In LCA dell'energia eolica offshore, quale componente ha il maggiore impatto ambientale in produzione?",
+        opts: ["Le fondazioni e strutture in acciaio dell'impianto","I cavi sottomarini per la connessione alla rete","Le pale in fibra di vetro/carbonio","Il sistema di controllo elettronico della turbina"],
+        correct: 0,
+        fb: "Per l'eolico offshore, le fondazioni (monopile o jacket in acciaio) e le strutture della torre dominano gli impatti di produzione per GWP, ADP ed energy demand, per l'enorme quantità di acciaio richiesta. L'impatto complessivo dell'eolico offshore è tipicamente 7-15 g CO₂-eq/kWh, dominato dalla produzione delle strutture."
+      },
+      {
+        q: "Cosa si intende per 'grid mix' in LCA e perché è importante?",
+        opts: ["La rete fisica di distribuzione elettrica, la cui costruzione ha impatti LCA rilevanti","La composizione del mix di fonti energetiche che produce l'elettricità; la sua intensità carbonica determina l'impatto di tutti i processi che consumano elettricità","Un metodo di allocazione specifico per sistemi energetici multifunzionali","Il database standard per i dati energetici nei software LCA europei"],
+        correct: 1,
+        fb: "Il grid mix rappresenta le quote di ciascuna fonte di generazione nel mix elettrico. La sua intensità carbonica varia enormemente: da <50 gCO₂/kWh (Norvegia, quasi 100% idro) a >800 gCO₂/kWh (Polonia, alta quota carbone). Poiché l'elettricità è input in quasi tutti i processi industriali, la scelta del mix è uno dei parametri più influenti in LCA e deve essere esplicitata nel goal & scope."
+      },
+      {
+        q: "In LCA del nucleare, quale categoria di impatto è specificamente più rilevante rispetto alle altre fonti?",
+        opts: ["Global Warming Potential, perché le centrali nucleari emettono più CO₂ del fotovoltaico","Ionizing Radiation, per le emissioni di radionuclidi lungo il ciclo del combustibile nucleare","Water Consumption, perché le centrali nucleari consumano più acqua di qualsiasi altra fonte","Land Use, perché le miniere di uranio occupano superfici enormi"],
+        correct: 1,
+        fb: "Il nucleare ha GWP basso (5-20 gCO₂-eq/kWh, simile al rinnovabile) ma si distingue per Ionizing Radiation: emissioni di radionuclidi lungo il ciclo del combustibile (estrazione uranio, arricchimento, fabbricazione, operazione, stoccaggio scorie). L'indicatore midpoint in ReCiPe è kBq U235-eq."
+      },
+      {
+        q: "Nel confronto LCA tra riscaldamento a gas e pompa di calore elettrica, il breakeven in GWP dipende principalmente da:",
+        opts: ["Solo dal COP della pompa di calore in condizioni di laboratorio","Dal rapporto tra GWP del gas naturale bruciato e GWP dell'elettricità per la PdC amplificato per il COP","Solo dall'intensità carbonica del mix elettrico nazionale","Dal costo economico dell'elettricità rispetto al gas"],
+        correct: 1,
+        fb: "GWP della PdC per kWh termico = gCO₂/kWh_elec / COP. Con mix italiano (~350 gCO₂/kWh_elec) e COP=3, PdC = 117 gCO₂/kWh termico → migliore del gas (~200-250 gCO₂/kWh). Con mix polacco (~700 gCO₂/kWh_elec) e COP=3, PdC = 233 gCO₂/kWh → equivalente al gas. La PdC è favorevole dove il mix è pulito e/o il COP è alto."
+      },
+      {
+        q: "In LCA della biomassa per energia, il 'carbon debt' si riferisce a:",
+        opts: ["Il debito finanziario degli investimenti in impianti a biomassa","Il tempo necessario affinché la ricrescita forestale riassorba la CO₂ emessa dalla combustione del legno, ripagando il debito climatico","La quota di carbonio fossile nel combustibile da biomassa","Il credito negativo assegnato alle emissioni di CO₂ biogenica secondo EN 15804"],
+        correct: 1,
+        fb: "Il carbon debt: quando si abbatte e brucia un albero, si emette immediatamente tutta la CO₂ stoccata. La ricrescita riassorbe questa CO₂ lentamente (decenni-secoli). Nel periodo intermedio si è 'in debito' di carbonio. Il payback period dipende dalla specie, dal ciclo colturale e dalla sostituzione alternativa. Questo effetto temporale non è catturato dal GWP100 standard."
+      }
+    ]
+  },{
+    title: "LCA settore alimentare e agricoltura",
+    topic: "Food LCA, agricoltura, packaging, dieta",
+    questions: [
+      {
+        q: "In LCA del settore agroalimentare, quale fase contribuisce di più al GWP per la carne bovina?",
+        opts: ["Il trasporto dalla fattoria al macello","La fase di allevamento (emissioni enteriche di CH₄ e N₂O da fertilizzanti azotati per mangimi)","Il confezionamento e refrigerazione nella catena distributiva","La cottura e preparazione da parte del consumatore"],
+        correct: 1,
+        fb: "Per la carne bovina, la fase di allevamento domina il GWP (70-90% del totale): CH₄ enterico dai ruminanti (fermentazione nel rumine, GWP100=28), CH₄ e N₂O dalle deiezioni, N₂O dai fertilizzanti azotati per i mangimi (GWP100=265). Il GWP medio è 20-100 kg CO₂-eq/kg con alta variabilità tra sistemi intensivi ed estensivi."
+      },
+      {
+        q: "In LCA comparativa del packaging alimentare, quale confronto è metodologicamente più complesso?",
+        opts: ["Confronto tra imballaggi dello stesso materiale (es. PET vs PET)","Confronto tra materiali diversi (vetro vs PET vs alluminio) che differiscono per peso, impatti di produzione, riciclabilità e protezione del prodotto","Confronto tra imballaggi monouso e riutilizzabili dello stesso materiale","Confronto tra imballaggi con e senza stampa tipografica"],
+        correct: 1,
+        fb: "Il confronto tra materiali di packaging diversi è complesso per: (1) pesi molto diversi (vetro 300g vs PET 40g vs alluminio 15g); (2) impatti di produzione diversi (vetro 1.2 vs PET 3.4 vs alluminio vergine 11 kg CO₂-eq/kg); (3) riciclabilità diversa; (4) funzioni diverse (barriera gas, trasparenza). L'UF deve includere la funzione di protezione del prodotto per tutta la shelf life."
+      },
+      {
+        q: "Il N₂O (protossido di azoto) è critico nella LCA agricola principalmente perché:",
+        opts: ["È tossico per i consumatori dei prodotti agricoli","Ha un GWP100 di 265 ed è emesso dai suoli agricoli come sottoprodotto della nitrificazione/denitrificazione dei fertilizzanti azotati","Causa acidificazione del suolo simile all'SO₂","È responsabile dell'ozono troposferico nelle aree rurali"],
+        correct: 1,
+        fb: "Il N₂O agricolo è uno dei principali contributi al GWP del settore alimentare: GWP100=265 (IPCC AR5), vita atmosferica ~114 anni. L'IPCC stima che ~1% dell'azoto applicato come fertilizzante sia emesso come N₂O diretto dal suolo. Per carne bovina e colture ad alta fertilizzazione, il N₂O può contribuire al 20-40% del GWP totale."
+      },
+      {
+        q: "In quale caso la dieta onnivora potrebbe favorire il land use rispetto alla dieta vegana?",
+        opts: ["Quando l'allevamento usa mangimi a base di soia OGM più produttiva","Dove pascoli estensivi su terreni marginali non coltivabili producono proteine che altrimenti richiederebbero terre arabili","Quando le colture erbacee consumano più acqua degli animali al pascolo","Quando le coltivazioni intensive causano più eutrofizzazione del bestiame"],
+        correct: 1,
+        fb: "In certe condizioni, l'allevamento estensivo su pascoli permanenti in terreni marginali (non idonei alla coltivazione) può produrre proteine con minore land use competitivo rispetto alla produzione vegetale su terre arabili. Tuttavia, per GWP, eutrofizzazione e water use, la dieta vegana è sistematicamente più favorevole nella grande maggioranza degli studi LCA."
+      },
+      {
+        q: "In LCA del pane, quale fase è tipicamente dominante per il GWP?",
+        opts: ["La cottura in forno (consumo di gas/elettricità)","La coltivazione del grano (fertilizzanti azotati, emissioni N₂O e CO₂ da lavorazione del suolo)","Il trasporto dalla panetteria al consumatore","Il confezionamento in film plastico"],
+        correct: 1,
+        fb: "Per il pane, la fase agricola (coltivazione grano) domina il GWP: emissioni di N₂O dai fertilizzanti, energia per lavorazione del suolo, produzione dei fertilizzanti. L'agricoltura rappresenta il 40-60% del GWP totale, seguita dalla cottura (20-30%) e dalla produzione della farina (15-25%)."
+      },
+      {
+        q: "Come influisce il 'food loss and waste' sui risultati LCA del sistema alimentare?",
+        opts: ["Gli scarti industriali già inclusi nell'LCI di fabbrica sono gli unici rilevanti","Le perdite lungo tutta la filiera amplificano gli impatti per unità di cibo effettivamente consumato","Solo lo spreco del consumatore finale è ambientalmente rilevante","Il consumo d'acqua nei processi di lavaggio è il principale impatto dello spreco"],
+        correct: 1,
+        fb: "Se il 30% del cibo viene perso/sprecato, per consegnare 1 kg al consumatore bisogna produrne ~1.43 kg, moltiplicando tutti gli impatti upstream per questo fattore. FAO stima che ~1/3 del cibo prodotto globalmente venga perso o sprecato. In LCA con UF = '1 kg di cibo consumato', le perdite lungo la filiera devono essere incluse nel reference flow."
+      },
+      {
+        q: "In LCA dell'acquacoltura (salmone), quale fattore ha il maggiore impatto sul GWP?",
+        opts: ["Il consumo energetico degli impianti (pompe, ossigenazione)","La produzione dei mangimi per pesci (farina di pesce, olio di pesce, soia)","Il trasporto del salmone dalla Norvegia ai mercati europei in aereo","Il confezionamento e refrigerazione nella distribuzione"],
+        correct: 1,
+        fb: "Per il salmone d'allevamento, la produzione del mangime domina il GWP (60-80%): servono ~3-5 kg di pesce forage per 1 kg di farina di pesce, e ~4-6 kg di soia per le proteine vegetali. Il salmone ha GWP tipicamente 3-5 kg CO₂-eq/kg — inferiore al manzo ma superiore al pollo."
+      },
+      {
+        q: "La 'Land Use Change' (LUC) in LCA alimentare si riferisce a:",
+        opts: ["Il cambio di proprietà dei terreni agricoli tra diversi soggetti","Il cambio di destinazione d'uso del suolo (es. deforestazione per pascoli) che rilascia il carbonio stoccato come CO₂","La rotazione delle colture che cambia l'uso del terreno ogni stagione","La conversione di terreni urbani in aree agricole per produzione locale"],
+        correct: 1,
+        fb: "La LUC (Land Use Change): quando foreste o praterie vengono convertite in terreni agricoli, il carbonio stoccato viene rilasciato come CO₂. La deforestazione tropicale per soia e pascoli bovini in Amazzonia rilascia 100-500 tCO₂/ettaro. La LUC diretta (DLUC) e indiretta (ILUC) sono tra le maggiori fonti di incertezza nella LCA agroalimentare."
+      },
+      {
+        q: "In LCA del caffè, quale fattore metodologico è critico per la definizione dell'unità funzionale nel confronto espresso vs istantaneo?",
+        opts: ["Il prezzo del caffè nei due formati","La quantità di caffeina per tazza, che determina il numero di tazze equivalenti","Solo la massa di caffè usata per preparazione","Il paese di origine dei chicchi"],
+        correct: 1,
+        fb: "La definizione dell'UF per il caffè deve includere la funzione ('fornire una bevanda caffeinata con proprietà specifiche') in modo quantificato. L'espresso richiede 7-9 g di caffè macinato; l'istantaneo 2-3 g. Un confronto basato su '1 g di caffè' sarebbe diverso da uno su '1 tazza con X mg caffeina'. La scelta dell'UF può cambiare quale prodotto risulta più favorevole."
+      }
+    ]
+  },{
+    title: "Costruzioni e materiali da costruzione",
+    topic: "EN 15804, LCA edifici, materiali, isolanti",
+    questions: [
+      {
+        q: "Cosa si intende per 'carbonio incorporato' (embodied carbon) in un edificio?",
+        opts: ["Il CO₂ assorbito dai materiali vegetali (legno, sughero) incorporati nella struttura","Le emissioni GHG associate alla produzione, trasporto, costruzione, manutenzione e fine vita dei materiali, escluse le emissioni operative","Le emissioni di CO₂ prodotte dagli occupanti durante la fase d'uso","Il CO₂ equivalente associato esclusivamente alla produzione del cemento Portland"],
+        correct: 1,
+        fb: "L'embodied carbon comprende tutti i GHG associati al ciclo di vita fisico dei materiali: produzione (A1-A3), cantiere (A4-A5), manutenzione e sostituzione (B2-B5), fine vita (C1-C4), e benefici da riciclo (D). Si distingue dall'operational carbon (emissioni da uso energetico B6). Con l'avanzare degli edifici NZEB, l'embodied carbon diventa la componente dominante del GWP lifecycle."
+      },
+      {
+        q: "In LCA, il GWP del calcestruzzo è dominato da quale processo?",
+        opts: ["La produzione degli aggregati (sabbia e ghiaia)","La produzione del clinker di cemento Portland, con decarbonatazione del calcare a ~1.450°C","Il trasporto del calcestruzzo fresco dalla centrale al cantiere","La fase di indurimento (curing) del calcestruzzo in opera"],
+        correct: 1,
+        fb: "La produzione del clinker genera ~0.8-0.9 kg CO₂/kg clinker: ~60% dalla decarbonatazione chimica (CaCO₃→CaO+CO₂) e ~40% dalla combustione del combustibile per 1.450°C. Il cemento Portland è ~12-15% della massa del calcestruzzo ma il ~90% del suo GWP. Il settore cemento è responsabile di ~8% delle emissioni globali di CO₂."
+      },
+      {
+        q: "In LCA comparativa tra lana di roccia e polistirene espanso (EPS), quale categoria distingue maggiormente i due materiali?",
+        opts: ["GWP, dove il polistirene è sempre migliore","Ozone Depletion Potential, per gli agenti espandenti storicamente usati nel polistirene","Human Toxicity, per le fibre minerali della lana di roccia","Non vi sono differenze significative in nessuna categoria"],
+        correct: 1,
+        fb: "Storicamente i polistireni espansi usavano HCFC come agenti espandenti, con significativo ODP. Oggi si usano idrocarburi (pentano) o CO₂, riducendo l'ODP. Tuttavia, l'ODP rimane la categoria dove i materiali plastici cellulari si distinguono dalle lane minerali. Per GWP per unità di prestazione termica il confronto dipende dalla conduttività termica (λ) dei materiali."
+      },
+      {
+        q: "In LCA di un edificio residenziale NZEB, quale fase contribuisce la quota maggiore al GWP complessivo 50-anno?",
+        opts: ["La fase operativa (B6), grazie all'alta efficienza energetica","La fase di produzione dei materiali (A1-A3), perché l'embodied carbon diventa dominante quando le emissioni operative sono quasi zero","La fase di fine vita (C1-C4), per la demolizione di materiali isolanti speciali","La fase di manutenzione (B2-B4), per le frequenti sostituzioni"],
+        correct: 1,
+        fb: "In un NZEB, le emissioni operative (B6) sono quasi nulle. Il GWP è dominato dall'embodied carbon (A1-A3): studi europei mostrano che in NZEB l'embodied carbon rappresenta il 50-80% del GWP lifecycle vs il 20-30% in edifici tradizionali. Questo shift ha importanti implicazioni per le politiche climatiche dell'edilizia."
+      },
+      {
+        q: "Cosa significa il 'modulo D' nelle EPD secondo EN 15804?",
+        opts: ["Copre la fase di distribuzione del prodotto dal produttore al cantiere","Riporta i benefici e carichi netti al di là del confine di sistema, presentato separatamente perché si riferisce a sistemi prodotto futuri","Include i dati aggiuntivi per studi LCA comparativi pubblici","È la sezione dedicata alla qualità dei dati e alla critical review"],
+        correct: 1,
+        fb: "Il modulo D riporta i benefici del riciclo, recupero energetico o riuso a fine vita. È separato dai moduli A1-C4 perché: (1) si riferisce a sistemi prodotto futuri non ancora definiti; (2) dipende da assunzioni su tecnologie future di riciclo; (3) sommare D agli impatti attuali creerebbe asimmetria metodologica. Può essere usato per valutazioni comparative ma non per dichiarare l'impatto 'totale' del prodotto."
+      },
+      {
+        q: "In LCA di una parete in CLT (Cross-Laminated Timber), il trattamento del carbonio biogenico secondo EN 15804+A2 prevede:",
+        opts: ["Il carbonio biogenico è ignorato e considerato neutro","L'assorbimento è registrato come credito negativo in A1 (-1 kg CO₂/kg CO₂ incorporata) e il rilascio a fine vita come debito positivo in C3/C4 (+1 kg CO₂), con bilancio netto zero","Il carbonio biogenico genera sempre un vantaggio netto perché le foreste riassorbono il CO₂ entro 10 anni","Il carbonio biogenico è incluso nel GWP come CO₂ fossile senza distinzione"],
+        correct: 1,
+        fb: "EN 15804+A2 (2019) richiede la contabilizzazione esplicita: l'assorbimento di CO₂ biogenica in A1 come credito (-1 kg CO₂/kg incorporata), e il rilascio a fine vita (combustione, decomposizione) come debito in C3/C4 (+1 kg CO₂). Il bilancio netto A-C è zero per il carbonio biogenico. Il modulo D può mostrare benefici aggiuntivi se parte del carbonio è permanentemente sequestrata."
+      },
+      {
+        q: "Cosa si intende per 'streamlined LCA' applicata ai materiali da costruzione?",
+        opts: ["Una LCA che considera solo le emissioni di CO₂","Una LCA che riduce la complessità: meno categorie, dati generici di database, esclusione di fasi minori, criteri di cut-off più ampi","Una LCA che usa esclusivamente dati EPD già verificati","Una LCA che analizza solo la fase di produzione A1-A3"],
+        correct: 1,
+        fb: "La streamlined LCA è un approccio pragmatico per le fasi iniziali di progetto o con risorse limitate: si riduce la complessità adottando cut-off più ampi, dati generici di database, categorie di impatto limitate alle più rilevanti. Non è conforme alla piena ISO 14044 ma fornisce indicazioni utili per prioritizzare le scelte di materiali. Deve essere chiaramente identificata come semplificata nel reporting."
+      },
+      {
+        q: "In LCA di una facciata in vetro (curtain wall), cosa deve includere l'unità funzionale per un confronto valido?",
+        opts: ["Solo il peso del sistema per m²","La performance termica (U), solare (g), la durata utile e la superficie coperta — per garantire prestazione funzionale equivalente","Solo il costo del sistema per m²","Solo la superficie vetrata trasparente per confrontare la trasmissione di luce"],
+        correct: 1,
+        fb: "Una facciata adempie a più funzioni: separazione termica (U, W/m²K), controllo solare (fattore g), trasmissione luminosa, tenuta all'acqua/aria, resistenza meccanica, durata. Un confronto valido tra curtain wall e facciata opaca richiede un'UF che specifichi tutte le prestazioni funzionali, la durata utile e le condizioni climatiche di riferimento."
+      },
+      {
+        q: "In LCA di calcestruzzo rinforzato (RC), quale strategia ha il maggiore potenziale di riduzione dell'embodied carbon?",
+        opts: ["Aumentare il copriferro per ridurre la corrosione","Sostituire parte del clinker con SCM (fly ash, slag, silica fume), riducendo il clinker ratio","Usare acciaio di minore resistenza con sezioni più grandi","Ridurre il diametro delle barre d'armatura per diminuire la massa di acciaio"],
+        correct: 1,
+        fb: "La sostituzione parziale del clinker con SCM è la strategia più efficace: fly ash, GGBS e silica fume possono sostituire il 20-50% del clinker, riducendo il GWP del cemento del 20-50%. Riducendo il clinker ratio da 0.9 a 0.5, il GWP del cemento scende da ~900 a ~450 g CO₂-eq/kg. È la strategia con il miglior rapporto costo-efficacia per decarbonizzare il calcestruzzo."
+      }
+    ]
+  },{
+    title: "Tossicità e USEtox",
+    topic: "Ecotossicità, tossicità umana, USEtox, fate modeling",
+    questions: [
+      {
+        q: "Il modello USEtox copre quali categorie di impatto tossicologiche?",
+        opts: ["Solo la tossicità acquatica (freshwater ecotoxicity)","Human Toxicity (cancerogenica e non-cancerogenica) e Freshwater Ecotoxicity","Tossicità umana, acquatica, marina e terrestre, più ionizing radiation","Solo la tossicità umana da esposizione orale a pesticidi"],
+        correct: 1,
+        fb: "USEtox copre: (1) Human Toxicity Characterisation Factor (CTUh) per tossicità cancerogenica e non-cancerogenica (unità: comparative toxic unit per umani); (2) Freshwater Ecotoxicity (CTUe, unità: comparative toxic unit per ecosistemi). È il metodo di consenso UNEP/SETAC per la tossicologia in LCIA."
+      },
+      {
+        q: "In USEtox, il fattore di caratterizzazione (CF) si calcola come:",
+        opts: ["CF = concentrazione ambientale / dose letale LD50","CF = FF × XF × EF, dove FF è il fate factor, XF è l'effect factor ed EF è l'exposure factor","CF = logaritmo della tossicità acuta (LC50) / persistenza ambientale","CF = bioconcentration factor × tossicità cronica / solubilità in acqua"],
+        correct: 1,
+        fb: "CF = FF × XF × EF: (1) Fate Factor (FF) — converte kg emessi in concentrazione nell'ambiente; (2) Exposure Factor (EF) — converte concentrazione in dose assorbita; (3) Effect Factor (XF) — converte dose in effetto biologico (DALYs per umani, PDF·m³·day per ecosistemi). La separazione identifica quale meccanismo domina la tossicità di una sostanza."
+      },
+      {
+        q: "Perché i metalli pesanti presentano sfide specifiche nei modelli tossicologici LCIA?",
+        opts: ["Non hanno effetti tossici documentati a basse concentrazioni ambientali","Sono persistenti (non si degradano), si bioaccumulano, e i loro impatti dipendono fortemente dalla speciazione chimica e dalla biodisponibilità nel compartimento specifico","I modelli LCIA non calcolano CF per i metalli perché non hanno LD50 definita","Causano impatti principalmente tramite inalazione, escludendo la via alimentare"],
+        correct: 1,
+        fb: "I metalli pesanti pongono sfide specifiche: (1) persistenza indefinita — si accumulano per secoli; (2) biomagnificazione nella catena alimentare; (3) alta dipendenza dalla speciazione (es. Cr(III) relativamente innocuo vs Cr(VI) cancerogeno); (4) biodisponibilità variabile per pH e materia organica del suolo. USEtox gestisce queste complessità con fate modeling specifico per metalli."
+      },
+      {
+        q: "Cosa rappresenta il 'bioconcentration factor' (BCF) in tossicologia e LCIA?",
+        opts: ["Il rapporto tra concentrazione di una sostanza nell'aria e nel suolo","Il rapporto tra concentrazione in un organismo acquatico e nell'acqua circostante, misurando la tendenza al bioaccumulo","Il fattore di conversione tra tossicità acuta e cronica","Il numero di organismi morti per mg di sostanza per litro d'acqua (LC50)"],
+        correct: 1,
+        fb: "BCF = Concentrazione nell'organismo (mg/kg) / Concentrazione nell'acqua (mg/L). BCF alto (>1000 L/kg) indica alta tendenza al bioaccumulo — caratteristico di sostanze idrofobe e persistenti come PCB, DDT, diossine. In LCIA, il BCF entra nel calcolo dell'exposure factor per la via di esposizione alimentare (consumo di pesce)."
+      },
+      {
+        q: "Perché la 'terrestrial ecotoxicity' è più incerta della 'freshwater ecotoxicity' in LCIA?",
+        opts: ["Il suolo non è un compartimento rilevante per la tossicologia","I processi di fate nel suolo sono più complessi e meno standardizzati, e i dati ecotossicologici per organismi terrestri sono meno disponibili","Gli ecosistemi terrestri si ripristinano più velocemente di quelli acquatici","I metodi LCIA non considerano il suolo come compartimento di deposizione finale"],
+        correct: 1,
+        fb: "L'ecotossicità terrestre è più incerta perché: (1) il destino nel suolo dipende da processi complessi (sorption, degradazione, leaching) con alta variabilità per tipo di suolo; (2) la biodisponibilità dipende da pH e materia organica; (3) dati ecotossicologici per organismi terrestri (lombrichi, piante, insetti) sono molto meno numerosi dei dati acquatici. I CF per l'ecotossicità terrestre hanno incertezza 1-2 ordini di grandezza superiore a quelli acquatici."
+      },
+      {
+        q: "Il 'comparative toxic unit' (CTU) in USEtox per la tossicità umana si esprime come:",
+        opts: ["mg di sostanza per kg di peso corporeo come dose giornaliera accettabile","casi di malattia per unità di massa emessa (casi/kg)","μg/L come concentrazione nell'acqua potabile corrispondente alla dose di effetto","numero di DALY per kg di sostanza emessa"],
+        correct: 1,
+        fb: "Il CTUh si esprime in casi di malattia (disease incidence) per kg di sostanza emessa. Formula: CTUh = iF (intake fraction) × ED (exposure-disease relationship). Permette di confrontare l'impatto tossicologico di sostanze diverse (pesticidi, metalli, solventi) in un'unica unità. Il CTUe per l'ecotossicità si esprime in PAF·m³·day per kg emesso."
+      },
+      {
+        q: "In LCA, quale categoria di impatto è tipicamente più incerta e perché?",
+        opts: ["Global Warming Potential, perché i meccanismi del cambiamento climatico non sono compresi","Human Toxicity e Ecotoxicity, per l'alta incertezza nei dati ecotossicologici, nei modelli di fate e nelle relazioni dose-risposta","Ozone Depletion Potential, perché la chimica dello strato di ozono è troppo complessa","Acidification Potential, perché le emissioni di SO₂ variano troppo tra paesi"],
+        correct: 1,
+        fb: "Le categorie tossicologiche hanno sistematicamente la maggiore incertezza in LCIA: 2-4 ordini di grandezza nei CF vs 1-2 per GWP e <1 per ODP. Le cause: limitata disponibilità di dati ecotossicologici cronici, complessità dei modelli di fate, estrapolazioni cross-species, alta variabilità spaziale degli effetti. Conclusioni basate principalmente sulla tossicità richiedono analisi di sensibilità robuste."
+      },
+      {
+        q: "In LCIA, il CF per i pesticidi in freshwater ecotoxicity tiene conto di quale proprietà critica?",
+        opts: ["Il costo di produzione del pesticida","La persistenza e la mobilità ambientale, che determinano per quanto tempo e in quale area rimane biodisponibile nei corpi idrici","Il divieto o meno del pesticida secondo la normativa europea","Il metodo di applicazione che determina la quota che raggiunge le acque superficiali"],
+        correct: 1,
+        fb: "Per i pesticidi, la persistenza (half-life in suolo/acqua) e la mobilità (solubilità, Koc) sono parametri critici per il CF ecotossicologico. Un pesticida altamente tossico ma rapidamente degradabile può avere CF minore di uno meno tossico ma persistente che si accumula nei sedimenti. I pesticidi clorurati organici (DDT, lindano) hanno CF elevati per la loro persistenza e mobilità."
+      },
+      {
+        q: "Cosa distingue i CF 'interim' da quelli 'recommended' in USEtox?",
+        opts: ["'Interim' indica fattori provvisori in attesa di peer review; 'recommended' indica fattori validati","'Interim' indica alta incertezza scientifica (dati limitati o meccanismi non compresi); 'recommended' indica base scientifica più consolidata","'Interim' si usa per sostanze con regolamentazione nazionale; 'recommended' per quelle internazionali","'Interim' si applica alle emissioni in aria; 'recommended' a quelle in acqua"],
+        correct: 1,
+        fb: "USEtox distingue CF 'recommended' (base scientifica consolidata, dati ecotossicologici sufficienti) da CF 'interim' (alta incertezza: dati limitati, estrapolazioni cross-species, meccanismi complessi). I risultati basati su CF 'interim' devono essere interpretati con maggiore cautela. Molti metalli e sostanze emergenti (nanomateriali, farmaci, microplastiche) hanno attualmente solo CF 'interim'."
+      }
+    ]
+  },{
+    title: "LCA e normativa europea",
+    topic: "Green Deal, EF, PEF, Tassonomia, regolamenti",
+    questions: [
+      {
+        q: "Il metodo EF (Environmental Footprint) della Commissione Europea include quante categorie di impatto?",
+        opts: ["11 categorie (CML-IA)","16 categorie con metodi di caratterizzazione selezionati per supportare il Green Deal europeo","18 categorie (ReCiPe 2016)","Solo GWP con un singolo indicatore di carbon footprint"],
+        correct: 1,
+        fb: "Il metodo EF usa 16 categorie di impatto selezionate da una review scientifica: Climate Change (IPCC), ODP (WMO), Human Toxicity (USEtox), Particulate Matter (WHO), Ionizing Radiation, Photochemical Ozone Formation, Acidification, Eutrophication (freshwater, marine, terrestrial), Ecotoxicity (USEtox), Land Use, Water Scarcity (AWARE), Resource Use fossile ed elementi."
+      },
+      {
+        q: "Cosa sono le 'PEF Category Rules' (PEFCR)?",
+        opts: ["I regolamenti europei che obbligano le aziende a pubblicare la PEF dei loro prodotti","Documenti specifici per categoria di prodotto che definiscono le regole LCA per studi PEF comparabili, equivalenti alle PCR nel sistema EPD","Linee guida per calcolare la carbon footprint dei veicoli a motore","Criteri di conformità per l'etichettatura energetica di prodotti elettronici"],
+        correct: 1,
+        fb: "Le PEFCR sono documenti analoghi alle PCR nel sistema EPD, sviluppate nell'ambito del framework PEF europeo: definiscono per una categoria di prodotto (bevande, fertilizzanti, tessili, batterie) le regole LCA — confini di sistema, dati di background, metodi allocativi, scenari d'uso, indicatori da riportare. Garantiscono comparabilità tra studi PEF della stessa categoria."
+      },
+      {
+        q: "La Tassonomia UE per la finanza sostenibile usa dati LCA in quale modo?",
+        opts: ["Richiede una LCA completa ISO 14044 per ogni attività classificata come sostenibile","Include soglie di GHG (gCO₂-eq/kWh o kgCO₂-eq/t) per alcune attività, basate su dati LCA, per determinare se un'attività contribuisce alla mitigazione climatica","Vieta l'uso di dati LCA come evidenza per le classificazioni di sostenibilità","Richiede la pubblicazione di EPD per tutte le attività classificate come sostenibili"],
+        correct: 1,
+        fb: "La Tassonomia UE (Regolamento 2020/852) include criteri tecnici con soglie di intensità carbonica basate su dati LCA di ciclo di vita: ad esempio, la generazione di elettricità deve essere <100 gCO₂-eq/kWh per essere classificata come attività di 'transizione'. La LCA non è richiesta come metodologia obbligatoria ma i suoi risultati informano i valori soglia."
+      },
+      {
+        q: "Il regolamento europeo sulle batterie (EU Battery Regulation 2023/1542) introduce quali requisiti LCA?",
+        opts: ["Richiede che tutte le batterie abbiano GWP certificato <50 kg CO₂-eq/kWh","Introduce soglie massime di carbon footprint lifecycle per le batterie (EV, industriali) che si abbassano progressivamente fino al 2030","Richiede la certificazione ISO 14001 per tutti i produttori di batterie","Impone l'uso esclusivo di materiali riciclati per le batterie prodotte in Europa dal 2025"],
+        correct: 1,
+        fb: "Il Battery Regulation 2023/1542 è avanzato in termini di requisiti LCA: dichiarazione obbligatoria della carbon footprint del ciclo di vita (dal 2024-2025), con metodologia armonizzata basata sulla PEF; soglie massime che si abbassano progressivamente (performance classes); Battery Passport digitale con dati LCA e tracciabilità; requisiti di contenuto minimo di materiali riciclati."
+      },
+      {
+        q: "Il regolamento ESPR (Ecodesign for Sustainable Products Regulation, 2024) rispetto al precedente ErP:",
+        opts: ["Limita l'ecodesign solo ai prodotti energetici, restringendo il campo rispetto a ErP","Estende i requisiti di ecodesign a quasi tutti i prodotti fisici, introducendo requisiti di durabilità, riparabilità, recyclability, carbon footprint e Digital Product Passport","Sostituisce le EPD con un unico sistema di etichettatura ambientale obbligatorio","Impone la certificazione LCA obbligatoria per tutti i prodotti nel mercato europeo"],
+        correct: 1,
+        fb: "ESPR (adottato nel 2024) si applica a quasi tutte le categorie di prodotto fisico (non solo energetici come ErP). Introduce requisiti su: performance ambientale minima (LCA-based), durabilità, riparabilità, contenuto di riciclato, recyclability, Digital Product Passport (DPP) con dati LCA e tracciabilità. Prodotti tessili, mobili, ferro/acciaio, elettronica sono tra le prime priorità."
+      },
+      {
+        q: "La direttiva europea sulle 'Green Claims' (proposta 2023) mira principalmente a:",
+        opts: ["Vietare qualsiasi comunicazione ambientale senza certificazione ISO 14001","Richiedere che i claim ambientali siano basati su metodologie robuste, verificate da terze parti, e non fuorvianti","Imporre l'uso esclusivo del metodo EF per tutti i claim ambientali in Europa","Limitare la pubblicità dei prodotti ad alto impatto ambientale nei media europei"],
+        correct: 1,
+        fb: "La proposta di direttiva Green Claims (COM 2023/166) combatte il greenwashing: i claim generici ('green', 'eco-friendly', 'carbon neutral') devono essere supportati da valutazione scientifica robusta, verificata da terza parte accreditata prima della pubblicazione. Vieta claim basati su carbon offsets per dichiarare 'carbon neutrality'. I claim comparativi devono usare metodologie comparabili e aggiornate."
+      },
+      {
+        q: "La norma EN 15978 per la performance ambientale degli edifici:",
+        opts: ["Richiede solo la dichiarazione del consumo energetico operativo senza analisi LCA","Fornisce il framework per LCA sull'intero ciclo di vita (A-D) degli edifici, usando le EPD dei prodotti (EN 15804) e dati sui processi di costruzione e gestione","Richiede la certificazione BREEAM o LEED come pre-requisito per la rendicontazione","Sostituisce i requisiti della Direttiva EPBD per la certificazione energetica"],
+        correct: 1,
+        fb: "EN 15978 è la norma per la valutazione della performance ambientale degli edifici tramite LCA. Definisce la struttura dei moduli A-D, le regole per l'aggregazione degli impatti dai prodotti all'edificio, i confini di sistema, le regole per la fase operativa (B6, B7) e il formato di reportistica. Si usa con EN 15804 e con sistemi di certificazione (LEED, BREEAM, DGNB)."
+      },
+      {
+        q: "Qual è la differenza tra dichiarazioni ambientali di tipo I, II e III secondo ISO 14020-14025?",
+        opts: ["Tipo I, II e III si riferiscono alla fase del ciclo di vita coperta: produzione, uso, fine vita","Tipo I = etichetta ecologica multicriterio verificata da terze parti (es. Ecolabel); Tipo II = autodichiarazione del produttore (es. '30% riciclato'); Tipo III = dichiarazione quantitativa LCA verificata da terza parte (EPD)","Tipo I è per alimenti; Tipo II per prodotti industriali; Tipo III per servizi","Tipo I usa indicatori fisici; Tipo II monetari; Tipo III sociali"],
+        correct: 1,
+        fb: "(1) Tipo I (ISO 14024) — etichetta multicriterio assegnata ai prodotti che superano criteri definiti da terze parti (EU Ecolabel, Nordic Swan); (2) Tipo II (ISO 14021) — autodichiarazione del produttore senza verifica obbligatoria, soggetta a greenwashing; (3) Tipo III (ISO 14025) — dichiarazione quantitativa basata su LCA completa, verificata da terza parte e pubblicata da un program operator (EPD)."
+      },
+      {
+        q: "Nel quadro della CSRD (Corporate Sustainability Reporting Directive) europea, la LCA è rilevante perché:",
+        opts: ["La CSRD non ha relazione con la LCA — riguarda solo la rendicontazione finanziaria","La CSRD richiede rendicontazione degli impatti lungo la value chain (Scope 3 GHG), per la quale la LCA fornisce metodologia e dati per quantificare gli impatti dei prodotti lungo il ciclo di vita","La CSRD richiede obbligatoriamente una LCA ISO 14044 annuale per ogni linea di prodotto","La CSRD impone che tutte le aziende usino il metodo EF per la rendicontazione ambientale"],
+        correct: 1,
+        fb: "La CSRD (Direttiva 2022/2464/EU) richiede rendicontazione di sostenibilità secondo gli ESRS. Per gli impatti ambientali, gli ESRS richiedono la valutazione degli impatti lungo l'intera catena del valore (double materiality). La LCA fornisce la metodologia rigorosa per quantificare gli impatti dei prodotti (Scope 3 GHG, uso risorse, biodiversità) lungo il ciclo di vita."
+      }
+    ]
+  }
+
+];
+
+let currentSetIdx = 0;
+let currentQIdx = 0;
+let score = 0;
+let answers = [];
+let setScores = {};
+
+function init() {
+  renderSets();
+}
+
+function renderSets() {
+  const grid = document.getElementById('sets-grid');
+  grid.innerHTML = '';
+  SETS.forEach((set, i) => {
+    const card = document.createElement('div');
+    card.className = 'set-card';
+    const saved = setScores[i];
+    const badge = saved !== undefined
+      ? `<div class="set-score-badge show ${saved >= 6 ? 'badge-pass' : 'badge-fail'}">${saved}/9</div>`
+      : '';
+    card.innerHTML = `
+      ${badge}
+      <div class="set-number">SET ${String(i+1).padStart(2,'0')}</div>
+      <div class="set-title">${set.title}</div>
+      <div class="set-meta">9 domande · 1 pt/domanda</div>
+    `;
+    card.onclick = () => startSet(i);
+    grid.appendChild(card);
+  });
+}
+
+function startSet(idx) {
+  currentSetIdx = idx;
+  currentQIdx = 0;
+  score = 0;
+  answers = [];
+  document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+
+// shuffledOpts stores the randomized order for the current question
+let shuffledOpts = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderQuestion() {
+  const set = SETS[currentSetIdx];
+  const q = set.questions[currentQIdx];
+  const total = set.questions.length;
+
+  document.getElementById('progress-info').textContent = `${currentQIdx+1} / ${total}`;
+  document.getElementById('progress-fill').style.width = `${((currentQIdx)/total)*100}%`;
+  document.getElementById('question-label').textContent = `DOMANDA ${currentQIdx+1}`;
+  document.getElementById('question-text').textContent = q.q;
+
+  // Build indexed options and shuffle them
+  const indexed = q.opts.map((text, i) => ({ text, origIdx: i }));
+  shuffledOpts = shuffle(indexed);
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  shuffledOpts.forEach((opt, displayIdx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[displayIdx]}</span><span>${opt.text}</span>`;
+    btn.onclick = () => selectAnswer(displayIdx);
+    optsEl.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedback-box');
+  fb.className = 'feedback-box';
+  document.getElementById('next-btn').className = 'next-btn';
+  document.getElementById('next-btn').textContent = currentQIdx < total-1 ? 'PROSSIMA DOMANDA →' : 'VEDI RISULTATI →';
+}
+
+function selectAnswer(displayIdx) {
+  const q = SETS[currentSetIdx].questions[currentQIdx];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const chosenOrigIdx = shuffledOpts[displayIdx].origIdx;
+  const isCorrect = chosenOrigIdx === q.correct;
+  if (isCorrect) score++;
+
+  // Find display position of the correct answer
+  const correctDisplayIdx = shuffledOpts.findIndex(o => o.origIdx === q.correct);
+
+  answers.push({
+    q: q.q,
+    chosen: chosenOrigIdx,
+    correct: q.correct,
+    opts: q.opts,
+    isCorrect
+  });
+
+  btns[displayIdx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) btns[correctDisplayIdx].classList.add('reveal-correct');
+
+  const fb = document.getElementById('feedback-box');
+  const fbLabel = document.getElementById('feedback-label');
+  const fbText = document.getElementById('feedback-text');
+
+  fb.className = `feedback-box show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  fbLabel.textContent = isCorrect ? '✓ CORRETTO' : '✗ SBAGLIATO';
+  fbText.textContent = q.fb;
+
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion() {
+  const total = SETS[currentSetIdx].questions.length;
+  if (currentQIdx < total-1) {
+    currentQIdx++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  setScores[currentSetIdx] = score;
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+
+  const pct = score / 9;
+  const display = document.getElementById('score-display');
+  display.textContent = `${score}/9`;
+  display.className = `results-score-display ${pct >= 0.78 ? 'score-pass' : pct >= 0.55 ? 'score-partial' : 'score-fail'}`;
+
+  const msgs = ['Da rivedere — riprova', 'Quasi — ripassare i punti errati', 'Buono — qualche gap da colmare', 'Molto buono', 'Ottimo — set dominato'];
+  const msgIdx = score <= 3 ? 0 : score <= 5 ? 1 : score <= 6 ? 2 : score <= 7 ? 3 : 4;
+  document.getElementById('results-subtitle').textContent = msgs[msgIdx];
+
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = 9 - score;
+
+  const reviewEl = document.getElementById('review-items');
+  reviewEl.innerHTML = '';
+  answers.forEach((a, i) => {
+    const div = document.createElement('div');
+    div.className = `review-item ${a.isCorrect ? 'ri-correct' : 'ri-wrong'}`;
+    div.innerHTML = `
+      <div class="review-q">${i+1}. ${a.q}</div>
+      <div class="review-a">${a.isCorrect ? '✓' : '✗'} ${a.opts[a.chosen]}</div>
+      ${!a.isCorrect ? `<div class="review-correct-ans">Risposta corretta: ${a.opts[a.correct]}</div>` : ''}
+    `;
+    reviewEl.appendChild(div);
+  });
+
+  renderSets();
+}
+
+function retrySet() {
+  startSet(currentSetIdx);
+}
+
+function goHome() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('home-screen').style.display = 'block';
+  renderSets();
+}
+
+init();
+</script>
+</body>
+</html>
