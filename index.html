@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="StudyKit">
+<meta name="theme-color" content="#ffffff">
+<title>StudyKit</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root {
+  --bg:#f2f2f7;--surface:#ffffff;--surface2:#f2f2f7;--text:#000000;
+  --text2:#3c3c43;--text3:#8e8e93;--sep:rgba(60,60,67,0.12);
+  --accent:#007aff;--green:#34c759;--green-bg:rgba(52,199,89,0.12);
+  --red:#ff3b30;--red-bg:rgba(255,59,48,0.12);--orange:#ff9500;
+  --purple:#af52de;--radius:12px;--radius-sm:8px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#000;--surface:#1c1c1e;--surface2:#2c2c2e;--text:#fff;
+  --text2:rgba(235,235,245,0.6);--text3:rgba(235,235,245,0.3);--sep:rgba(84,84,88,0.6);
+}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);height:100dvh;overflow:hidden;display:flex;flex-direction:column;}
+.topbar{background:var(--surface);border-bottom:0.5px solid var(--sep);padding:calc(var(--safe-top) + 12px) 20px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.topbar-title{font-size:17px;font-weight:600;color:var(--text);}
+.topbar-sub{font-size:13px;color:var(--text3);}
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.page{display:none;flex:1;overflow-y:auto;flex-direction:column;padding-bottom:calc(var(--safe-bottom) + 72px);}
+.page.active{display:flex;}
+.tabbar{background:var(--surface);border-top:0.5px solid var(--sep);display:flex;padding:8px 0 calc(var(--safe-bottom) + 4px);flex-shrink:0;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:transparent;color:var(--text3);font-size:10px;font-family:inherit;padding:2px 0;transition:color .15s;}
+.tab.active{color:var(--accent);}
+.tab-icon{font-size:22px;line-height:1;}
+/* HOME */
+.home-header{padding:32px 20px 16px;}
+.home-title{font-size:34px;font-weight:700;}
+.home-sub{font-size:15px;color:var(--text3);margin-top:4px;}
+.section-label{font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:0 20px;margin-bottom:8px;margin-top:24px;}
+.card-list{margin:0 16px;background:var(--surface);border-radius:var(--radius);overflow:hidden;}
+.card-row{display:flex;align-items:center;padding:13px 16px;gap:12px;cursor:pointer;border-bottom:0.5px solid var(--sep);transition:background .1s;}
+.card-row:last-child{border-bottom:none;}
+.card-row:active{background:var(--surface2);}
+.card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.card-text{flex:1;}
+.card-title{font-size:16px;font-weight:500;color:var(--text);}
+.card-desc{font-size:13px;color:var(--text3);margin-top:1px;}
+.card-badge{font-size:12px;color:var(--text3);}
+.chevron{color:var(--text3);font-size:13px;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px;}
+.stat-card{background:var(--surface);border-radius:var(--radius);padding:16px;}
+.stat-val{font-size:28px;font-weight:700;color:var(--text);}
+.stat-lbl{font-size:13px;color:var(--text3);margin-top:2px;}
+/* FLASHCARD */
+.fc-toolbar{display:flex;align-items:center;gap:8px;padding:12px 16px;}
+.fc-select{flex:1;font-size:15px;padding:8px 12px;border-radius:var(--radius-sm);border:0.5px solid var(--sep);background:var(--surface);color:var(--text);font-family:inherit;appearance:none;-webkit-appearance:none;}
+.fc-count{font-size:14px;color:var(--text3);white-space:nowrap;}
+.fc-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;}
+.fc-card-wrap{width:100%;max-width:600px;perspective:1000px;}
+.fc-card-inner{position:relative;width:100%;min-height:240px;transform-style:preserve-3d;transition:transform .5s;cursor:pointer;}
+.fc-card-inner.flipped{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border-radius:var(--radius);padding:28px 24px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:240px;box-shadow:0 2px 12px rgba(0,0,0,.08);}
+.fc-face.back{transform:rotateY(180deg);}
+.fc-face-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:16px;}
+.fc-q{font-size:18px;font-weight:500;color:var(--text);line-height:1.4;}
+.fc-a{font-size:15px;color:var(--text2);line-height:1.6;}
+.fc-hint{font-size:13px;color:var(--text3);margin-top:16px;}
+.fc-tag-row{display:flex;justify-content:center;margin-top:12px;}
+.tag{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500;}
+.fc-nav-row{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:600px;margin-top:16px;}
+.fc-nav-btn{width:48px;height:48px;border-radius:50%;background:var(--surface);border:0.5px solid var(--sep);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.fc-progress{font-size:14px;color:var(--text3);}
+/* QUIZ */
+.quiz-wrap{padding:16px;max-width:640px;width:100%;margin:0 auto;}
+.quiz-prog-bar{height:4px;background:var(--surface2);border-radius:2px;margin-bottom:20px;overflow:hidden;}
+.quiz-prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s;}
+.quiz-q-text{font-size:19px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:20px;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{padding:14px 16px;border-radius:var(--radius);background:var(--surface);border:0.5px solid var(--sep);font-size:16px;color:var(--text);text-align:left;cursor:pointer;font-family:inherit;transition:all .15s;line-height:1.4;}
+.quiz-opt.correct{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+.quiz-opt.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+.quiz-opt.reveal{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+.quiz-feedback{margin-top:16px;padding:14px 16px;border-radius:var(--radius);font-size:14px;line-height:1.5;}
+.quiz-feedback.ok{background:var(--green-bg);color:var(--green);}
+.quiz-feedback.ko{background:var(--red-bg);color:var(--red);}
+.quiz-next{margin-top:12px;width:100%;padding:14px;border-radius:var(--radius);background:var(--accent);color:white;border:none;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;}
+.quiz-score-wrap{text-align:center;padding:40px 20px;}
+.quiz-score-num{font-size:72px;font-weight:700;color:var(--text);line-height:1;}
+.quiz-score-den{font-size:24px;color:var(--text3);margin-bottom:8px;}
+.quiz-score-msg{font-size:17px;color:var(--text2);margin-bottom:32px;}
+.quiz-restart{display:inline-block;padding:14px 32px;border-radius:var(--radius);background:var(--accent);color:white;border:none;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;}
+/* SCHEMI */
+.schema-picker{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex-shrink:0;}
+.schema-picker::-webkit-scrollbar{display:none;}
+.schema-chip{padding:7px 14px;border-radius:20px;background:var(--surface);border:0.5px solid var(--sep);font-size:14px;color:var(--text2);white-space:nowrap;cursor:pointer;font-family:inherit;transition:all .15s;flex-shrink:0;}
+.schema-chip.active{background:var(--accent);border-color:var(--accent);color:white;}
+.schema-body{flex:1;overflow-y:auto;padding:0 16px 16px;}
+.schema-panel{display:none;}
+.schema-panel.active{display:block;}
+.s-card{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.s-card h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:10px;}
+.s-card h4{font-size:13px;font-weight:600;color:var(--text);margin:10px 0 6px;}
+.s-card p,.s-card li{font-size:14px;color:var(--text2);line-height:1.65;}
+.s-card ul{padding-left:18px;}
+.s-card li{margin-bottom:5px;}
+.s-row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:0.5px solid var(--sep);}
+.s-row:last-child{border-bottom:none;}
+.s-row-key{font-size:14px;color:var(--text2);flex:1;padding-right:8px;}
+.s-row-val{font-size:14px;color:var(--text);font-weight:500;text-align:right;flex:1;}
+.s-chain{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.s-step{padding:8px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;}
+.s-arrow{font-size:14px;color:var(--text3);}
+.pill2{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500;margin:3px;}
+.hier-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:0.5px solid var(--sep);}
+.hier-row:last-child{border-bottom:none;}
+.hier-n{font-size:22px;font-weight:700;width:28px;flex-shrink:0;margin-top:-2px;}
+.hier-t{font-size:14px;font-weight:600;color:var(--text);}
+.hier-d{font-size:13px;color:var(--text3);margin-top:2px;line-height:1.55;}
+.grid2s{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.mini-card{background:var(--surface2);border-radius:var(--radius-sm);padding:12px;}
+.mini-card h4{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.mini-card p,.mini-card li{font-size:12px;color:var(--text2);line-height:1.55;}
+.mini-card ul{padding-left:14px;}
+.note{font-size:12px;color:var(--text3);font-style:italic;padding:8px 0;line-height:1.5;}
+.badge-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.divider{height:0.5px;background:var(--sep);margin:10px 0;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.two-col-item{}
+.two-col-item strong{font-size:13px;font-weight:600;color:var(--text);display:block;margin-bottom:3px;}
+.two-col-item p{font-size:12px;color:var(--text2);line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <div class="topbar-title" id="topbar-title">StudyKit</div>
+    <div class="topbar-sub" id="topbar-sub">I tuoi corsi</div>
+  </div>
+</div>
+<div class="main">
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="home-header">
+    <div class="home-title">Ciao, Vito 👋</div>
+    <div class="home-sub">Cosa studi oggi?</div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val">60</div><div class="stat-lbl">Flashcard LCA</div></div>
+    <div class="stat-card"><div class="stat-val">20</div><div class="stat-lbl">Domande quiz</div></div>
+  </div>
+  <div class="section-label" style="margin-top:24px;">Accesso rapido</div>
+  <div class="card-list">
+    <div class="card-row" onclick="goTo('flashcard')"><div class="card-icon" style="background:#007aff22;">🃏</div><div class="card-text"><div class="card-title">Flashcard</div><div class="card-desc">Studia domanda-risposta</div></div><div class="chevron">›</div></div>
+    <div class="card-row" onclick="goTo('quiz')"><div class="card-icon" style="background:#34c75922;">✅</div><div class="card-text"><div class="card-title">Quiz</div><div class="card-desc">Metti alla prova le tue conoscenze</div></div><div class="chevron">›</div></div>
+    <div class="card-row" onclick="goTo('schemi')"><div class="card-icon" style="background:#ff950022;">🗂️</div><div class="card-text"><div class="card-title">Schemi</div><div class="card-desc">10 sezioni ordinate per lezione</div></div><div class="chevron">›</div></div>
+  </div>
+  <div class="section-label">Corsi</div>
+  <div class="card-list">
+    <div class="card-row" onclick="goTo('flashcard')"><div class="card-icon" style="background:#af52de22;">🌱</div><div class="card-text"><div class="card-title">LCA e Materiali</div><div class="card-desc">Politecnico di Milano</div></div><div class="card-badge">60 card</div><div class="chevron">›</div></div>
+    <div class="card-row"><div class="card-icon" style="background:var(--surface2);">＋</div><div class="card-text"><div class="card-title" style="color:var(--accent)">Aggiungi corso</div><div class="card-desc">Carica un nuovo argomento</div></div></div>
+  </div>
+</div>
+
+<!-- FLASHCARD -->
+<div class="page" id="page-flashcard">
+  <div class="fc-toolbar">
+    <select class="fc-select" id="fc-topic" onchange="fcFilter()">
+      <option value="all">Tutti gli argomenti</option>
+      <option value="sost">Sostenibilità & LCT</option>
+      <option value="framework">Framework & ISO</option>
+      <option value="scope">Goal & Scope</option>
+      <option value="lci">LCI & Flussi</option>
+      <option value="multi">Multifunzionalità</option>
+      <option value="lcia">LCIA</option>
+      <option value="qualita">Qualità del dato</option>
+      <option value="eol">End-of-Life</option>
+    </select>
+    <div class="fc-count" id="fc-count">1 / 40</div>
+  </div>
+  <div class="fc-area">
+    <div class="fc-card-wrap">
+      <div class="fc-card-inner" id="fc-inner" onclick="fcFlip()">
+        <div class="fc-face front">
+          <div class="fc-face-label">Domanda</div>
+          <div class="fc-q" id="fc-q"></div>
+          <div class="fc-hint">Tocca per girare</div>
+        </div>
+        <div class="fc-face back">
+          <div class="fc-face-label">Risposta</div>
+          <div class="fc-a" id="fc-a"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-tag-row"><span class="tag" id="fc-tag-el"></span></div>
+    <div class="fc-nav-row">
+      <button class="fc-nav-btn" onclick="fcPrev()">‹</button>
+      <div class="fc-progress" id="fc-prog">1 / 40</div>
+      <button class="fc-nav-btn" onclick="fcNext()">›</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="page" id="page-quiz">
+  <div class="quiz-wrap" id="quiz-wrap"></div>
+</div>
+
+<!-- SCHEMI -->
+<div class="page" id="page-schemi">
+  <div class="schema-picker" id="schema-picker">
+    <button class="schema-chip active" onclick="showSchema('sost',this)">1. Sostenibilità</button>
+    <button class="schema-chip" onclick="showSchema('lca',this)">2. LCA</button>
+    <button class="schema-chip" onclick="showSchema('iso',this)">3. ISO 14040</button>
+    <button class="schema-chip" onclick="showSchema('scope',this)">4. Goal & Scope</button>
+    <button class="schema-chip" onclick="showSchema('lci',this)">5. LCI</button>
+    <button class="schema-chip" onclick="showSchema('multi',this)">6. Multifunzionalità</button>
+    <button class="schema-chip" onclick="showSchema('antro',this)">7. Antropocene</button>
+    <button class="schema-chip" onclick="showSchema('lcia',this)">8. LCIA</button>
+    <button class="schema-chip" onclick="showSchema('lcia2',this)">9. LCIA Avanzata</button>
+    <button class="schema-chip" onclick="showSchema('eol',this)">10. End-of-Life</button>
+  </div>
+  <div class="schema-body">
+
+<!-- 1. SOSTENIBILITÀ -->
+<div class="schema-panel active" id="sp-sost">
+  <div class="s-card">
+    <h3>Sviluppo sostenibile — definizione base</h3>
+    <p>Soddisfare i bisogni del presente senza compromettere la capacità delle generazioni future di soddisfare i propri. Include una dimensione di <strong>giustizia e accesso</strong>: esistono bisogni essenziali a cui dare priorità. I limiti entro cui operare sono di due tipi: <strong>tecnologici</strong> e <strong>sociali/organizzativi</strong>.</p>
+  </div>
+  <div class="s-card">
+    <h3>I tre pilastri — diagramma di Venn</h3>
+    <p style="margin-bottom:10px;">Le tre intersezioni del diagramma descrivono cosa succede quando si combinano due pilastri su tre:</p>
+    <div class="s-row"><span class="s-row-key">Bearable</span><span class="s-row-val">Ambientale + Sociale — accettabile e vivibile</span></div>
+    <div class="s-row"><span class="s-row-key">Viable</span><span class="s-row-val">Ambientale + Economico — funziona senza devastare</span></div>
+    <div class="s-row"><span class="s-row-key">Equitable</span><span class="s-row-val">Sociale + Economico — distribuzione equa di costi e benefici</span></div>
+    <div class="s-row"><span class="s-row-key">Sustainable</span><span class="s-row-val">Tutti e tre insieme — il centro del Venn</span></div>
+    <p class="note">Equitable ≠ uguale per tutti: significa fair — diritti, opportunità, condizioni di lavoro, accesso.</p>
+  </div>
+  <div class="s-card">
+    <h3>Life Cycle Thinking (LCT)</h3>
+    <p style="margin-bottom:10px;">Va oltre il focus tradizionale sul solo sito produttivo, includendo impatti ambientali, sociali ed economici <strong>lungo tutto il ciclo di vita</strong>. Il focus tradizionale (guardare solo la propria fabbrica/fase) genera due errori sistemici:</p>
+    <div class="s-row"><span class="s-row-key">Burden shifting spaziale</span><span class="s-row-val">Si migliora la propria zona peggiorando un'altra</span></div>
+    <div class="s-row"><span class="s-row-key">Burden shifting temporale/di fase</span><span class="s-row-val">Si migliora la produzione rovinando il riciclo o un'altra fase</span></div>
+    <p class="note">Guardare solo nel proprio recinto produce marketing interno, non sostenibilità reale.</p>
+  </div>
+  <div class="s-card">
+    <h3>LCM e LCSA</h3>
+    <div class="s-row"><span class="s-row-key">Life Cycle Management (LCM)</span><span class="s-row-val">Gestione integrata del ciclo di vita per orientare produzione e consumo verso sostenibilità, usando strumenti procedurali e analitici</span></div>
+    <div class="s-row"><span class="s-row-key">Life Cycle Sustainability Assessment (LCSA)</span><span class="s-row-val">LCSA = LCA + LCC + S-LCA. Valuta impatti e benefici ambientali, sociali ed economici in modo integrato</span></div>
+  </div>
+  <div class="s-card">
+    <h3>End of Waste — condizioni (WFD 2008/98/EC Art.6)</h3>
+    <p style="margin-bottom:10px;">Un materiale classificato come rifiuto può diventare prodotto/materia prima secondaria se rispetta tutte e quattro le condizioni:</p>
+    <ul>
+      <li>È comunemente usato per scopi specifici</li>
+      <li>Esiste un mercato o una domanda per esso</li>
+      <li>Soddisfa requisiti tecnici e rispetta leggi/standard di prodotto</li>
+      <li>Il suo uso non porta a impatti avversi su ambiente o salute umana</li>
+    </ul>
+    <p class="note">L'End of Waste cambia: i confini del sistema, la responsabilità lungo la filiera, la modellazione del riciclo in LCA.</p>
+  </div>
+  <div class="s-card">
+    <h3>Economia Circolare — 3 principi fondamentali</h3>
+    <div class="s-row"><span class="s-row-key">Design out waste & pollution</span><span class="s-row-val">Progettare eliminando rifiuti e inquinamento alla fonte</span></div>
+    <div class="s-row"><span class="s-row-key">Keep products & materials in use</span><span class="s-row-val">Manutenzione → riparazione → riuso → refurbish → remanufacturing → riciclo (in quest'ordine di preferenza)</span></div>
+    <div class="s-row"><span class="s-row-key">Regenerate natural systems</span><span class="s-row-val">Materiali biologici devono tornare alla biosfera senza avvelenarla — non compatibile con qualunque chimica</span></div>
+    <p class="note">Industrial Symbiosis: uso dei sottoprodotti di un'azienda da parte di un'altra — CE applicata al sistema di imprese.</p>
+  </div>
+</div>
+
+<!-- 2. LCA FRAMEWORK -->
+<div class="schema-panel" id="sp-lca">
+  <div class="s-card">
+    <h3>Origini storiche</h3>
+    <p>Nasce negli anni '70 come metodo tecnico in ambiente scientifico-industriale. Il <strong>SETAC</strong> funge da incubatore negli anni '90, cercando di uniformare studi di inventario condotti in modo non confrontabile. Senza regole comuni, studi diversi sullo stesso prodotto davano risultati incomparabili. Oggi formalizzato da <strong>ISO 14040</strong> (principi e framework) + <strong>ISO 14044</strong> (requisiti e linee guida).</p>
+  </div>
+  <div class="s-card">
+    <h3>Definizione ISO — cosa analizza la LCA</h3>
+    <ul>
+      <li>Considera aspetti ambientali e <strong>potenziali</strong> impatti ambientali (non reali osservati)</li>
+      <li>Lungo tutto il ciclo di vita del prodotto</li>
+      <li>Sul <strong>product system</strong> — non sul prodotto fisico isolato</li>
+    </ul>
+    <p class="note">LCA è solo il pilastro ambientale. Non include automaticamente aspetti economici e sociali — per quelli servono LCC e S-LCA (→ LCSA).</p>
+  </div>
+  <div class="s-card">
+    <h3>Le 4 fasi — processo iterativo</h3>
+    <div class="s-chain">
+      <div class="s-step" style="background:#007aff22;color:#007aff;">1. Goal & Scope</div>
+      <div class="s-arrow">→</div>
+      <div class="s-step" style="background:#34c75922;color:#34c759;">2. LCI</div>
+      <div class="s-arrow">↔</div>
+      <div class="s-step" style="background:#ff950022;color:#ff9500;">3. LCIA</div>
+      <div class="s-arrow">→</div>
+      <div class="s-step" style="background:#af52de22;color:#af52de;">4. Interpretazione</div>
+    </div>
+    <p>La freccia ↔ tra LCI e LCIA indica che le due fasi si alimentano vicendevolmente. Il processo è <strong>iterativo</strong>: dati insufficienti o incoerenti portano a ridefinire confini e assunzioni.</p>
+  </div>
+  <div class="s-card">
+    <h3>7 proprietà fondamentali della LCA</h3>
+    <div class="s-row"><span class="s-row-key">Environmental focus</span><span class="s-row-val">Analisi esclusivamente ambientale — mescolare con economico/sociale crea confusione senza dichiararlo</span></div>
+    <div class="s-row"><span class="s-row-key">Life cycle perspective</span><span class="s-row-val">Guarda l'intera catena per evitare burden shifting spaziale e temporale</span></div>
+    <div class="s-row"><span class="s-row-key">Relative approach</span><span class="s-row-val">Non dà impatti assoluti, ma per unità funzionale — strumento di confronto. Senza FU ben definita i risultati sono privi di significato</span></div>
+    <div class="s-row"><span class="s-row-key">Iterative approach</span><span class="s-row-val">Si parte con un modello, si scoprono lacune nei dati, si aggiustano confini e assunzioni, si rifanno i conti</span></div>
+    <div class="s-row"><span class="s-row-key">Trasparenza</span><span class="s-row-val">Documentare dati, assunzioni, confini, scelte di allocazione, qualità dati e limitazioni</span></div>
+    <div class="s-row"><span class="s-row-key">Comprehensiveness</span><span class="s-row-val">Evitare visione monocriterio — completezza dipende da goal/scope ma non ci si fissa su un solo impianto</span></div>
+    <div class="s-row"><span class="s-row-key">Scientific basis</span><span class="s-row-val">Ogni passaggio si basa su modelli scientifici e fattori di caratterizzazione verificabili</span></div>
+  </div>
+  <div class="s-card">
+    <h3>Limitazioni della LCA</h3>
+    <ul>
+      <li>Solo pilastro ambientale — non include economia e sociale</li>
+      <li>Forte dipendenza dalle scelte di confine del sistema</li>
+      <li>Forte dipendenza dalla qualità e disponibilità dei dati</li>
+      <li>Gli impatti sono <strong>potenziali</strong>, non impatti reali osservati sul campo</li>
+      <li>Risoluzione spazio-temporale spesso debole — non localizza dove/quando avviene il danno</li>
+    </ul>
+  </div>
+  <div class="s-card">
+    <h3>Il trasporto in LCA</h3>
+    <p style="margin-bottom:8px;">Il trasporto <strong>non è una fase</strong> del ciclo di vita, ma una funzione <strong>trasversale</strong> che compare più volte. Può essere hotspot o contributo secondario a seconda del prodotto. Per quantificarlo servono:</p>
+    <ul>
+      <li>Distanza (km)</li>
+      <li>Massa/quantità trasportata (kg o t)</li>
+      <li>Modalità: camion, rail, nave, aereo</li>
+      <li>Carico utile e fattore di riempimento (incluse tratte a vuoto)</li>
+      <li>Tipo di veicolo e carburante</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 3. ISO 14040 -->
+<div class="schema-panel" id="sp-iso">
+  <div class="s-card">
+    <h3>Lo standard ISO 14040:2006</h3>
+    <p>Titolo completo: <em>Environmental management – Life cycle assessment – Principles and framework</em>. Ha sostituito le precedenti EN ISO 14040:1997, 14041:1998, 14042:2000, 14043:2000 — una versione consolidata. Ogni standard contiene: motivo, scope, riferimenti ad altri standard, terminologia, corpo principale.</p>
+  </div>
+  <div class="s-card">
+    <h3>Applicazioni previste dalla norma</h3>
+    <ul>
+      <li>Identificare opportunità di miglioramento ambientale dei prodotti lungo il ciclo di vita</li>
+      <li>Informare i decisori (aziende, governi, ONG) per pianificazione strategica e eco-design</li>
+      <li>Selezionare indicatori di prestazione ambientale e tecniche di misurazione</li>
+      <li>Marketing: ecolabel, dichiarazioni ambientali, EPD (Environmental Product Declaration)</li>
+    </ul>
+  </div>
+  <div class="s-card">
+    <h3>Il concetto di "prodotto" in LCA — 4 categorie</h3>
+    <div class="s-row"><span class="s-row-key">Servizi</span><span class="s-row-val">Es: trasporto, documentazione fiscale, trasmissione di informazioni, atmosfera di un hotel</span></div>
+    <div class="s-row"><span class="s-row-key">Software</span><span class="s-row-val">Informazioni, approcci, transazioni, procedure — generalmente intangibile</span></div>
+    <div class="s-row"><span class="s-row-key">Hardware</span><span class="s-row-val">Tangibile, quantità numerabile (es. numero di unità)</span></div>
+    <div class="s-row"><span class="s-row-key">Processed materials</span><span class="s-row-val">Tangibile, quantità continua (litri, kg) — es. lubrificante</span></div>
+    <p class="note">In LCA "prodotto" è molto più ampio del linguaggio comune: include qualsiasi bene o servizio.</p>
+  </div>
+  <div class="s-card">
+    <h3>Terminologia fondamentale ISO</h3>
+    <div class="s-row"><span class="s-row-key">Unit Process</span><span class="s-row-val">Il più piccolo elemento dell'LCI per cui si quantificano input e output. Il "mattone" del sistema. La definizione è una scelta metodologica.</span></div>
+    <div class="s-row"><span class="s-row-key">Product System</span><span class="s-row-val">Collezione di unit process collegati da flussi elementari e di prodotto, che modella il ciclo di vita</span></div>
+    <div class="s-row"><span class="s-row-key">Elementary flow</span><span class="s-row-val">Flusso che entra nel sistema dall'ambiente senza trasformazione umana, o che esce verso l'ambiente senza ulteriore trasformazione</span></div>
+    <div class="s-row"><span class="s-row-key">Product flow</span><span class="s-row-val">Prodotti che entrano o escono da un sistema verso un altro sistema prodotto — restano nella tecnosfera</span></div>
+    <div class="s-row"><span class="s-row-key">Intermediate product</span><span class="s-row-val">Output di un UP che diventa input per un altro UP che richiede ulteriore trasformazione — non è il prodotto finale</span></div>
+    <div class="s-row"><span class="s-row-key">Co-product</span><span class="s-row-val">Uno di due o più prodotti provenienti dallo stesso unit process o sistema prodotto</span></div>
+    <div class="s-row"><span class="s-row-key">Ancillary input</span><span class="s-row-val">Materiale in input usato per produrre il prodotto principale ma che non ne fa parte (es. solvente di pulizia). Sempre input, mai output.</span></div>
+  </div>
+  <div class="s-card">
+    <h3>Tecnosfera vs Biosfera</h3>
+    <div class="s-row"><span class="s-row-key">Tecnosfera</span><span class="s-row-val">Rete di attività umane interconnesse — fabbriche, trasporti, sistemi energetici. I flussi di prodotto circolano qui.</span></div>
+    <div class="s-row"><span class="s-row-key">Biosfera</span><span class="s-row-val">Ambiente naturale: fonte di risorse (input) e ricettore di emissioni (output). Include atmosfera, idrosfera, geosfera, biosfera in senso stretto.</span></div>
+    <div class="s-row"><span class="s-row-key">Flussi elementari</span><span class="s-row-val">Attraversano il confine tecnosfera ↔ biosfera in entrambe le direzioni — sono questi che alimentano la LCIA</span></div>
+    <p class="note">Il ciclo centrale della LCA: la biosfera fornisce risorse → la tecnosfera le trasforma → le emissioni tornano alla biosfera.</p>
+  </div>
+  <div class="s-card">
+    <h3>System boundary e Cut-off criteria</h3>
+    <div class="s-row"><span class="s-row-key">System boundary</span><span class="s-row-val">Insieme dei criteri che specificano quali unit process fanno parte del sistema. È una delle decisioni più critiche.</span></div>
+    <div class="s-row"><span class="s-row-key">Cut-off criteria</span><span class="s-row-val">Specificazione della quantità di flusso o del livello di significatività ambientale sotto cui un UP può essere escluso. Soglia tipica: 1–5% del contributo totale.</span></div>
+    <div class="s-row"><span class="s-row-key">Foreground system</span><span class="s-row-val">Processi con dati primari o controllo diretto — es. produzione del componente in studio</span></div>
+    <div class="s-row"><span class="s-row-key">Background system</span><span class="s-row-val">Processi generici modellati con database — es. mix elettrico (EU mix), estrazione MP → Ecoinvent</span></div>
+  </div>
+</div>
+
+<!-- 4. GOAL & SCOPE -->
+<div class="schema-panel" id="sp-scope">
+  <div class="s-card">
+    <h3>Goal — il "Perché"</h3>
+    <p style="margin-bottom:8px;">Il Goal risponde alla domanda: <em>perché stiamo conducendo questo studio?</em> Deve specificare:</p>
+    <ul>
+      <li>L'applicazione prevista: a cosa servirà lo studio?</li>
+      <li>Le ragioni per cui lo si conduce</li>
+      <li>Il pubblico di riferimento: a chi sono destinati i risultati?</li>
+      <li>Se i risultati verranno usati in <strong>asserzioni comparative destinate al pubblico</strong> — questo implica requisiti più stringenti (revisione critica obbligatoria, no pesatura, ecc.)</li>
+    </ul>
+  </div>
+  <div class="s-card">
+    <h3>Scope — il "Cosa" — elementi obbligatori</h3>
+    <ul>
+      <li>Sistema prodotto da studiare</li>
+      <li>Funzioni del sistema (o dei sistemi in studi comparativi)</li>
+      <li>Unità funzionale (FU) o Declared Unit (DU)</li>
+      <li>Confine del sistema: cosa è incluso e cosa è escluso</li>
+      <li>Procedure di allocazione per co-prodotti</li>
+      <li>Categorie di impatto selezionate e metodologia LCIA</li>
+      <li>Requisiti sui dati, assunzioni e limitazioni</li>
+      <li>Requisiti iniziali di qualità dei dati (10 dimensioni ISO)</li>
+      <li>Tipo di revisione critica, se prevista</li>
+      <li>Tipo e formato del report finale</li>
+    </ul>
+  </div>
+  <div class="s-card">
+    <h3>Functional Unit (FU) — concetto centrale</h3>
+    <p style="margin-bottom:8px;"><strong>Definizione:</strong> prestazione quantificata di un sistema prodotto, usata come unità di riferimento. È il "metro di misura" rispetto al quale si normalizzano tutti i flussi.</p>
+    <div class="s-row"><span class="s-row-key">Functional Unit</span><span class="s-row-val">La funzione — es. "trasportare 1t per 1km", "verniciare 1m² di superficie"</span></div>
+    <div class="s-row"><span class="s-row-key">Reference Flow</span><span class="s-row-val">La quantità concreta di prodotto per realizzare la FU — es. "200g di vernice per verniciare 1m²"</span></div>
+    <p class="note">La FU definisce la comparabilità tra studi. Due sistemi con FU diverse non sono confrontabili. Se non si fissa bene la funzione, i risultati sono spazzatura.</p>
+  </div>
+  <div class="s-card">
+    <h3>Declared Unit (DU) — quando e perché</h3>
+    <p style="margin-bottom:8px;">Si usa quando la funzione precisa del prodotto <strong>non è nota o non è specificabile</strong>, oppure quando il prodotto può essere integrato in sistemi diversi con scenari d'uso multipli (ISO 21930:2017, nata per costruzioni ora universale).</p>
+    <div class="s-row"><span class="s-row-key">Usa FU quando</span><span class="s-row-val">L'LCA riguarda una funzione specifica e ben definita</span></div>
+    <div class="s-row"><span class="s-row-key">Usa DU quando</span><span class="s-row-val">L'LCA copre una gamma di funzionalità, scenari multipli, o nessuna FU è definibile</span></div>
+  </div>
+  <div class="s-card">
+    <h3>10 requisiti di qualità dei dati (ISO)</h3>
+    <div class="s-row"><span class="s-row-key">a) Copertura temporale</span><span class="s-row-val">Età dei dati e periodo minimo di raccolta</span></div>
+    <div class="s-row"><span class="s-row-key">b) Copertura geografica</span><span class="s-row-val">Area geografica da cui raccogliere i dati per i processi unitari</span></div>
+    <div class="s-row"><span class="s-row-key">c) Copertura tecnologica</span><span class="s-row-val">Tecnologia specifica o mix tecnologico di riferimento</span></div>
+    <div class="s-row"><span class="s-row-key">d) Precisione</span><span class="s-row-val">Misura della variabilità dei valori (es. varianza)</span></div>
+    <div class="s-row"><span class="s-row-key">e) Completezza</span><span class="s-row-val">Percentuale di flussi misurati o stimati rispetto al totale</span></div>
+    <div class="s-row"><span class="s-row-key">f) Rappresentatività</span><span class="s-row-val">Grado in cui il dataset riflette la reale popolazione di interesse</span></div>
+    <div class="s-row"><span class="s-row-key">g) Consistenza</span><span class="s-row-val">La metodologia è applicata in modo uniforme su tutti i componenti</span></div>
+    <div class="s-row"><span class="s-row-key">h) Riproducibilità</span><span class="s-row-val">Un ricercatore indipendente può replicare i risultati</span></div>
+    <div class="s-row"><span class="s-row-key">i) Fonti dei dati</span><span class="s-row-val">Indicazione delle fonti da cui provengono i dati</span></div>
+    <div class="s-row"><span class="s-row-key">j) Incertezza</span><span class="s-row-val">Incertezza relativa a dati, modelli e assunzioni utilizzate</span></div>
+  </div>
+  <div class="s-card">
+    <h3>Tipologie di dati raccoglibili</h3>
+    <div class="s-row"><span class="s-row-key">Input</span><span class="s-row-val">Acqua, biomassa, metalli, materiali riciclati, trasporto, energia, lubrificanti, fertilizzanti</span></div>
+    <div class="s-row"><span class="s-row-key">Emissioni</span><span class="s-row-val">In aria, scarichi in acqua e nel suolo, da sorgenti puntuali o diffuse, emissioni fuggitive (se significative)</span></div>
+    <div class="s-row"><span class="s-row-key">Altri dati</span><span class="s-row-val">Rumore e vibrazioni, uso del suolo, radiazioni, odori, calore disperso</span></div>
+    <p class="note">I dati sono quasi sempre un mix di misurato, calcolato e stimato. Possono provenire da siti produttivi (dati primari) o da database/letteratura (dati secondari).</p>
+  </div>
+</div>
+
+<!-- 5. LCI -->
+<div class="schema-panel" id="sp-lci">
+  <div class="s-card">
+    <h3>Definizione ISO di LCI</h3>
+    <p>"Phase of LCA involving the compilation and quantification of inputs and outputs for a product throughout its life cycle." L'LCI risponde alla domanda: quanta energia, quanti materiali, quante emissioni sono associati al sistema prodotto lungo l'intero ciclo di vita? I suoi output alimentano direttamente l'LCIA, dove i flussi elementari vengono trasformati in indicatori di impatto.</p>
+  </div>
+  <div class="s-card">
+    <h3>Stadi del ciclo di vita — EN 50693:2019 (elettronici)</h3>
+    <div class="s-row"><span class="s-row-key">Manufacturing</span><span class="s-row-val">Acquisizione MP, trasporto, produzione componenti, assemblaggio, packaging, rifiuti</span></div>
+    <div class="s-row"><span class="s-row-key">Distribution</span><span class="s-row-val">Trasporto al distributore, repackaging, trasporto all'utente</span></div>
+    <div class="s-row"><span class="s-row-key">Installation</span><span class="s-row-val">Setup del sistema, integrazione, trattamento rifiuti</span></div>
+    <div class="s-row"><span class="s-row-key">Use Stage</span><span class="s-row-val">Operazione, manutenzione, pulizia e riparazione, trattamento rifiuti</span></div>
+    <div class="s-row"><span class="s-row-key">End-of-Life</span><span class="s-row-val">Disinstallazione, raccolta e trasporto, riciclo, smaltimento</span></div>
+    <p class="note">Input trasversali a tutti gli stadi: energia, materiali, consumabili. Output trasversali: emissioni (aria, suolo, acqua) e rifiuti/materiali secondari.</p>
+  </div>
+  <div class="s-card">
+    <h3>Le due tipologie di flussi</h3>
+    <div class="two-col">
+      <div class="two-col-item"><strong style="color:#007aff;">Flussi elementari</strong><p>Scambi tra tecnosfera e natura. INPUT: risorse energetiche, minerali, acqua, uso suolo. OUTPUT: emissioni in aria, acqua, suolo. Solo questi alimentano la LCIA.</p></div>
+      <div class="two-col-item"><strong style="color:#ff9500;">Flussi di prodotto</strong><p>Scambi tra processi nella tecnosfera. Materiali intermedi, energia, semilavorati, servizi. I rifiuti sono flussi di prodotto — non elementari.</p></div>
+    </div>
+  </div>
+  <div class="s-card">
+    <h3>6 passi della roadmap per l'inventario</h3>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">1</div><div><div class="hier-t">Diagramma di flusso</div><div class="hier-d">Disegnare il diagramma di flusso dei processi con le interrelazioni tra unit process</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">2</div><div><div class="hier-t">Descrizione processi</div><div class="hier-d">Descrivere ogni unit process rispetto ai fattori che influenzano input e output</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">3</div><div><div class="hier-t">Elenco flussi</div><div class="hier-d">Elencare tutti i flussi e dati rilevanti per le condizioni operative</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">4</div><div><div class="hier-t">Unità di misura</div><div class="hier-d">Definire le unità di misura utilizzate per ogni flusso</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">5</div><div><div class="hier-t">Tecniche raccolta</div><div class="hier-d">Descrivere le tecniche di raccolta e calcolo dei dati</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">6</div><div><div class="hier-t">Documentazione anomalie</div><div class="hier-d">Documentare casi speciali, irregolarità o anomalie nei dati</div></div></div>
+  </div>
+  <div class="s-card">
+    <h3>Validazione dei dati — fondamenti fisici</h3>
+    <p style="margin-bottom:8px;">La validazione è obbligatoria per ISO 14044 e avviene durante la raccolta dati tramite bilanci di massa e bilanci energetici. Si basa su:</p>
+    <ul>
+      <li>Conservazione della massa</li>
+      <li>Conservazione dell'energia</li>
+      <li>Aumento dell'entropia (II principio — processi reali sono irreversibili)</li>
+      <li>Stechiometria — proporzioni molari vincolano i flussi chimici</li>
+      <li>Equivalenza massa-energia (E=mc²) — solo per reazioni nucleari</li>
+    </ul>
+    <p class="note">Attenzione: un bilancio input-output rigoroso NON viene generalmente applicato in modo stretto nell'LCI pratico. La validazione è una verifica di plausibilità, non una chiusura algebrica perfetta.</p>
+  </div>
+  <div class="s-card">
+    <h3>Database e LCA attributiva vs consequenziale</h3>
+    <div class="s-row"><span class="s-row-key">Ecoinvent</span><span class="s-row-val">Database di riferimento mondiale. Trasparenza + consistenza metodologica. System models: cut-off (attributivo) vs substitution (consequenziale)</span></div>
+    <div class="s-row"><span class="s-row-key">LCA attributiva</span><span class="s-row-val">"Com'è il sistema ora?" → partizione (massa, economia). Usata per EPD e benchmark.</span></div>
+    <div class="s-row"><span class="s-row-key">LCA consequenziale</span><span class="s-row-val">"Cosa cambia se...?" → espansione del sistema. Usata per policy e eco-design.</span></div>
+    <p class="note">La notazione geografica nei dataset Ecoinvent (CH=Svizzera, DE=Germania, RER=Europa, GLO=globale) indica la correlazione geografica — parametro chiave della pedigree matrix.</p>
+  </div>
+  <div class="s-card">
+    <h3>Sensitivity analysis e raffinamento dei confini</h3>
+    <p style="margin-bottom:8px;">Procedura sistematica — <strong>obbligatoria per ISO 14044</strong> — per stimare quanto le scelte metodologiche influenzano i risultati LCIA. Si variano: tipi e fonti di dati, quantità dei flussi, metodologia di allocazione, confini del sistema.</p>
+    <div class="s-row"><span class="s-row-key">Processo non significativo</span><span class="s-row-val">Può essere escluso dal system boundary (cut-off giustificato)</span></div>
+    <div class="s-row"><span class="s-row-key">Input non significativo</span><span class="s-row-val">Può essere omesso dall'inventario</span></div>
+    <div class="s-row"><span class="s-row-key">Processo significativo non incluso</span><span class="s-row-val">Deve essere aggiunto al sistema — l'LCA è iterativa</span></div>
+  </div>
+</div>
+
+<!-- 6. MULTIFUNZIONALITÀ -->
+<div class="schema-panel" id="sp-multi">
+  <div class="s-card">
+    <h3>Il problema della multifunzionalità</h3>
+    <p style="margin-bottom:8px;">Nella realtà industriale quasi nessun processo produce un solo output. Esempi classici:</p>
+    <ul>
+      <li>Raffineria → benzina, diesel, nafta, GPL simultaneamente</li>
+      <li>Cogenerazione (CHP) → elettricità + calore dalla stessa fonte</li>
+      <li>Cloro-soda → Cl₂ + NaOH + H₂ in rapporto stechiometrico fisso</li>
+      <li>Segheria → tavole, segatura, trucioli, corteccia</li>
+      <li>Allevamento → carne, latte, cuoio, lana, letame</li>
+    </ul>
+    <p class="note">La scelta del metodo di allocazione può cambiare i risultati in modo determinante — due studi sullo stesso prodotto con metodi diversi possono dare risultati molto diversi.</p>
+  </div>
+  <div class="s-card">
+    <h3>Tassonomia completa dei processi multifunzionali</h3>
+    <div class="s-row"><span class="s-row-key">Monofunctional production</span><span class="s-row-val">g4 — 1 output-bene, 1 funzione</span></div>
+    <div class="s-row"><span class="s-row-key">Coproduction</span><span class="s-row-val">g4 + g5 — due output-beni, 2 funzioni</span></div>
+    <div class="s-row"><span class="s-row-key">Monofunctional waste process</span><span class="s-row-val">w1 — 1 input-rifiuto, 1 funzione</span></div>
+    <div class="s-row"><span class="s-row-key">Combined waste processing</span><span class="s-row-val">w1 + w2 — due input-rifiuti, 2 funzioni</span></div>
+    <div class="s-row"><span class="s-row-key">Recycling</span><span class="s-row-val">w1 (input-rifiuto) + g3 (output-bene) — 2 funzioni</span></div>
+    <div class="s-row"><span class="s-row-key">Combined waste + recycling</span><span class="s-row-val">w1+w2+g2+g3 — 4 funzioni</span></div>
+    <p class="note">g = good (valore ≥ 0), w = waste (valore &lt; 0). Il recycling è il caso più complesso: svolge sia funzione di trattamento che funzione produttiva.</p>
+  </div>
+  <div class="s-card">
+    <h3>Criterio prodotto vs rifiuto — perché è critico</h3>
+    <p style="margin-bottom:8px;">Il criterio adottato è il <strong>valore economico</strong>: prodotto se valore ≥ 0 (qualcuno lo acquista o accetta gratuitamente); rifiuto se valore &lt; 0 (chi lo cede paga per farselo gestire). Questo determina chi è "responsabile" del flusso — e quindi come si allocano gli impatti.</p>
+    <p>Il <strong>functional flow</strong> non è una proprietà intrinseca: dipende dal punto di vista del processo osservato. L'amido di mais è functional outflow della lavorazione del mais, ma inflow non-funzionale nel processo chimico successivo.</p>
+  </div>
+  <div class="s-card">
+    <h3>Gerarchia ISO 14044 — 3 livelli di priorità</h3>
+    <div class="hier-row"><div class="hier-n" style="color:#34c759;">1°</div><div><div class="hier-t">Evitare l'allocazione</div><div class="hier-d">Suddivisione del processo in sub-processi monofunzionali (richiede dati disaggregati — spesso i dati industriali sono aggregati) oppure System Expansion. Arbitrarietà: nulla/minima.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#ff9500;">2°</div><div><div class="hier-t">Partitioning fisico</div><div class="hier-d">Massa, volume, contenuto energetico (LHV/HHV), moli. Riflette le relazioni fisiche reali tra input/output e prodotti.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#ff3b30;">3°</div><div><div class="hier-t">Partitioning economico</div><div class="hier-d">f_i = (p_i × m_i) / Σ(p_j × m_j). Volatile nel tempo e tra mercati: due studi identici condotti in anni diversi possono dare risultati molto diversi solo per variazioni di prezzo.</div></div></div>
+    <p class="note">Vincoli ISO: la procedura deve essere dichiarata e documentata; la somma degli input allocati deve uguagliare i flussi totali (conservazione); se più procedure sono ugualmente applicabili, è obbligatoria la sensitivity analysis.</p>
+  </div>
+  <div class="s-card">
+    <h3>System Expansion vs Substitution vs Partitioning</h3>
+    <div class="s-row"><span class="s-row-key">System Expansion</span><span class="s-row-val">Allarga la FU per includere tutte le funzioni → cambia la domanda di studio ("impatti per produrre X e Y insieme?"). Dati extra: nessuno.</span></div>
+    <div class="s-row"><span class="s-row-key">Substitution (Avoided burdens)</span><span class="s-row-val">Sistema = in studio − sistema sostituto per il co-prodotto. Mantiene la FU originale. Non menzionata esplicitamente in ISO 14044. Dati extra: sistema alternativo evitato.</span></div>
+    <div class="s-row"><span class="s-row-key">Partitioning</span><span class="s-row-val">Processi monofunzionali virtuali — non esistono nella realtà e possono violare bilanci fisici. La scelta del criterio introduce arbitrarietà. Dati extra: fattori di partizione.</span></div>
+  </div>
+  <div class="s-card">
+    <h3>Approcci allocativi per il riciclo</h3>
+    <div class="s-row"><span class="s-row-key">Cut-off</span><span class="s-row-val">I carichi del processo vergine restano al prodotto primario; il riciclato eredita solo i carichi del riciclo. Sottostima i benefici del riciclo.</span></div>
+    <div class="s-row"><span class="s-row-key">Avoided burden</span><span class="s-row-val">Al sistema che genera il rifiuto si accredita il beneficio del materiale riciclato (sottrazione carichi vergine evitati). Dipende dalla scelta del sistema sostitutivo.</span></div>
+    <div class="s-row"><span class="s-row-key">50/50</span><span class="s-row-val">I carichi totali del ciclo di vita vengono divisi equamente tra primo uso e riciclo. Arbitrario ma semplice e trasparente.</span></div>
+    <p class="note">Nessuno dei tre approcci è universalmente corretto. La scelta dipende dalla domanda di ricerca e deve essere giustificata e testata con sensitivity analysis.</p>
+  </div>
+</div>
+
+<!-- 7. ANTROPOCENE -->
+<div class="schema-panel" id="sp-antro">
+  <div class="s-card">
+    <h3>L'Antropocene — definizione</h3>
+    <p>Termine proposto da <strong>Paul J. Crutzen</strong> (Nobel 1995 per la chimica atmosferica) in un articolo su Nature del 2002. Designa l'epoca geologica attuale in cui l'essere umano è diventato la principale forza di trasformazione del Sistema Terra. Data di inizio proposta: seconda metà del XVIII secolo (analisi dei gas nei ghiacciai polari mostrano aumento di CO₂ e CH₄ — coincide con la macchina a vapore di Watt, 1784).</p>
+    <p class="note">Non ancora formalmente ratificato dalla Commissione Internazionale di Stratigrafia come epoca geologica ufficiale.</p>
+  </div>
+  <div class="s-card">
+    <h3>La Great Acceleration — indicatori chiave</h3>
+    <p style="margin-bottom:8px;">Tutti gli indicatori di attività umana mostrano lo stesso pattern: andamento piatto fino a metà '900, poi decollo quasi verticale.</p>
+    <div class="s-row"><span class="s-row-key">Dighe sui fiumi</span><span class="s-row-val">Da ~5.000 a ~28.000 tra 1950 e 2000 — alterazione ciclo idrologico</span></div>
+    <div class="s-row"><span class="s-row-key">Uso dell'acqua</span><span class="s-row-val">Triplicato dal 1950 — stress idrico globale</span></div>
+    <div class="s-row"><span class="s-row-key">Concentrazione CO₂</span><span class="s-row-val">~280 → ~360 ppm al 2000</span></div>
+    <div class="s-row"><span class="s-row-key">CH₄ atmosferico</span><span class="s-row-val">Quasi raddoppiato — GWP100 ~27-30 × CO₂</span></div>
+    <div class="s-row"><span class="s-row-key">N₂O atmosferico</span><span class="s-row-val">Crescita esponenziale — GWP100 ~273 × CO₂, da fertilizzanti</span></div>
+    <div class="s-row"><span class="s-row-key">Estinzioni globali</span><span class="s-row-val">Tasso attuale 100–1.000× il tasso di fondo naturale — sesta estinzione di massa</span></div>
+  </div>
+  <div class="s-card">
+    <h3>Modello IPAT</h3>
+    <p style="margin-bottom:8px;">Framework concettuale per ragionare sull'impatto ambientale umano:</p>
+    <p style="font-size:18px;font-weight:600;text-align:center;padding:12px 0;color:var(--accent);">I = P × A × T</p>
+    <div class="s-row"><span class="s-row-key">I — Impatto</span><span class="s-row-val">Impatto ambientale totale</span></div>
+    <div class="s-row"><span class="s-row-key">P — Popolazione</span><span class="s-row-val">Da 1,8 miliardi (1900) a 7 miliardi (2011)</span></div>
+    <div class="s-row"><span class="s-row-key">A — Affluenza</span><span class="s-row-val">PIL pro capite — crescita nei paesi non-OCSE</span></div>
+    <div class="s-row"><span class="s-row-key">T — Tecnologia</span><span class="s-row-val">Efficienza/brevetti — migliorata ma superata dalla crescita di P e A (effetto rebound)</span></div>
+    <p class="note">Effetto rebound: storicamente i miglioramenti tecnologici (T in calo) sono stati superati dalla crescita di P e A, con impatto netto crescente.</p>
+  </div>
+  <div class="s-card">
+    <h3>Planetary Boundaries — Rockström et al. 2009, aggiornato 2023-2025</h3>
+    <p style="margin-bottom:10px;">9 sistemi planetari critici con soglie di sicurezza. Stato al 2025:</p>
+    <div class="s-row"><span class="s-row-key" style="color:#ff3b30;">Climate change</span><span class="s-row-val">Superato</span></div>
+    <div class="s-row"><span class="s-row-key" style="color:#ff3b30;">Biosphere integrity</span><span class="s-row-val">Superato</span></div>
+    <div class="s-row"><span class="s-row-key" style="color:#ff3b30;">Biochemical flows (N e P)</span><span class="s-row-val">Superato</span></div>
+    <div class="s-row"><span class="s-row-key" style="color:#ff3b30;">Land-system change</span><span class="s-row-val">Superato</span></div>
+    <div class="s-row"><span class="s-row-key" style="color:#ff3b30;">Novel entities (plastica, inquinanti)</span><span class="s-row-val">Superato</span></div>
+    <div class="s-row"><span class="s-row-key" style="color:#ff9500;">Freshwater use</span><span class="s-row-val">Superato / zona incertezza</span></div>
+    <div class="s-row"><span class="s-row-key" style="color:#ff9500;">Ocean acidification</span><span class="s-row-val">Zona di incertezza</span></div>
+    <div class="s-row"><span class="s-row-key" style="color:#34c759;">Stratospheric ozone depletion</span><span class="s-row-val">In recupero (Protocollo di Montreal)</span></div>
+    <div class="s-row"><span class="s-row-key">Atmospheric aerosol loading</span><span class="s-row-val">Non ancora quantificato</span></div>
+    <p class="note">Il superamento contemporaneo di più confini è sinergico: sistemi interconnessi che si destabilizzano a vicenda aumentano la probabilità di tipping points catastrofici. 2009: 3 superati → 2015: 4 → 2023: 6 → 2025: 7.</p>
+  </div>
+  <div class="s-card">
+    <h3>Collegamento Antropocene → LCA</h3>
+    <p>Le pressioni documentate nell'Antropocene sono esattamente le categorie di impatto che la LCIA quantifica:</p>
+    <div class="s-row"><span class="s-row-key">Climate change</span><span class="s-row-val">GWP — CO₂, CH₄, N₂O, HFC...</span></div>
+    <div class="s-row"><span class="s-row-key">Biochemical flows (N, P)</span><span class="s-row-val">Eutrophication potential</span></div>
+    <div class="s-row"><span class="s-row-key">Land-system change</span><span class="s-row-val">Land use indicator</span></div>
+    <div class="s-row"><span class="s-row-key">Biosphere integrity</span><span class="s-row-val">Biodiversity loss, PDF·m²·yr (endpoint)</span></div>
+    <div class="s-row"><span class="s-row-key">Ocean acidification</span><span class="s-row-val">Acidification potential (AP)</span></div>
+  </div>
+</div>
+
+<!-- 8. LCIA -->
+<div class="schema-panel" id="sp-lcia">
+  <div class="s-card">
+    <h3>Definizione ISO di LCIA</h3>
+    <p>"Phase of life cycle assessment aimed at understanding and evaluating the magnitude and significance of the potential environmental impacts for a product system throughout the life cycle." La parola chiave è <strong>"potential"</strong>: la LCIA non misura impatti reali osservati, ma stima il potenziale di danno associato ai flussi elementari dell'inventario. È una valutazione modellistica, non empirica.</p>
+  </div>
+  <div class="s-card">
+    <h3>Struttura procedurale — obbligatorio e opzionale</h3>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;font-size:14px;">OBB</div><div><div class="hier-t">1. Selezione categorie, indicatori, modelli</div><div class="hier-d">Scelta metodologica documentata e giustificata. Trasparenza obbligatoria.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;font-size:14px;">OBB</div><div><div class="hier-t">2. Classificazione</div><div class="hier-d">Ogni flusso elementare assegnato alle categorie di impatto pertinenti. Un flusso può contribuire a più categorie (es. NO₂ → acidification + eutrophication + photochemical ozone formation).</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;font-size:14px;">OBB</div><div><div class="hier-t">3. Caratterizzazione</div><div class="hier-d">Indicator result = Σ CF_i × m_i. I flussi classificati vengono moltiplicati per i fattori di caratterizzazione e sommati per categoria → profilo LCIA.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:var(--text3);font-size:14px;">OPZ</div><div><div class="hier-t">4. Normalizzazione</div><div class="hier-d">Divisione per un valore di riferimento (es. impatto pro capite europeo) per confrontare la rilevanza relativa delle categorie.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:var(--text3);font-size:14px;">OPZ</div><div><div class="hier-t">5. Raggruppamento</div><div class="hier-d">Ordinamento/raggruppamento delle categorie per area di protezione o criteri tecnici.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:var(--text3);font-size:14px;">OPZ*</div><div><div class="hier-t">6. Pesatura</div><div class="hier-d">Moltiplicazione per pesi valoriali per ottenere punteggio aggregato. La fase più controversa (giudizi di valore). *Vietata in studi comparativi destinati al pubblico senza disclosure esplicita.</div></div></div>
+  </div>
+  <div class="s-card">
+    <h3>Midpoint vs Endpoint — distinzione fondamentale</h3>
+    <div class="s-row"><span class="s-row-key"></span><span class="s-row-val" style="font-size:12px;font-weight:600;">Midpoint</span><span class="s-row-val" style="font-size:12px;font-weight:600;">Endpoint</span></div>
+    <div style="display:flex;padding:9px 0;border-bottom:0.5px solid var(--sep);"><span class="s-row-key">Posizione</span><span class="s-row-val">Metà catena causale</span><span class="s-row-val">Fine catena causale</span></div>
+    <div style="display:flex;padding:9px 0;border-bottom:0.5px solid var(--sep);"><span class="s-row-key">Misura</span><span class="s-row-val">Variabile intermedia — kg SO₂eq, kg CO₂eq</span><span class="s-row-val">Danno finale — DALY, PDF·m²·yr</span></div>
+    <div style="display:flex;padding:9px 0;border-bottom:0.5px solid var(--sep);"><span class="s-row-key">Incertezza</span><span class="s-row-val" style="color:#34c759;">Minore ✓</span><span class="s-row-val" style="color:#ff3b30;">Maggiore</span></div>
+    <div style="display:flex;padding:9px 0;border-bottom:0.5px solid var(--sep);"><span class="s-row-key">Intuitivo</span><span class="s-row-val" style="color:#ff3b30;">Meno per decisori</span><span class="s-row-val" style="color:#34c759;">Di più ✓</span></div>
+    <div style="display:flex;padding:9px 0;"><span class="s-row-key">Uso tipico</span><span class="s-row-val">EF method (CE), ReCiPe midpoint</span><span class="s-row-val">Ecoindicator-99, ReCiPe endpoint</span></div>
+    <p class="note">Le metodologie moderne (ReCiPe) calcolano sia midpoint che endpoint. Il metodo EF usa prevalentemente midpoint per robustezza nelle applicazioni regolatorie.</p>
+  </div>
+  <div class="s-card">
+    <h3>Le 3 aree di protezione</h3>
+    <div class="s-row"><span class="s-row-key">Human health</span><span class="s-row-val">Mortalità e morbidità umana — misurata in DALY (Disability-Adjusted Life Years)</span></div>
+    <div class="s-row"><span class="s-row-key">Ecosystem health</span><span class="s-row-val">Qualità e funzionalità degli ecosistemi — misurata in PDF·m²·yr (Potentially Disappeared Fraction)</span></div>
+    <div class="s-row"><span class="s-row-key">Natural resources</span><span class="s-row-val">Disponibilità di risorse per le generazioni future</span></div>
+  </div>
+  <div class="s-card">
+    <h3>Categorie di impatto e driver principali</h3>
+    <div class="s-row"><span class="s-row-key">Climate change (GWP)</span><span class="s-row-val">CO₂, CH₄, N₂O, HFC, PFC, SF₆</span></div>
+    <div class="s-row"><span class="s-row-key">Acidification (AP)</span><span class="s-row-val">SO₂, NOₓ, NH₃ — modello RAINS 10</span></div>
+    <div class="s-row"><span class="s-row-key">Eutrophication</span><span class="s-row-val">N reattivo, P in acqua e suolo</span></div>
+    <div class="s-row"><span class="s-row-key">Ozone depletion</span><span class="s-row-val">CFC, HCFC, halon</span></div>
+    <div class="s-row"><span class="s-row-key">Ecotoxicity</span><span class="s-row-val">Metalli pesanti, pesticidi, composti organici</span></div>
+    <div class="s-row"><span class="s-row-key">Human toxicity</span><span class="s-row-val">Sostanze cancerogene e non cancerogene</span></div>
+    <div class="s-row"><span class="s-row-key">Land use</span><span class="s-row-val">Occupazione e trasformazione del suolo</span></div>
+    <div class="s-row"><span class="s-row-key">Photochemical ozone formation</span><span class="s-row-val">NOₓ + COV in presenza di luce UV</span></div>
+    <div class="s-row"><span class="s-row-key">Water depletion</span><span class="s-row-val">Consumo netto di acqua dolce</span></div>
+    <div class="s-row"><span class="s-row-key">Resource depletion</span><span class="s-row-val">Estrazione di risorse fossili e minerali</span></div>
+    <div class="s-row"><span class="s-row-key">Ionising radiation</span><span class="s-row-val">Emissioni radioattive (nucleare, radon)</span></div>
+  </div>
+  <div class="s-card">
+    <h3>GWP100 — valori chiave (IPCC AR6)</h3>
+    <div class="s-row"><span class="s-row-key">CO₂</span><span class="s-row-val">1 (riferimento per definizione)</span></div>
+    <div class="s-row"><span class="s-row-key">CH₄</span><span class="s-row-val">27–30 (da allevamento, discariche, gas naturale)</span></div>
+    <div class="s-row"><span class="s-row-key">N₂O</span><span class="s-row-val">~273 (da fertilizzanti azotati)</span></div>
+    <div class="s-row"><span class="s-row-key">HFC-134a</span><span class="s-row-val">~1.430 (refrigeranti)</span></div>
+    <div class="s-row"><span class="s-row-key">SF₆</span><span class="s-row-val">~25.200 (settore elettrico)</span></div>
+  </div>
+  <div class="s-card">
+    <h3>Acidification Potential — approfondimento</h3>
+    <p style="margin-bottom:8px;">Misura la capacità acidificante su suoli, acque superficiali/sotterranee ed ecosistemi. Calcolato con il <strong>modello RAINS 10</strong> che modella fate & transport dei contaminanti nell'atmosfera tenendo conto di distanza, condizioni meteorologiche e capacità tampone dei suoli.</p>
+    <div class="s-row"><span class="s-row-key">SO₂</span><span class="s-row-val">1.0 kg SO₂eq/kg (riferimento)</span></div>
+    <div class="s-row"><span class="s-row-key">NOₓ</span><span class="s-row-val">~0.5 kg SO₂eq/kg</span></div>
+    <div class="s-row"><span class="s-row-key">NH₃</span><span class="s-row-val">~1.6 kg SO₂eq/kg — più acidificante della SO₂!</span></div>
+    <div class="s-row"><span class="s-row-key">HCl</span><span class="s-row-val">~0.88 kg SO₂eq/kg</span></div>
+    <p class="note">NH₃ &gt; 1: l'ammoniaca è più acidificante della SO₂ su base massica — dato controintuitivo ma importante nei sistemi agro-zootecnici.</p>
+  </div>
+  <div class="s-card">
+    <h3>Qualità del dato — Pedigree Matrix Ecoinvent</h3>
+    <p style="margin-bottom:8px;">Score 1 (ottimo) → 5 (peggiore). Default = 5 se informazioni non disponibili.</p>
+    <div class="s-row"><span class="s-row-key">Reliability</span><span class="s-row-val">k_max = 1.50 — misurazioni dirette vs stima non qualificata</span></div>
+    <div class="s-row"><span class="s-row-key">Completeness</span><span class="s-row-val">k_max = 1.20 — tutti i siti vs rappresentatività sconosciuta</span></div>
+    <div class="s-row"><span class="s-row-key">Temporal correlation</span><span class="s-row-val">k_max = 1.50 — differenza &lt;3 anni vs &gt;15 anni</span></div>
+    <div class="s-row"><span class="s-row-key">Geographical correlation</span><span class="s-row-val">k_max = 1.10 — area in studio vs area diversa</span></div>
+    <div class="s-row"><span class="s-row-key" style="color:#ff3b30;font-weight:600;">Technological correlation ★</span><span class="s-row-val" style="color:#ff3b30;font-weight:600;">k_max = 2.00 — parametro dominante</span></div>
+    <p class="note">I fattori k si combinano in un'unica σ di distribuzione lognormale. GSD² = 1 = nessuna incertezza. Valori tipici Ecoinvent: 1.05 → &gt;10. EF DQR = (TeR + GR + TiR + P) / 4 → score qualità per selezione dataset PEF.</p>
+  </div>
+  <div class="s-card">
+    <h3>7 criteri ISO per la selezione dei modelli di caratterizzazione</h3>
+    <div class="s-row"><span class="s-row-key">a) Accettazione internazionale</span><span class="s-row-val">Basati su accordi internazionali o approvati da IPCC, SETAC, JRC</span></div>
+    <div class="s-row"><span class="s-row-key">b) Rappresentatività</span><span class="s-row-val">Le categorie devono coprire gli impatti aggregati su tutti gli endpoint</span></div>
+    <div class="s-row"><span class="s-row-key">c) Minimizzazione giudizi di valore</span><span class="s-row-val">Scelte valoriali ridotte al minimo e rese trasparenti</span></div>
+    <div class="s-row"><span class="s-row-key">d) No double counting</span><span class="s-row-val">Un flusso non deve essere conteggiato due volte nella stessa categoria</span></div>
+    <div class="s-row"><span class="s-row-key">e) Validità scientifica</span><span class="s-row-val">Ogni modello fondato su meccanismo ambientale identificabile e osservazioni empiriche riproducibili</span></div>
+    <div class="s-row"><span class="s-row-key">f) Limiti di validità</span><span class="s-row-val">Dichiarare esplicitamente il grado di validità scientifica e tecnica del modello</span></div>
+    <div class="s-row"><span class="s-row-key">g) Rilevanza ambientale</span><span class="s-row-val">Gli indicatori devono avere connessione reale con i problemi ambientali rappresentati</span></div>
+  </div>
+</div>
+
+
+<!-- 9. LCIA AVANZATA (Lecture 9) -->
+<div class="schema-panel" id="sp-lcia2">
+  <div class="s-card">
+    <h3>Elementi obbligatori LCIA — flusso completo</h3>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;font-size:13px;">OBB</div><div><div class="hier-t">1. Selezione: categorie, indicatori, modelli</div><div class="hier-d">Si sceglie la metodologia (es. CML-IA, ReCiPe, EF). La selezione determina quali flussi elementari contano e come. Documentazione obbligatoria.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;font-size:13px;">OBB</div><div><div class="hier-t">2. Classificazione</div><div class="hier-d">Assegna ogni flusso LCI alle categorie di impatto pertinenti. Un flusso può andare a più categorie (meccanismi paralleli) oppure seguire una catena seriale senza doppio conteggio.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;font-size:13px;">OBB</div><div><div class="hier-t">3. Caratterizzazione — formula</div><div class="hier-d">I(k) = Σ CF_j^k × m_j — conversione in unità comuni e somma per categoria. Risultato = profilo LCIA (un numero per categoria).</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:var(--text3);font-size:13px;">OPZ</div><div><div class="hier-t">4. Normalizzazione</div><div class="hier-d">I*_k = I_k / N_k — confronto tra categorie su base comune (impatto EU 2010 pro capite). Aiuta a capire quale categoria pesa di più.</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:var(--text3);font-size:13px;">OPZ</div><div><div class="hier-t">5. Raggruppamento</div><div class="hier-d">Sorting per scala spaziale (globale/regionale/locale), area di protezione, o reversibilità. O ranking per priorità (alta/media/bassa).</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:var(--text3);font-size:13px;">OPZ*</div><div><div class="hier-t">6. Pesatura</div><div class="hier-d">Moltiplicazione per weight factors basati su scelte valoriali. Non scientificamente neutrale. *Vietata senza disclosure in studi comparativi pubblici.</div></div></div>
+  </div>
+  <div class="s-card">
+    <h3>Classificazione — meccanismi paralleli vs seriali</h3>
+    <p style="margin-bottom:8px;">Problema: un flusso può contribuire a più impatti tramite meccanismi diversi.</p>
+    <div class="s-row"><span class="s-row-key">Meccanismo parallelo</span><span class="s-row-val">SO₂ → acidification E → human toxicity E → counteracting climate change. Tre catene indipendenti dalla stessa fonte. Si assegna a tutte e tre, evitando però doppio conteggio all'interno della stessa categoria.</span></div>
+    <div class="s-row"><span class="s-row-key">Meccanismo seriale</span><span class="s-row-val">CFC → concentrazione troposferica → concentrazione stratosferica → ozone depletion (fine catena). Si assegna al punto più a valle per evitare doppio conteggio.</span></div>
+    <p class="note">Regola: nei meccanismi seriali si usa il midpoint più a valle; nei paralleli si assegna a tutte le categorie interessate, ciascuna modellata separatamente.</p>
+  </div>
+  <div class="s-card">
+    <h3>Metodologia CML-IA — 11 categorie midpoint</h3>
+    <p style="margin-bottom:8px;">Sviluppata dal Center of Environmental Science (CML) di Leiden (Paesi Bassi). Approccio problem-oriented (midpoint).</p>
+    <div class="s-row"><span class="s-row-key">Abiotic depletion</span><span class="s-row-val">kg Sb eq</span></div>
+    <div class="s-row"><span class="s-row-key">Abiotic depletion (fossil fuels)</span><span class="s-row-val">MJ</span></div>
+    <div class="s-row"><span class="s-row-key">Global warming (GWP100)</span><span class="s-row-val">kg CO₂ eq</span></div>
+    <div class="s-row"><span class="s-row-key">Ozone layer depletion</span><span class="s-row-val">kg CFC-11 eq</span></div>
+    <div class="s-row"><span class="s-row-key">Human toxicity</span><span class="s-row-val">kg 1,4-DB eq</span></div>
+    <div class="s-row"><span class="s-row-key">Fresh water aquatic ecotox.</span><span class="s-row-val">kg 1,4-DB eq</span></div>
+    <div class="s-row"><span class="s-row-key">Marine aquatic ecotoxicity</span><span class="s-row-val">kg 1,4-DB eq</span></div>
+    <div class="s-row"><span class="s-row-key">Terrestrial ecotoxicity</span><span class="s-row-val">kg 1,4-DB eq</span></div>
+    <div class="s-row"><span class="s-row-key">Photochemical oxidation</span><span class="s-row-val">kg C₂H₄ eq</span></div>
+    <div class="s-row"><span class="s-row-key">Acidification</span><span class="s-row-val">kg SO₂ eq</span></div>
+    <div class="s-row"><span class="s-row-key">Eutrophication</span><span class="s-row-val">kg PO₄³⁻ eq</span></div>
+    <p class="note">CML-IA è un metodo midpoint puro: non calcola endpoint (nessun DALY, nessun PDF). La referenza 1,4-DB = 1,4-diclorobenzene per le categorie di tossicità.</p>
+  </div>
+  <div class="s-card">
+    <h3>Normalizzazione — concetto e formula</h3>
+    <p style="margin-bottom:8px;">Trasforma un indicatore di impatto in un numero adimensionale confrontando con un valore di riferimento geograficamente e temporalmente definito.</p>
+    <p style="font-size:16px;font-weight:600;text-align:center;padding:10px 0;color:var(--accent);">I*_k = I_k / N_k</p>
+    <div class="s-row"><span class="s-row-key">I_k</span><span class="s-row-val">Impatto nella k-esima categoria del LCA in studio</span></div>
+    <div class="s-row"><span class="s-row-key">N_k</span><span class="s-row-val">Fattore di normalizzazione per la k-esima categoria (es. EU 2010 per persona per anno)</span></div>
+    <div class="s-row"><span class="s-row-key">I*_k</span><span class="s-row-val">Impatto normalizzato — adimensionale, confrontabile tra categorie</span></div>
+    <p class="note">Esempio: N_k per Climate change (EU27, 2010) = 9.22E+03 kg CO₂eq/persona/anno. Se il prodotto emette 100 kg CO₂eq → I* = 100/9.22E+03 ≈ 0.011 (circa 1% dell'impatto annuo pro capite).</p>
+  </div>
+  <div class="s-card">
+    <h3>Raggruppamento — Sorting vs Ranking</h3>
+    <div class="s-row"><span class="s-row-key">Sorting (ordinamento nominale)</span><span class="s-row-val">Per scala spaziale: globale (climate change, ozone depletion) / regionale / locale. Per area di protezione: salute umana / ecosistema / risorse. Per base scientifica vs value-choice.</span></div>
+    <div class="s-row"><span class="s-row-key">Ranking (gerarchia)</span><span class="s-row-val">Per reversibilità degli impatti (irreversibili > reversibili). Per certezza scientifica (alta/media/bassa). Per priorità di policy (es. obiettivi EU Net Zero 2050).</span></div>
+    <p class="note">Il raggruppamento NON aggrega numericamente: è solo organizzazione. La pesatura aggrega. Non confondere i due.</p>
+  </div>
+  <div class="s-card">
+    <h3>Pesatura — metodi e limiti</h3>
+    <div class="s-row"><span class="s-row-key">Monetizzazione</span><span class="s-row-val">Stima monetaria del danno (es. costo sociale del carbonio). Dipende fortemente dal tasso di sconto adottato.</span></div>
+    <div class="s-row"><span class="s-row-key">Panel (expert/stakeholder)</span><span class="s-row-val">Importanza relativa derivata da survey e tecniche di elicitazione. Dipende dalla composizione del panel.</span></div>
+    <div class="s-row"><span class="s-row-key">Distance-to-target</span><span class="s-row-val">I risultati di caratterizzazione relazionati a target di policy (es. net zero) o capacità di carico (Planetary Boundaries). Metodologicamente più difendibile.</span></div>
+    <div class="s-row"><span class="s-row-key">Fuzzy-logic</span><span class="s-row-val">Variabili linguistiche (basso/medio/alto) e regole if-then. Gestisce l'incertezza intrinseca nelle scelte valoriali.</span></div>
+    <p class="note">Nessun metodo di pesatura è scientificamente neutrale. Tutti coinvolgono giudizi di valore. Per questo in studi comparativi destinati al pubblico la pesatura richiede disclosure esplicita dei criteri.</p>
+  </div>
+  <div class="s-card">
+    <h3>ReCiPe — metodologia completa midpoint + endpoint</h3>
+    <p style="margin-bottom:8px;"><strong>18 indicatori midpoint → 3 endpoint</strong>. È attualmente la metodologia più completa e aggiornata per LCA internazionale.</p>
+    <div class="s-row"><span class="s-row-key">Human health (DALY)</span><span class="s-row-val">Climate change + Ozone depletion + Radiation + Carcinogens + Respiratory (org/inorg) → somma in DALY</span></div>
+    <div class="s-row"><span class="s-row-key">Ecosystems (species·yr)</span><span class="s-row-val">Climate change + Terrestrial acidif. + Land occ./transf. + Freshwater eutroph. + Marine eutroph. + Ecotox (terr/freshw/marine) → species·yr</span></div>
+    <div class="s-row"><span class="s-row-key">Resources (surplus cost $)</span><span class="s-row-val">Fossil fuel cons. + Minerals cons. → costo surplus estrazione futura</span></div>
+    <p style="margin-bottom:8px;">Tre prospettive culturali per i weight factors (Thompson & Hofstetter):</p>
+    <div class="s-row"><span class="s-row-key">H — Hierarchist</span><span class="s-row-val">Bilanciamento breve/lungo termine; policy può risolvere molti problemi; inclusione basata su consenso scientifico. Prospettiva default.</span></div>
+    <div class="s-row"><span class="s-row-key">I — Individualist</span><span class="s-row-val">Breve termine; tecnologia può risolvere molti problemi; solo effetti provati inclusi.</span></div>
+    <div class="s-row"><span class="s-row-key">E — Egalitarian</span><span class="s-row-val">Lunghissimo termine; problemi possono portare a catastrofe; tutti gli effetti possibili inclusi.</span></div>
+    <p class="note">Single score ReCiPe: tutto aggregato in un unico numero. Massima sintesi ma massima arbitrarietà valoriale. Usato per confronti rapidi, non per comunicazioni regolatorie.</p>
+  </div>
+  <div class="s-card">
+    <h3>DALY — Disability Adjusted Life Years</h3>
+    <p style="margin-bottom:8px;">Indicatore endpoint per la salute umana. Sviluppato dall'OMS. <strong>DALY = YLL + YLD</strong></p>
+    <div class="s-row"><span class="s-row-key">YLL (Years of Life Lost)</span><span class="s-row-val">= n_morti × anni persi. Basato su aspettativa di vita frontier 2050 = 92 anni (UN World Population Prospects 2012)</span></div>
+    <div class="s-row"><span class="s-row-key">YLD (Years lived with Disability)</span><span class="s-row-val">= prevalenza condizione × disability weight. Cattura morbidità senza mortalità (es. cecità da cataratta)</span></div>
+    <div class="s-row"><span class="s-row-key">1 DALY</span><span class="s-row-val">= perdita di 1 anno di vita in piena salute</span></div>
+    <p class="note">Il DALY permette di confrontare malattie che causano morte precoce (annegamento, morbillo) con malattie che causano disabilità senza morte (cecità, sordità). È la metrica comune in valutazione del rischio sanitario.</p>
+  </div>
+  <div class="s-card">
+    <h3>PDF — Potential Disappeared Fraction</h3>
+    <p style="margin-bottom:8px;">Indicatore endpoint per la qualità degli ecosistemi. Misura la perdita di biodiversità (ricchezza di specie vegetali vascolari) rispetto a una situazione di riferimento (woodland semi-naturale).</p>
+    <div class="s-row"><span class="s-row-key">PDF (adimensionale)</span><span class="s-row-val">Frazione di specie potenzialmente scomparse in una data condizione di uso del suolo</span></div>
+    <div class="s-row"><span class="s-row-key">PDF·m²·yr</span><span class="s-row-val">Perdita di specie integrata su area e tempo — permette di aggregare impatti da uso del suolo e tossicità</span></div>
+    <div class="s-row"><span class="s-row-key">Formula</span><span class="s-row-val">PDF_medio = Σ(CF_i × A_i) / Σ A_i — media ponderata per area dei fattori di caratterizzazione per ogni tipo di uso del suolo</span></div>
+    <p class="note">Un PDF=0.30 per un certo tipo di uso del suolo significa che il 30% delle specie vegetali presenti in condizioni di woodland semi-naturale sarebbero assenti. Non va confuso con la probabilità di estinzione definitiva.</p>
+  </div>
+  <div class="s-card">
+    <h3>Analisi aggiuntive — Gravity, Uncertainty, Sensitivity</h3>
+    <div class="s-row"><span class="s-row-key">Gravity analysis (Pareto)</span><span class="s-row-val">Identifica i processi/flussi con maggiore contributo al risultato. Il principio di Pareto in LCA: tipicamente il 20% dei processi genera l'80% dell'impatto. Indirizza le priorità di raccolta dati.</span></div>
+    <div class="s-row"><span class="s-row-key">Uncertainty analysis</span><span class="s-row-val">Come le incertezze nei dati si propagano nei risultati finali. Metodo Monte Carlo: campionamento ripetuto dalla distribuzione di ogni parametro → distribuzione del risultato finale.</span></div>
+    <div class="s-row"><span class="s-row-key">Sensitivity analysis</span><span class="s-row-val">Come le scelte metodologiche (allocazione, confini, CF) cambiano i risultati. Variazione one-at-a-time o scenario analysis. Obbligo ISO per scelte metodologiche rilevanti.</span></div>
+  </div>
+</div>
+
+<!-- 10. END-OF-LIFE IN LCA (Lecture 10) -->
+<div class="schema-panel" id="sp-eol">
+  <div class="s-card">
+    <h3>Il problema End-of-Life in LCA</h3>
+    <p style="margin-bottom:8px;">Il fine vita genera un dilemma: a quale sistema di prodotto appartengono i benefici (materiali secondari evitano estrazione vergine) e i carichi (processi di riciclo)? La norma ISO 14044 affronta esplicitamente questo nodo nel paragrafo 4.3.4 (Allocazione).</p>
+    <div class="s-row"><span class="s-row-key">Recycled content</span><span class="s-row-val">Frazione di materiale riciclato usato in un prodotto. Pre-consumer = scarti di produzione. Post-consumer = scarti d'uso. È un INPUT al sistema.</span></div>
+    <div class="s-row"><span class="s-row-key">Recyclability</span><span class="s-row-val">Possibilità di riciclare i materiali a fine vita del prodotto</span></div>
+    <div class="s-row"><span class="s-row-key">Recovery</span><span class="s-row-val">Recupero di valore (tipicamente energia) a fine vita</span></div>
+    <div class="s-row"><span class="s-row-key">Re-use / Repurposing</span><span class="s-row-val">Uso del prodotto per la stessa o diversa funzione — evita produzione di nuovi beni</span></div>
+    <div class="s-row"><span class="s-row-key">Downcycling</span><span class="s-row-val">Riciclo con perdita di qualità rispetto al vergine — problema per polimeri, ceramiche, compositi</span></div>
+  </div>
+  <div class="s-card">
+    <h3>Open-loop vs Closed-loop recycling — distinzione ISO</h3>
+    <div class="s-row"><span class="s-row-key">Closed-loop recycling</span><span class="s-row-val">Il materiale riciclato torna nello STESSO sistema prodotto. Le proprietà intrinseche non cambiano (o cambiano di poco). Non si pone il problema di allocazione tra sistemi diversi.</span></div>
+    <div class="s-row"><span class="s-row-key">Open-loop recycling</span><span class="s-row-val">Il materiale riciclato entra in un ALTRO sistema prodotto E le sue proprietà cambiano. Richiede procedura allocativa open-loop.</span></div>
+    <div class="s-row"><span class="s-row-key">Open-loop con procedura closed-loop</span><span class="s-row-val">Open-loop dove le proprietà NON cambiano → si può trattare come closed-loop. Stesso approccio, nessuna allocazione necessaria.</span></div>
+    <p class="note">ISO 14044 è esplicito: nessuna allocazione occorre in closed-loop e in open-loop trattato con procedura closed-loop. L'allocazione è necessaria solo quando le proprietà cambiano (vero open-loop).</p>
+  </div>
+  <div class="s-card">
+    <h3>ISO 14067 — Formule per il riciclo (Carbon Footprint)</h3>
+    <p style="margin-bottom:8px;">ISO 14067:2018 adotta il framework ISO 14040/44 e aggiunge nell'Annex D formule esplicite per il trattamento del riciclo negli studi CFP (Carbon Footprint of Products).</p>
+    <h4>Closed-loop recycling</h4>
+    <p style="font-size:15px;font-weight:600;color:var(--accent);padding:8px 0;">E_M = E_V + E_EoL − R × E_V = (1−R)E_V + E_EoL</p>
+    <div class="s-row"><span class="s-row-key">E_M</span><span class="s-row-val">Impatti totali per produrre le materie prime (mix vergine + riciclato)</span></div>
+    <div class="s-row"><span class="s-row-key">E_V</span><span class="s-row-val">Impatti per produrre il 100% da vergine</span></div>
+    <div class="s-row"><span class="s-row-key">E_EoL</span><span class="s-row-val">Impatti di tutti i processi EoL per riciclare il materiale fino alla stessa qualità del vergine</span></div>
+    <div class="s-row"><span class="s-row-key">R</span><span class="s-row-val">Tasso di riciclo (fraction, 0→1)</span></div>
+    <div class="s-row"><span class="s-row-key">R × E_V</span><span class="s-row-val">Recycling credit = sconto sul carico per materiale vergine evitato</span></div>
+    <p class="note">In closed-loop i benefici (materiale vergine evitato = R×E_V) E i carichi (E_EoL) sono interamente allocati al sistema in studio.</p>
+  </div>
+  <div class="s-card">
+    <h3>Open-loop recycling — formula con fattore di allocazione A</h3>
+    <p style="font-size:15px;font-weight:600;color:var(--accent);padding:8px 0;">E_M = E_V + E_EoL − R × A × E_V</p>
+    <div class="s-row"><span class="s-row-key">A</span><span class="s-row-val">Fattore di allocazione = prezzo di mercato del rottame/riciclato ÷ prezzo di mercato del materiale primario (media su 5 anni)</span></div>
+    <div class="s-row"><span class="s-row-key">R × A × E_V</span><span class="s-row-val">Recycling credit in open-loop — ridotto dall'abbattimento di qualità (A < 1 se il riciclato vale meno)</span></div>
+    <div class="s-row"><span class="s-row-key">A = 1</span><span class="s-row-val">Riciclato vale come il vergine → stesso credito del closed-loop (anche se proprietà diverse!)</span></div>
+    <div class="s-row"><span class="s-row-key">A = 0</span><span class="s-row-val">Complete downcycling: il riciclato non ha valore → nessun credito di riciclo</span></div>
+    <p class="note">Il fatto che A dipenda dal prezzo di mercato introduce volatilità: studi condotti in anni diversi sullo stesso sistema possono dare crediti diversi. Va giustificato esplicitamente e testato con sensitivity analysis.</p>
+  </div>
+  <div class="s-card">
+    <h3>Open-loop recycling con recycled content (formula completa)</h3>
+    <p style="margin-bottom:8px;">Quando il sistema in studio usa ANCHE materiale riciclato come input (non solo lo produce), la formula si espande:</p>
+    <p style="font-size:15px;font-weight:600;color:var(--accent);padding:8px 0;">E_M = E_V × A + E_PP + E_EoL − R × A × E_V</p>
+    <div class="s-row"><span class="s-row-key">E_V × A</span><span class="s-row-val">Carico del materiale riciclato in ingresso (il credito dato al sistema precedente diventa carico per chi riceve il riciclato)</span></div>
+    <div class="s-row"><span class="s-row-key">E_PP</span><span class="s-row-val">Pre-Processing: impatti per portare il riciclato alla qualità del vergine sostituto (pulizia, rifusione, ecc.)</span></div>
+    <p class="note">Principio di coerenza: se il sistema precedente ha ricevuto un recycling credit per quel materiale, il sistema ricevente carica quell'impatto come potenziale. Questa simmetria garantisce che i carichi totali del ciclo di vita siano conservati.</p>
+  </div>
+  <div class="s-card">
+    <h3>Esempio: alluminio — Open-loop con procedura closed-loop (ISO 14049)</h3>
+    <p style="margin-bottom:8px;">Il ciclo di vita di un imballaggio in alluminio illustra il caso più comune nell'industria: net export di rottame verso un pool condiviso (alluminio edilizio, altri settori).</p>
+    <div class="s-row"><span class="s-row-key">Produzione packaging</span><span class="s-row-val">100 kg alluminio (primario y + secondario x)</span></div>
+    <div class="s-row"><span class="s-row-key">Rottame recuperato nel ciclo specifico</span><span class="s-row-val">110 kg totali (30 da produzione + 20 da fabbricazione + 60 da fine vita)</span></div>
+    <div class="s-row"><span class="s-row-key">Net export al pool</span><span class="s-row-val">110 − 100 = 10 kg → vanno ad altri sistemi (es. alluminio per serramenti)</span></div>
+    <p style="margin-bottom:8px;"><strong>Metodo 1 — System expansion:</strong> si includono i cicli sostituti (produzione vergine vs da rottame). Il beneficio = differenza impatti vergine vs secondario per 10 kg → accreditato all'imballaggio.</p>
+    <p style="margin-bottom:8px;"><strong>Metodo 2 — Closed-loop like:</strong> si assume che il pool processi alluminio in modo identico al sistema in studio (stessa tecnologia, stesse proprietà). Simmetria input/output → nessuna allocazione necessaria.</p>
+    <p class="note">L'approccio closed-loop è valido solo se: tecnologia del forno di riciclo identica o molto simile nel sistema e nel pool; proprietà di alluminio primario e secondario identiche o simili (vera per alluminio, falsa per molti polimeri).</p>
+  </div>
+  <div class="s-card">
+    <h3>Esempio: carta Kraft — Open-loop con allocazione per numero di usi (ISO 14049)</h3>
+    <p style="margin-bottom:8px;">Il KBPB (Kraft Bleached Paperboard) è un caso di open-loop con downcycling progressivo. Il riciclo della carta comporta progressiva perdita di lunghezza delle fibre cellulosiche → qualità decrescente ad ogni ciclo.</p>
+    <p style="margin-bottom:8px;">Distribuzione EoL: 30% → MSW (discarica/inceneritore/compostaggio), 70% → riciclo (metà → tissue usa e getta; metà → prodotti riciclati riutilizzabili).</p>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">1</div><div><div class="hier-t">Calcolare la base per l'allocazione</div><div class="hier-d">Totale dei carichi del sistema prodotto primario fino a fine vita</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">2</div><div><div class="hier-t">Determinare gli usi del materiale riciclato</div><div class="hier-d">Identificare tutti i sistemi prodotto che useranno il riciclato</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">3</div><div><div class="hier-t">Calcolare il numero di usi</div><div class="hier-d">Tenendo conto di perdite ad ogni ciclo e quota che va a smaltimento</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">4</div><div><div class="hier-t">Fattore di allocazione</div><div class="hier-d">Basato sul numero di usi: il sistema primario paga la quota 1/n_usi</div></div></div>
+    <div class="hier-row"><div class="hier-n" style="color:#007aff;">5</div><div><div class="hier-t">Allocare gli impatti</div><div class="hier-d">Distribuire la base di allocazione tra tutti i sistemi che usano le fibre</div></div></div>
+    <p class="note">Parametri tipici: z₁=0.70 (fibra riciclata), u₁₂=0.25 (fraction → tissue), u₁₃=0.75 (fraction → recycled product), z₃=x₃=0.5, y₂=y₃=1.0. Limitazione: richiede conoscenza precisa del numero di usi futuri — spesso incerta. Non tiene conto del downcycling progressivo.</p>
+  </div>
+  <div class="s-card">
+    <h3>Riepilogo: quando applicare quale approccio EoL</h3>
+    <div class="s-row"><span class="s-row-key">Closed-loop</span><span class="s-row-val">Stesso sistema, stesse proprietà. Benefici E carichi al sistema in studio. Valido per: alluminio, vetro, acciaio.</span></div>
+    <div class="s-row"><span class="s-row-key">Open-loop → closed-loop</span><span class="s-row-val">Sistemi diversi ma proprietà invariate. Nessuna allocazione. Validità: proprietà identiche o molto simili.</span></div>
+    <div class="s-row"><span class="s-row-key">Open-loop con A (ISO 14067)</span><span class="s-row-val">Sistemi diversi, proprietà cambiano. Credito ridotto da A (rapporto prezzi). Usare con cautela per polimeri e compositi.</span></div>
+    <div class="s-row"><span class="s-row-key">Allocazione per numero di usi</span><span class="s-row-val">Appropriato per materiali con degradazione progressiva (fibre cellulosiche). Richiede conoscenza della catena di riciclo.</span></div>
+    <div class="s-row"><span class="s-row-key">System expansion (avoided burden)</span><span class="s-row-val">Quando si vuole quantificare il beneficio netto del riciclo rispetto alla produzione vergine. Richiede di modellare il sistema sostituto.</span></div>
+    <p class="note">Materiali per cui A ≈ 1 (approccio closed-loop) è generalmente valido: metalli (alluminio, acciaio, rame) e vetro. Materiali da trattare con cautela: polimeri (downcycling quasi inevitabile), ceramiche, compositi (difficile separazione).</p>
+  </div>
+</div>
+
+  </div><!-- /schema-body -->
+</div><!-- /page-schemi -->
+
+</div><!-- /main -->
+
+<!-- TAB BAR -->
+<div class="tabbar">
+  <button class="tab active" id="tab-home" onclick="goTo('home')"><div class="tab-icon">⊞</div><div>Home</div></button>
+  <button class="tab" id="tab-flashcard" onclick="goTo('flashcard')"><div class="tab-icon">🃏</div><div>Flashcard</div></button>
+  <button class="tab" id="tab-quiz" onclick="goTo('quiz')"><div class="tab-icon">✅</div><div>Quiz</div></button>
+  <button class="tab" id="tab-schemi" onclick="goTo('schemi')"><div class="tab-icon">🗂️</div><div>Schemi</div></button>
+</div>
+
+<script>
+const CARDS=[
+  {q:"Definisci sviluppo sostenibile e i suoi due tipi di limiti.",a:"Soddisfare i bisogni del presente senza compromettere le generazioni future. Limiti tecnologici e limiti sociali/organizzativi. Include una dimensione di giustizia e accesso.",topic:"sost"},
+  {q:"Cosa significano Bearable, Viable, Equitable nel diagramma di Venn?",a:"Bearable = ambientale+sociale (accettabile). Viable = ambientale+economico (funziona senza devastare). Equitable = sociale+economico (distribuzione equa di costi e benefici). Al centro: Sustainable.",topic:"sost"},
+  {q:"Cos'è il burden shifting e quanti tipi esistono?",a:"Spostare problemi ambientali da un luogo/fase a un altro. Spaziale: si migliora la propria zona peggiorandone un'altra. Temporale/di fase: si migliora la produzione rovinando il riciclo.",topic:"sost"},
+  {q:"Quali sono le 4 condizioni End of Waste (WFD 2008/98/EC)?",a:"1) È comunemente usato per scopi specifici. 2) Esiste un mercato/domanda. 3) Soddisfa requisiti tecnici e leggi. 4) Il suo uso non porta a impatti avversi su ambiente o salute umana.",topic:"sost"},
+  {q:"I 3 principi dell'Economia Circolare.",a:"1) Design out waste & pollution — eliminare rifiuti alla fonte. 2) Keep products & materials in use — manutenzione→riparazione→riuso→refurbish→riciclo. 3) Regenerate natural systems — materiali biologici alla biosfera senza avvelenarla.",topic:"sost"},
+  {q:"Differenza tra LCM e LCSA.",a:"LCM = gestione integrata del ciclo di vita per orientare produzione e consumo verso sostenibilità. LCSA = LCA + LCC + S-LCA: valuta impatti ambientali, economici e sociali in modo integrato.",topic:"sost"},
+  {q:"Definisci LCA secondo ISO 14040.",a:"Strumento per considerare aspetti ambientali e potenziali impatti di un sistema prodotto lungo l'intero ciclo di vita. Non misura impatti reali, ma potenziali. Solo pilastro ambientale.",topic:"framework"},
+  {q:"Quali sono le 4 fasi dell'LCA e come si relazionano?",a:"1. Goal & Scope → 2. LCI ↔ 3. LCIA → 4. Interpretazione. Processo iterativo — dati insufficienti portano a ridefinire il sistema. LCI e LCIA si alimentano vicendevolmente.",topic:"framework"},
+  {q:"Elenca le 7 proprietà fondamentali della LCA.",a:"Environmental focus, Life cycle perspective, Relative approach (per FU), Iterative approach, Trasparenza, Comprehensiveness, Scientific basis.",topic:"framework"},
+  {q:"Limitazioni della LCA — elencale tutte.",a:"Solo pilastro ambientale. Dipendenza dalle scelte di confine. Dipendenza dai dati. Impatti potenziali non reali. Risoluzione spazio-temporale spesso debole.",topic:"framework"},
+  {q:"Cosa significa che il trasporto è 'trasversale' in LCA?",a:"Non è una fase del ciclo di vita ma compare più volte lungo tutta la catena. Può essere hotspot o contributo secondario. Si quantifica con: distanza, massa, modalità, carico utile, tipo veicolo/carburante.",topic:"framework"},
+  {q:"Cosa contiene lo standard ISO 14040 e a cosa serve ISO 14044?",a:"ISO 14040: principi e framework concettuale. ISO 14044: requisiti e linee guida pratiche. Devono essere usati insieme. ISO 14040 ha sostituito le norme 14040:97, 14041:98, 14042:00, 14043:00.",topic:"framework"},
+  {q:"Le 4 categorie di 'prodotto' in LCA secondo ISO.",a:"Servizi (es. trasporto), Software (intangibile), Hardware (tangibile, numerabile), Processed materials (tangibile, misura continua come kg o litri).",topic:"framework"},
+  {q:"Differenza tra flusso elementare e flusso di prodotto.",a:"Elementare: scambio tra tecnosfera e natura (ecosfera) — solo questi alimentano la LCIA. Di prodotto: scambio tra processi nella tecnosfera. I rifiuti sono flussi di prodotto, non elementari.",topic:"framework"},
+  {q:"Cos'è l'Unità Funzionale (FU) e perché è critica?",a:"La prestazione quantificata del sistema usata come unità di riferimento. Permette di confrontare sistemi diversi su base comune. Senza FU ben definita i risultati sono privi di significato.",topic:"scope"},
+  {q:"Differenza tra Functional Unit e Reference Flow.",a:"FU = la funzione da realizzare (es. verniciare 1m²). Reference flow = quantità concreta di prodotto per realizzarla (es. 200g di vernice). La FU è la funzione, il RF è la misura.",topic:"scope"},
+  {q:"Quando si usa la Declared Unit invece della FU?",a:"Quando la funzione precisa del prodotto non è nota/specificabile o il prodotto è integrabile in sistemi diversi con scenari multipli. Nata nel settore costruzioni (ISO 21930), ora universale.",topic:"scope"},
+  {q:"Elenca i 10 requisiti di qualità dati ISO.",a:"a)Temporale b)Geografica c)Tecnologica d)Precisione e)Completezza f)Rappresentatività g)Consistenza h)Riproducibilità i)Fonti dei dati j)Incertezza.",topic:"scope"},
+  {q:"Definisci 'Unit Process' secondo ISO 14044.",a:"Il più piccolo elemento dell'LCI per cui si quantificano input e output. Il 'mattone' del product system. La sua definizione è una scelta metodologica — non esiste un solo modo corretto.",topic:"lci"},
+  {q:"Qual è la differenza tra tecnosfera e biosfera?",a:"Tecnosfera: rete di attività umane (fabbriche, trasporti, energia) — i flussi di prodotto circolano qui. Biosfera: ambiente naturale, fonte di risorse e ricettore di emissioni. I flussi elementari attraversano il confine.",topic:"lci"},
+  {q:"Cos'è il 'functional flow' e il 'non-functional flow'?",a:"Functional flow = il flusso che è lo scopo del processo (product outflow in produzione, waste inflow in trattamento). Non-functional flow = tutto il resto. Non è proprietà intrinseca: dipende dal punto di vista.",topic:"lci"},
+  {q:"Elenca i 6 passi della roadmap per l'inventario.",a:"1)Diagramma di flusso. 2)Descrizione ogni UP. 3)Elenco flussi. 4)Unità di misura. 5)Tecniche raccolta/calcolo. 6)Documentazione casi speciali e anomalie.",topic:"lci"},
+  {q:"Come si valida un LCI? Quali principi fisici si usano?",a:"Bilanci di massa e bilanci energetici. Principi: conservazione massa, conservazione energia, aumento entropia (II principio), stechiometria. La validazione è verifica di plausibilità, non chiusura algebrica perfetta.",topic:"lci"},
+  {q:"LCA attributiva vs consequenziale — differenza.",a:"Attributiva: 'com'è il sistema ora?' → partizione, usata per EPD. Consequenziale: 'cosa cambia se...?' → espansione del sistema, usata per policy e eco-design.",topic:"lci"},
+  {q:"Cos'è un processo multifunzionale? Fai 3 esempi.",a:"Un UP che genera più di un functional flow. Es: raffineria (benzina+diesel+GPL), cogenerazione (elettricità+calore), cloro-soda (Cl₂+NaOH+H₂ in rapporto stechiometrico fisso).",topic:"multi"},
+  {q:"Elenca la tassonomia completa dei processi multifunzionali.",a:"Monofunctional production (g4), Coproduction (g4+g5), Monofunctional waste (w1), Combined waste (w1+w2), Recycling (w1+g3), Combined waste+recycling (w1+w2+g2+g3). g=good, w=waste.",topic:"multi"},
+  {q:"Gerarchia ISO 14044 per la multifunzionalità.",a:"1° Evitare: suddivisione o system expansion. 2° Partitioning fisico (massa, energia, moli). 3° Partitioning economico (f_i = p_i×m_i / Σp_j×m_j). Si scende solo se il livello superiore non è applicabile.",topic:"multi"},
+  {q:"Differenza tra System Expansion e Substitution.",a:"System expansion allarga la FU includendo tutte le funzioni — cambia la domanda di studio, dati extra: nessuno. Substitution mantiene la FU originale e detrae gli impatti del sistema alternativo — non è in ISO 14044 esplicitamente.",topic:"multi"},
+  {q:"Limite del Partitioning — cosa sono i processi virtuali?",a:"I processi monofunzionali risultanti non esistono nella realtà e possono violare bilanci fisici (massa o energia). Sono 'virtuali'. La scelta del criterio di partizione introduce arbitrarietà.",topic:"multi"},
+  {q:"Tre approcci allocativi per il riciclo.",a:"Cut-off: carichi vergine al prodotto primario (sottostima benefici riciclo). Avoided burden: si accredita il beneficio del riciclato (dipende dal sistema sostitutivo). 50/50: divisione equa (arbitrario ma semplice). Nessuno universalmente corretto.",topic:"multi"},
+  {q:"Definizione ISO di LCIA — parola chiave.",a:"'Potential' è la parola chiave: la LCIA non misura impatti reali osservati, ma stima il potenziale di danno associato ai flussi elementari. È una valutazione modellistica, non empirica.",topic:"lcia"},
+  {q:"Elementi obbligatori vs opzionali della LCIA.",a:"Obbligatori: selezione categorie/indicatori/modelli, classificazione, caratterizzazione (Σ CF_i × m_i). Opzionali: normalizzazione, raggruppamento, pesatura (*vietata in comparativi pubblici senza disclosure).",topic:"lcia"},
+  {q:"Midpoint vs Endpoint — confronto completo.",a:"Midpoint: metà catena causale, variabile intermedia (kg SO₂eq), minore incertezza, meno intuitivo. Endpoint: fine catena causale, danno finale (DALY, PDF·m²·yr), più intuitivo, maggiore incertezza per catena modellistica lunga.",topic:"lcia"},
+  {q:"Le 3 aree di protezione della LCIA con indicatori.",a:"Human health (DALY — Disability-Adjusted Life Years). Ecosystem health (PDF·m²·yr — Potentially Disappeared Fraction). Natural resources (disponibilità per generazioni future).",topic:"lcia"},
+  {q:"GWP100 — valori chiave (IPCC AR6).",a:"CO₂=1, CH₄=27-30, N₂O≈273, HFC-134a≈1430, SF₆≈25.200. Il GWP è il characterization factor per climate change. Definito dall'IPCC, aggiornato periodicamente.",topic:"lcia"},
+  {q:"Acidification Potential — gas di riferimento, valori e dato controintuitivo.",a:"Riferimento: SO₂=1. NOₓ≈0.5, NH₃≈1.6, HCl≈0.88. Dato controintuitivo: NH₃ > 1 — l'ammoniaca è più acidificante della SO₂! Importante nei sistemi agro-zootecnici. Modello RAINS 10.",topic:"lcia"},
+  {q:"7 criteri ISO per la selezione dei modelli di caratterizzazione.",a:"a)Accettazione internazionale b)Rappresentatività c)Minimizzazione giudizi di valore d)No double counting e)Validità scientifica f)Limiti di validità dichiarati g)Rilevanza ambientale.",topic:"lcia"},
+  {q:"Cos'è la Pedigree Matrix di Ecoinvent — 5 indicatori.",a:"Reliability, Completeness, Temporal correlation, Geographical correlation, Technological correlation. Score 1–5. Default=5 (il peggiore). Technological correlation è dominante (k_max=2.00).",topic:"qualita"},
+  {q:"Perché la Technological Correlation è il parametro dominante?",a:"Ha k_max = 2.00 — usare dati da tecnologie diverse raddoppia il fattore di incertezza. È la peggiore approssimazione possibile in un LCI. Tutti gli altri fattori hanno k_max ≤ 1.50.",topic:"qualita"},
+  {q:"Formula DQR e differenza con Pedigree Matrix.",a:"DQR = (TeR + GR + TiR + P) / 4. Score 1–5 per selezione dataset PEF. Differenza: EF DQR risponde a 'quanto è buono il dataset?' (qualità). Pedigree risponde a 'quanto è incerto?' (σ, GSD² per Monte Carlo).",topic:"qualita"},
+
+  {q:"Cos'è la classificazione in LCIA e cosa sono i meccanismi paralleli vs seriali?",a:"Assegna i flussi LCI alle categorie di impatto. Meccanismi paralleli: lo stesso flusso (es. SO₂) contribuisce a più categorie indipendenti (acidification, human toxicity). Seriali: si usa solo il midpoint più a valle per evitare doppio conteggio (es. CFC → solo ozone depletion, non anche concentrazione troposferica).",topic:"lcia"},
+  {q:"Formula della caratterizzazione LCIA.",a:"I(k) = Σ(j=1→N) CF_j^k × m_j. Dove: I(k) = impatto nella k-esima categoria; CF_j^k = characterization factor del j-esimo flusso per la k-esima categoria; m_j = quantità del j-esimo flusso elementare; N = numero di flussi classificati.",topic:"lcia"},
+  {q:"Formula normalizzazione e a cosa serve.",a:"I*_k = I_k / N_k. Dove N_k è il fattore di normalizzazione (es. impatto EU2010 pro capite/anno). Serve a confrontare categorie di impatto su scala comune: capire quali categorie sono relativamente più importanti per il prodotto in esame.",topic:"lcia"},
+  {q:"CML-IA: quante categorie, che tipo di metodo, unità per acidification e GWP?",a:"11 categorie midpoint (problem-oriented). Acidification: kg SO₂ eq. GWP100: kg CO₂ eq. Tossicità: kg 1,4-DB eq. Abiotic depletion: kg Sb eq. È un metodo midpoint puro — nessun endpoint (no DALY, no PDF).",topic:"lcia"},
+  {q:"ReCiPe: struttura e 3 prospettive culturali.",a:"18 midpoint → 3 endpoint (Human health in DALY, Ecosystems in species·yr, Resources in surplus cost $). Tre prospettive: H=Hierarchist (bilancio breve/lungo), I=Individualist (breve termine, solo effetti provati), E=Egalitarian (lunghissimo termine, tutti gli effetti possibili).",topic:"lcia"},
+  {q:"DALY = YLL + YLD — cosa misura ciascun termine?",a:"YLL = Years of Life Lost = morti × anni persi (aspettativa frontier 92 anni al 2050). YLD = Years lived with Disability = prevalenza × disability weight. 1 DALY = 1 anno di vita piena perso. Permette di confrontare mortalità e morbidità su scala comune.",topic:"lcia"},
+  {q:"PDF: formula, cosa misura, differenza tra PDF e PDF·m²·yr.",a:"PDF_medio = Σ(CF_i × A_i) / Σ A_i. PDF = frazione di specie vegetali vascolari potenzialmente scomparse rispetto a woodland semi-naturale. PDF·m²·yr integra area e tempo → per aggregare impatti di uso suolo e tossicità. PDF=0.3 → il 30% delle specie sarebbe assente.",topic:"lcia"},
+  {q:"Metodi di pesatura LCIA — elenca i 4 tipi.",a:"1) Monetizzazione (costo danno — dipende dal tasso di sconto). 2) Panel expert/stakeholder (survey di elicitazione). 3) Distance-to-target (relazione a target policy o Planetary Boundaries). 4) Fuzzy-logic (variabili linguistiche + regole if-then). Nessuno è scientificamente neutrale.",topic:"lcia"},
+  {q:"Cosa sono gravity, uncertainty e sensitivity analysis in LCIA?",a:"Gravity (Pareto): identifica i processi con maggiore contributo (20% processi → 80% impatto). Uncertainty: come incertezze nei dati si propagano (Monte Carlo). Sensitivity: come scelte metodologiche cambiano i risultati (variazione one-at-a-time). Sensitivity è obbligatoria per ISO 14044.",topic:"lcia"},
+  {q:"Perché la pesatura è vietata in studi comparativi pubblici senza disclosure?",a:"Perché la pesatura non è scientificamente neutrale: incorpora giudizi di valore (culturali, politici, etici). Non esiste un consenso universale sui weight factors. ISO 14044 richiede che i dati pre-pesatura rimangano disponibili e che l'uso di weighting in studi comparativi pubblici sia dichiarato esplicitamente.",topic:"lcia"},
+  {q:"Definizioni: recycled content, recyclability, recovery, re-use, downcycling.",a:"Recycled content: quota di materiale riciclato in un prodotto (pre/post-consumer). Recyclability: possibilità di riciclare a fine vita. Recovery: recupero di valore (tipicamente energetico). Re-use: stesso prodotto riutilizzato. Downcycling: riciclo con perdita di qualità rispetto al vergine.",topic:"eol"},
+  {q:"Differenza tra closed-loop e open-loop recycling secondo ISO 14044.",a:"Closed-loop: materiale ritorna nello stesso sistema prodotto, proprietà invariate → nessuna allocazione. Open-loop: materiale va in altro sistema prodotto E proprietà cambiano → allocazione necessaria. Se proprietà non cambiano, open-loop si tratta come closed-loop.",topic:"eol"},
+  {q:"Formula closed-loop recycling (ISO 14067) — spiegazione di ogni termine.",a:"E_M = E_V + E_EoL − R×E_V = (1−R)E_V + E_EoL. E_V: impatti produzione 100% vergine. E_EoL: impatti processi riciclo. R: tasso di riciclo (0→1). R×E_V: recycling credit (sconto per vergine evitato). Benefici E carichi entrambi al sistema in studio.",topic:"eol"},
+  {q:"Formula open-loop recycling — cosa aggiunge rispetto al closed-loop?",a:"E_M = E_V + E_EoL − R×A×E_V. Aggiunge A = fattore di allocazione = prezzo rottame / prezzo materiale primario (media 5 anni). Se A<1 il credito è ridotto (riciclato vale meno). Se A=0 (downcycling totale) → nessun credito. Se A=1 → uguale al closed-loop.",topic:"eol"},
+  {q:"Formula open-loop con recycled content — cosa aggiungono E_V×A e E_PP?",a:"E_M = E_V×A + E_PP + E_EoL − R×A×E_V. E_V×A: carico del riciclato ricevuto in ingresso (il credito dato al sistema precedente diventa carico per il ricevente). E_PP: pre-processing per portare il riciclato alla qualità del vergine sostituto.",topic:"eol"},
+  {q:"Esempio alluminio: perché si usa procedura closed-loop anche in open-loop?",a:"L'alluminio riciclato mantiene le stesse proprietà del vergine (qualità invariata). Il forno di riciclo è tecnologicamente identico o simile nel sistema specifico e nel pool generale. Condizione: import/export di rottame dal pool deve bilanciarsi. Se c'è net export → co-prodotto → si gestisce con system expansion o closed-loop model.",topic:"eol"},
+  {q:"Esempio carta Kraft KBPB: come si alloca e qual è il limite del metodo?",a:"Allocazione per numero di usi: carichi base divisi tra tutti i sistemi prodotto che usano le fibre. Passi: calcola base di allocazione → determina usi del riciclato → calcola n° usi (con perdite) → fattore = 1/n_usi. Limite: richiede conoscenza precisa dei cicli futuri (incerta). Non quantifica il downcycling progressivo della fibra.",topic:"eol"},
+  {q:"Quando è appropriato usare A≈1 (approccio closed-loop) e quando no?",a:"A≈1 valido: metalli (alluminio, acciaio, rame), vetro — proprietà intrinsiche conservate nel riciclo. Cautela: polimeri (downcycling quasi inevitabile), ceramiche, compositi (difficile separazione), fibre cellulosiche (lunghezza ridotta ad ogni ciclo). ISO 14044 è esplicito su questo.",topic:"eol"},
+  {q:"Cos'è il recycling credit e come si differenzia tra closed e open loop?",a:"Recycling credit = sconto sui carichi per il materiale vergine evitato grazie al riciclo. Closed-loop: credito = R×E_V (pieno). Open-loop: credito = R×A×E_V (ridotto dal fattore A che riflette la qualità/valore del riciclato rispetto al vergine). A=1 → stessi crediti; A=0 → nessun credito.",topic:"eol"},
+  {q:"Cosa dice ISO 14044 sull'allocazione in closed-loop e open-loop con procedura closed-loop?",a:"Esplicito: 'allocation does not occur in closed loop and open loop (with closed loop procedure) recycling'. Nessuna allocazione necessaria nei due casi. L'allocazione è richiesta solo nel vero open-loop (diverse proprietà). Paragrafo 4.3.4 e Annex D della norma.",topic:"eol"},
+];
+
+const TOPICS={all:"Tutti",sost:"Sostenibilità",framework:"Framework",scope:"Goal & Scope",lci:"LCI",multi:"Multifunzionalità",lcia:"LCIA",qualita:"Qualità dato",eol:"End-of-Life"};
+const TAG_COLORS={sost:"#34c75922,#34c759",framework:"#007aff22,#007aff",scope:"#af52de22,#af52de",lci:"#ff950022,#ff9500",multi:"#ff3b3022,#ff3b30",lcia:"#af52de22,#af52de",qualita:"#007aff22,#007aff",eol:"#34c75922,#34c759"};
+
+let filteredCards=[...CARDS],fcIdx=0,fcFlipped=false;
+
+function fcFilter(){
+  const t=document.getElementById('fc-topic').value;
+  filteredCards=t==='all'?[...CARDS]:CARDS.filter(c=>c.topic===t);
+  fcIdx=0;fcFlipped=false;document.getElementById('fc-inner').classList.remove('flipped');renderFC();
+}
+function renderFC(){
+  if(!filteredCards.length)return;
+  const c=filteredCards[fcIdx];
+  document.getElementById('fc-q').textContent=c.q;
+  document.getElementById('fc-a').textContent=c.a;
+  const n=fcIdx+1,tot=filteredCards.length;
+  document.getElementById('fc-count').textContent=n+' / '+tot;
+  document.getElementById('fc-prog').textContent=n+' / '+tot;
+  const cols=(TAG_COLORS[c.topic]||'var(--surface2),var(--text2)').split(',');
+  const tag=document.getElementById('fc-tag-el');
+  tag.textContent=TOPICS[c.topic]||c.topic;
+  tag.style.background=cols[0];tag.style.color=cols[1];
+}
+function fcFlip(){fcFlipped=!fcFlipped;document.getElementById('fc-inner').classList.toggle('flipped',fcFlipped);}
+function fcNext(){fcIdx=(fcIdx+1)%filteredCards.length;fcFlipped=false;document.getElementById('fc-inner').classList.remove('flipped');renderFC();}
+function fcPrev(){fcIdx=(fcIdx-1+filteredCards.length)%filteredCards.length;fcFlipped=false;document.getElementById('fc-inner').classList.remove('flipped');renderFC();}
+renderFC();
+
+const QUIZ=[
+  {q:"Secondo ISO 14044, quale strategia per la multifunzionalità ha massima priorità?",opts:["Partitioning economico","Partitioning fisico (massa)","System expansion / suddivisione del processo","Substitution con avoided burdens"],ans:2,exp:"Primo passo = evitare l'allocazione tramite suddivisione del processo o system expansion. Si scende al livello successivo solo se il precedente non è applicabile."},
+  {q:"La Declared Unit (DU) si usa quando:",opts:["La FU è sempre preferibile","La funzione precisa del prodotto non è nota o specificabile","È obbligatoria solo per EPD di costruzioni","Può essere usata solo nel settore elettronico"],ans:1,exp:"La DU si usa quando la funzione precisa non è specificabile o il prodotto è integrabile in sistemi con scenari multipli. Nata nel settore costruzioni (ISO 21930), ora universale."},
+  {q:"Quale flusso alimenta direttamente la LCIA?",opts:["Flussi di prodotto tra unit process","Flussi elementari (scambi con la natura)","I rifiuti in uscita dal sistema","I product flows intermedi"],ans:1,exp:"Solo i flussi elementari (emissioni in aria/acqua/suolo e prelievi dalla natura) entrano nei calcoli LCIA tramite i fattori di caratterizzazione CF."},
+  {q:"Il processo cloro-soda è un esempio di:",opts:["Recycling","Coproduction con partitioning fisico ovvio","Joint production — qualsiasi allocazione è arbitraria","Combined waste processing"],ans:2,exp:"Cl₂ e NaOH sono prodotti in rapporto stechiometrico fisso. Non si può produrre uno senza l'altro: è joint production per eccellenza. Qualsiasi criterio allocativo è fondamentalmente arbitrario."},
+  {q:"Technological Correlation nella Pedigree Matrix: k_max = 2.00 significa che:",opts:["Il dato è affidabile al 200%","Usare dati da tecnologie diverse raddoppia il fattore di incertezza","È il parametro meno importante","Vale solo per dati energetici"],ans:1,exp:"k=2.00 è il fattore dominante della Pedigree Matrix. Tutti gli altri hanno k_max ≤ 1.50. Usare dati da tecnologie diverse è la peggiore approssimazione in un LCI."},
+  {q:"Quale indicatore LCIA ha MINORE incertezza?",opts:["Endpoint — misura il danno reale","Midpoint — catena causale più corta","Sono equivalenti in incertezza","Dipende dalla metodologia usata"],ans:1,exp:"Il midpoint si posiziona a metà catena causale: catena modellistica più corta = minore incertezza. L'endpoint richiede modellare l'intera cascata fino al danno finale (DALY, PDF)."},
+  {q:"Il modulo D in EN 15804 è escluso dal sistema principale perché:",opts:["Non è rilevante per le costruzioni","Evita il doppio conteggio dei benefici di riciclo","ISO 14044 lo vieta","I dati sono sempre di qualità bassa"],ans:1,exp:"I benefici di riciclo/riuso del modulo D si realizzano fuori dal ciclo di vita del prodotto analizzato. Includerli creerebbe doppio conteggio se un secondo studio conta gli stessi benefici come input."},
+  {q:"Nel modello IPAT, cosa rappresenta l'effetto rebound?",opts:["Il rimbalzo economico dopo una crisi","I miglioramenti tecnologici (T) sono stati storicamente superati dalla crescita di P e A","Il rimbalzo delle emissioni dopo una riduzione","L'effetto della tecnologia sulla popolazione"],ans:1,exp:"Storicamente, i miglioramenti di efficienza tecnologica (T in calo) sono stati più che compensati dalla crescita della popolazione (P) e dell'affluenza (A), risultando in un impatto netto crescente."},
+  {q:"Quanti Planetary Boundaries risultano superati al 2025?",opts:["3","5","7","9"],ans:2,exp:"Evoluzione: 2009 → 3 superati, 2015 → 4, 2023 → 6, 2025 → 7. I confini superati includono climate change, biosphere integrity, biochemical flows (N,P), land-system change, novel entities, freshwater use."},
+  {q:"La sensitivity analysis in ISO 14044 è:",opts:["Opzionale — utile ma non richiesta","Obbligatoria in ogni studio conforme","Solo per studi comparativi pubblici","Solo se si usa partitioning economico"],ans:1,exp:"ISO 14044 richiede esplicitamente la sensitivity analysis. Se variare un parametro non cambia i risultati, quel dato è irrilevante. Se lo cambia significativamente, deve essere dichiarato come limitazione."},
+
+  {q:"Nella classificazione LCIA, la SO₂ contribuisce ad acidification E human toxicity. Questo è un meccanismo:",opts:["Seriale — si usa solo il midpoint più a valle","Parallelo — due catene causali indipendenti dallo stesso flusso","Sequenziale — acidification porta a human toxicity","Non consentito da ISO 14044"],ans:1,exp:"SO₂ → acidification E SO₂ → (via aerosol) → human toxicity sono catene causali INDIPENDENTI (meccanismo parallelo). Si assegna a entrambe le categorie. Sarebbe seriale se una causasse l'altra."},
+  {q:"In ReCiPe, quale endpoint riceve contributi da climate change, ozone depletion, carcinogens e respiratory effects?",opts:["Ecosystems (species·yr)","Resources (surplus cost $)","Human health (DALY)","Nessuno — sono tutti midpoint"],ans:2,exp:"Tutti questi midpoint convergono sull'endpoint Human health, espresso in DALY. Climate change → mortalità e morbidità. Ozone depletion → melanoma e cataratta. Carcinogens e respiratory → malattie croniche."},
+  {q:"Qual è il limite principale dell'allocazione per numero di usi nella carta riciclata?",opts:["È vietata da ISO 14044","Non considera il downcycling progressivo delle fibre","Richiede sempre system expansion","È valida solo per i metalli"],ans:1,exp:"Il metodo alloca i carichi in proporzione agli usi futuri ma non quantifica la perdita di qualità (lunghezza fibre) ad ogni ciclo. Anche se le fibre vengono riciclate 3 volte, al terzo ciclo valgono molto meno del primo."},
+  {q:"Nella formula open-loop E_M = E_V + E_EoL - R×A×E_V, se A=0 significa:",opts:["Il riciclato ha lo stesso valore del vergine","Il riciclo è completamente closed-loop","Il materiale va a discarica senza riciclo","Downcycling totale: nessun recycling credit"],ans:3,exp:"A = rapporto prezzo rottame / prezzo primario. A=0 significa che il rottame viene ceduto gratuitamente (o addirittura a pagamento per chi lo riceve) — nessun valore economico → nessun credito di riciclo. Esempio: plastiche contaminate."},
+  {q:"Per quale materiale è MENO appropriato usare la procedura closed-loop nell'EoL?",opts:["Alluminio da imballaggio","Vetro da contenitori","Fibra cellulosica da carta","Acciaio da costruzioni"],ans:2,exp:"La fibra cellulosica subisce accorciamento progressivo ad ogni ciclo di riciclo → le proprietà cambiano (downcycling). Alluminio, vetro e acciaio mantengono le proprietà dopo la rifusione. Per la carta è necessario l'approccio open-loop con allocazione per numero di usi o fattore A."},
+  {q:"Cosa garantisce la simmetria nella formula open-loop con recycled content (E_M = E_V×A + E_PP + E_EoL - R×A×E_V)?",opts:["Il fattore A è sempre uguale a 1","Il credito del sistema precedente diventa carico per chi riceve il riciclato","E_PP azzera il beneficio del riciclo","ISO 14067 non prevede questo caso"],ans:1,exp:"Principio di conservazione: se il sistema generatore ha ricevuto un credito R×A×E_V per aver prodotto il riciclato, il sistema ricevente carica E_V×A come costo del materiale riciclato in ingresso. I carichi totali del ciclo di vita sono conservati."},
+  {q:"Normalizzazione in LCIA: se I_k = 50 kg CO₂eq e N_k = 9220 kg CO₂eq/persona/anno, il valore normalizzato I*_k è:",opts:["Circa 0.005 (0.5% dell'impatto pro capite annuo europeo)","Circa 50/9220 ≈ 0.0054","Entrambe le risposte a) e b) sono corrette","Non calcolabile senza pesatura"],ans:2,exp:"I*_k = I_k/N_k = 50/9220 ≈ 0.0054 ≈ 0.54% dell'impatto pro capite annuo EU 2010. Risposta a) dice 0.5% che è approssimato (0.54%). Risposta b) è il calcolo esatto. La c) è tecnicamente corretta ma b) è più precisa. N_k per Climate change EU27 2010 = 9.22E+03 kg CO₂eq/persona/anno."},
+  {q:"Secondo ISO 14044, in quali casi NON è necessaria allocazione per l'EoL?",opts:["Solo in closed-loop recycling","Solo se A=1","In closed-loop e in open-loop con procedura closed-loop (proprietà invariate)","Solo se si usa system expansion"],ans:2,exp:"ISO 14044 esplicito: 'allocation does not occur in closed loop and open loop (with closed loop procedure) recycling'. La condizione per applicare procedura closed-loop all'open-loop è che le proprietà intrinseche del materiale NON cambino dopo il riciclo."},
+  {q:"Nell'esempio dell'alluminio (ISO 14049), il ciclo genera 110 kg rottame ma richiede solo 100 kg. Il net export di 10 kg al pool è trattato come:",opts:["Rifiuto — va smaltito senza benefici","Co-prodotto — allocazione tramite system expansion o closed-loop model","Flusso elementare verso la natura","Input non funzionale"],ans:1,exp:"I 10 kg eccedenti entrano in un pool di alluminio condiviso con altri settori. Sono un co-prodotto del ciclo dell'imballaggio. Si può gestire con system expansion (sottrarre impatti di produzione vergine sostituta) o con un modello closed-loop con technology split ricalibrato."},
+  {q:"Perché la pesatura LCIA non ha consenso e non è scientificamente basata?",opts:["Perché i software LCA non la supportano","Perché incorpora giudizi di valore (culturali, politici, etici) non universali","Perché ISO 14040 la vieta completamente","Perché la normalizzazione deve precedere la pesatura obbligatoriamente"],ans:1,exp:"Non esiste una risposta scientificamente corretta a 'quanto vale 1 DALY rispetto a 1 PDF·m²·yr?'. Qualsiasi peso riflette priorità culturali o politiche (ReCiPe usa le 3 prospettive H/I/E proprio per evidenziare la dipendenza dal sistema di valori). ISO richiede disclosure obbligatoria in studi pubblici comparativi."},
+];
+
+let qIdx=0,qScore=0,qShuffled=[];
+function initQuiz(){qShuffled=[...QUIZ].sort(()=>Math.random()-0.5);qIdx=0;qScore=0;renderQuiz();}
+function renderQuiz(){
+  const wrap=document.getElementById('quiz-wrap');
+  if(qIdx>=qShuffled.length){
+    const pct=Math.round(qScore/qShuffled.length*100);
+    wrap.innerHTML=`<div class="quiz-score-wrap"><div class="quiz-score-num">${qScore}</div><div class="quiz-score-den">su ${qShuffled.length}</div><div class="quiz-score-msg">${pct>=90?'Eccellente! 🏆':pct>=70?'Buono 💪':pct>=50?'Discreto, ripassare 📖':'Bisogna studiare ancora 📚'}</div><button class="quiz-restart" onclick="initQuiz()">Riprova</button></div>`;
+    return;
+  }
+  const q=qShuffled[qIdx];
+  const pct=Math.round(qIdx/qShuffled.length*100);
+  let html=`<div class="quiz-prog-bar"><div class="quiz-prog-fill" style="width:${pct}%"></div></div>`;
+  html+=`<p style="font-size:12px;color:var(--text3);margin-bottom:12px;">Domanda ${qIdx+1} di ${qShuffled.length} · Punteggio: ${qScore}</p>`;
+  html+=`<div class="quiz-q-text">${q.q}</div><div class="quiz-opts">`;
+  q.opts.forEach((o,i)=>{html+=`<button class="quiz-opt" onclick="answerQ(${i})">${o}</button>`;});
+  html+=`</div>`;
+  wrap.innerHTML=html;
+}
+function answerQ(i){
+  const q=qShuffled[qIdx];
+  const btns=document.querySelectorAll('.quiz-opt');
+  btns.forEach(b=>b.disabled=true);
+  const ok=i===q.ans;
+  btns[i].classList.add(ok?'correct':'wrong');
+  if(!ok)btns[q.ans].classList.add('reveal');
+  if(ok)qScore++;
+  const wrap=document.getElementById('quiz-wrap');
+  const fb=document.createElement('div');
+  fb.className='quiz-feedback '+(ok?'ok':'ko');
+  fb.textContent=(ok?'✓ Corretto — ':'✗ Sbagliato — ')+q.exp;
+  wrap.querySelector('.quiz-opts').after(fb);
+  const nb=document.createElement('button');
+  nb.className='quiz-next';
+  nb.textContent=qIdx<qShuffled.length-1?'Prossima →':'Vedi risultato';
+  nb.onclick=()=>{qIdx++;renderQuiz();};
+  fb.after(nb);
+}
+initQuiz();
+
+const PAGES=['home','flashcard','quiz','schemi'];
+const TITLES={home:'StudyKit',flashcard:'Flashcard',quiz:'Quiz',schemi:'Schemi'};
+const SUBS={home:'I tuoi corsi',flashcard:'LCA e Materiali',quiz:'LCA e Materiali',schemi:'LCA e Materiali'};
+function goTo(page){
+  PAGES.forEach(p=>{
+    document.getElementById('page-'+p).classList.toggle('active',p===page);
+    document.getElementById('tab-'+p).classList.toggle('active',p===page);
+  });
+  document.getElementById('topbar-title').textContent=TITLES[page]||page;
+  document.getElementById('topbar-sub').textContent=SUBS[page]||'';
+  if(page==='flashcard')renderFC();
+  if(page==='quiz')renderQuiz();
+}
+function showSchema(id,el){
+  document.querySelectorAll('.schema-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.schema-chip').forEach(c=>c.classList.remove('active'));
+  document.getElementById('sp-'+id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
