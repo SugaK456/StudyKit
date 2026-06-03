@@ -1,0 +1,2703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LCA Mock Exams – Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --bg: #f5f2ed;
+    --surface: #ffffff;
+    --surface2: #f0ece5;
+    --border: #d8d0c4;
+    --border-strong: #b0a898;
+    --accent: #1a4d6e;
+    --accent2: #2e7d52;
+    --accent3: #8b4513;
+    --accent-light: #e8f0f5;
+    --text: #1c1a18;
+    --text-secondary: #5a5550;
+    --text-muted: #8a837a;
+    --tag-bg: #1a4d6e;
+    --tag-text: #ffffff;
+    --warn: #b85c00;
+    --warn-bg: #fff3e8;
+    --highlight: #2e7d52;
+    --highlight-bg: #eaf5ee;
+    --table-head: #1a4d6e;
+    --table-head-text: #ffffff;
+    --table-alt: #f7f4f0;
+    --serif: 'IBM Plex Serif', Georgia, serif;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: var(--sans);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 0;
+    border-bottom: 3px solid #0f2e42;
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 36px 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .header-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+  .header-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: #fff;
+  }
+  .header-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 4px;
+  }
+
+  /* ── NAV BAR ── */
+  .nav-bar {
+    background: #0f2e42;
+    border-bottom: 1px solid #0a1e2d;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-bar::-webkit-scrollbar { display: none; }
+  .nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+  }
+  .nav-btn {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 13px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .nav-btn:hover { color: rgba(255,255,255,0.9); }
+  .nav-btn.active {
+    color: #fff;
+    border-bottom-color: #5cb8ff;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  /* ── EXAM PANEL ── */
+  .exam-panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .exam-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── EXAM META BAR ── */
+  .exam-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .exam-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    padding: 4px 10px;
+    border-radius: 3px;
+  }
+  .exam-badge.green { background: var(--accent2); }
+  .exam-badge.brown { background: var(--accent3); }
+  .exam-badge.teal { background: #1a6e6e; }
+  .points-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--warn-bg);
+    color: var(--warn);
+    border: 1px solid #f0c090;
+    padding: 4px 10px;
+    border-radius: 3px;
+  }
+  .method-badge {
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-family: var(--mono);
+  }
+
+  /* ── SECTION CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .card-head {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-head-icon {
+    width: 22px;
+    height: 22px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .card-head-title {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .card-body { padding: 20px; }
+
+  /* ── EXAM TITLE ── */
+  .exam-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .exam-intro {
+    color: var(--text-secondary);
+    font-size: 14.5px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  /* ── SCENARIO TEXT ── */
+  .scenario {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: var(--text);
+  }
+  .scenario p { margin-bottom: 12px; }
+  .scenario p:last-child { margin-bottom: 0; }
+  .scenario strong { color: var(--text); font-weight: 600; }
+  .scenario em { font-style: italic; color: var(--text-secondary); }
+
+  /* ── HIGHLIGHT BOX ── */
+  .info-box {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .warn-box {
+    background: var(--warn-bg);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .green-box {
+    background: var(--highlight-bg);
+    border-left: 3px solid var(--highlight);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  /* ── TABLES ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+  }
+  .table-label {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  thead tr {
+    background: var(--table-head);
+    color: var(--table-head-text);
+  }
+  thead th {
+    padding: 9px 13px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+  tbody tr:nth-child(even) { background: var(--table-alt); }
+  tbody tr:hover { background: var(--accent-light); }
+  tbody td {
+    padding: 8px 13px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td code, th code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: rgba(0,0,0,0.06);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+
+  /* ── QUESTIONS ── */
+  .questions-list { list-style: none; padding: 0; counter-reset: q; }
+  .question-item {
+    counter-increment: q;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .question-item:last-child { margin-bottom: 0; }
+  .q-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .q-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .q-pts {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--warn);
+    background: var(--warn-bg);
+    border: 1px solid #f0c090;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .q-body {
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .q-body p { margin-bottom: 8px; }
+  .q-body p:last-child { margin-bottom: 0; }
+  .q-sub {
+    background: var(--surface2);
+    border-left: 3px solid var(--border-strong);
+    border-radius: 0 3px 3px 0;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+  }
+  .mandatory-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  /* ── FORMULA ── */
+  .formula-box {
+    background: #fafaf7;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    margin: 10px 0;
+    overflow-x: auto;
+  }
+
+  /* ── DIVIDER ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 24px 32px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── SOLUTION TOGGLE ── */
+  .sol-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    background: none;
+    border: 1.5px solid var(--accent2);
+    color: var(--accent2);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    letter-spacing: 0.01em;
+  }
+  .sol-toggle-btn:hover {
+    background: var(--accent2);
+    color: #fff;
+  }
+  .sol-toggle-btn.open {
+    background: var(--accent2);
+    color: #fff;
+    border-color: var(--accent2);
+  }
+  .sol-toggle-btn .arrow {
+    font-size: 10px;
+    transition: transform 0.2s;
+    display: inline-block;
+  }
+  .sol-toggle-btn.open .arrow { transform: rotate(180deg); }
+
+  .solution-block {
+    display: none;
+    margin-top: 14px;
+    border-top: 2px solid var(--accent2);
+    padding-top: 14px;
+    animation: fadeIn 0.25s ease;
+  }
+  .solution-block.visible { display: block; }
+
+  .sol-header {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sol-header::before {
+    content: '✓';
+    width: 18px;
+    height: 18px;
+    background: var(--accent2);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .sol-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--highlight-bg);
+    border: 1px solid #c3e6ce;
+    border-radius: 5px;
+    padding: 16px 18px;
+  }
+  .sol-body p { margin-bottom: 10px; }
+  .sol-body p:last-child { margin-bottom: 0; }
+  .sol-body strong { color: var(--accent); }
+  .sol-body .sol-calc {
+    background: #fff;
+    border: 1px solid #c3e6ce;
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text);
+    margin: 10px 0;
+    overflow-x: auto;
+  }
+  .sol-body ul { padding-left: 20px; margin: 8px 0; }
+  .sol-body li { margin-bottom: 5px; }
+  .sol-result {
+    display: inline-block;
+    background: var(--accent2);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 3px;
+    margin: 2px 0;
+  }
+  .sol-note {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 8px;
+    border-left: 2px solid var(--border-strong);
+    padding-left: 10px;
+  }
+
+  /* ── PDF BUTTON ── */
+  .pdf-bar {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 12px 32px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+  .pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 9px 18px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.01em;
+    box-shadow: 0 2px 6px rgba(26,77,110,0.25);
+  }
+  .pdf-btn:hover { background: #15405c; transform: translateY(-1px); }
+  .pdf-btn:active { transform: translateY(0); }
+  .pdf-btn svg { flex-shrink: 0; }
+  .pdf-btn.loading { opacity: 0.7; cursor: wait; pointer-events: none; }
+  .pdf-spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .pdf-btn.loading .pdf-spinner { display: block; }
+  .pdf-btn.loading .pdf-icon { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── PRINT / PDF OVERRIDES ── */
+  @media print {
+    header, .nav-bar, .pdf-bar, footer { display: none !important; }
+    .exam-panel { display: block !important; }
+    body { background: #fff; font-size: 12px; }
+    .card { break-inside: avoid; }
+    main { padding: 0; max-width: 100%; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .header-inner, main { padding: 24px 16px; }
+    .nav-inner { padding: 0 12px; }
+    .nav-btn { padding: 13px 12px; }
+    .exam-title { font-size: 19px; }
+    .pdf-bar { padding: 10px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="header-label">Politecnico di Milano · LCA Course</span>
+    <h1 class="header-title">Life Cycle Assessment of Materials and Processes</h1>
+    <p class="header-sub">Mock Exam Collection — Part A with <strong style="color:#7dd4a8">✓ Solutions</strong> · click "Show Solution" under each question</p>
+  </div>
+</header>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showExam(0)">Exam 1 · Coffee Capsule</button>
+    <button class="nav-btn" onclick="showExam(1)">Exam 2 · Electric Scooter</button>
+    <button class="nav-btn" onclick="showExam(2)">Exam 3 · Wooden Furniture</button>
+    <button class="nav-btn" onclick="showExam(3)">Exam 4 · Smartphone</button>
+    <button class="nav-btn" onclick="showExam(4)">Exam 5 · Wind Turbine</button>
+    <button class="nav-btn" onclick="showExam(5)">Exam 6 · Cotton T-Shirt</button>
+    <button class="nav-btn" onclick="showExam(6)">Exam 7 · Plastic Bottle</button>
+    <button class="nav-btn" onclick="showExam(7)">Exam 8 · Concrete Block</button>
+  </div>
+</div>
+
+<div class="pdf-bar">
+  <button class="pdf-btn" id="pdf-btn" onclick="exportPDF()">
+    <svg class="pdf-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/>
+    </svg>
+    <div class="pdf-spinner"></div>
+    Download PDF
+  </button>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM 1 – COFFEE CAPSULE
+═══════════════════════════════════════════════ -->
+<div class="exam-panel active" id="exam-0">
+  <div class="exam-meta">
+    <span class="exam-badge">Exam 1</span>
+    <span class="exam-badge green">Cradle-to-Grave</span>
+    <span class="points-badge">Part A · 24 points</span>
+    <span class="method-badge">EF 3.0 Method (adapted)</span>
+  </div>
+
+  <h2 class="exam-title">LCA of a Single-Serve Coffee Capsule System</h2>
+  <p class="exam-intro">Comparative and cradle-to-grave LCA of an aluminium coffee capsule system, from raw material extraction through end-of-life treatment.</p>
+
+  <div class="card" style="border-color:#c3e6ce;background:#f6fdf8">
+    <div class="card-head" style="background:#eaf5ee;border-color:#c3e6ce">
+      <div class="card-head-icon" style="background:var(--accent2)">★</div>
+      <span class="card-head-title" style="color:var(--accent2)">Solution Guide — click "Show Solution" under each question</span>
+    </div>
+    <div class="card-body" style="font-size:13.5px;color:var(--text-secondary)">
+      Solutions include reference flow calculations, process inventory setup hints, expected numerical results, and commentary on sensitivity analysis. Use them only after attempting the exercise.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">▶</div><span class="card-head-title">Scenario Description</span></div>
+    <div class="card-body">
+      <div class="scenario">
+        <p>A major Italian coffee brand is evaluating the environmental performance of its single-serve aluminium coffee capsule system. The goal of this exercise is to perform a <strong>cradle-to-grave LCA</strong> of the system, from the production of the capsule and its contents to end-of-life treatment.</p>
+
+        <p>The capsule is produced in a facility in <strong>Germany (DE)</strong>. It is made of aluminium (3.2 g) and a polypropylene lid (0.5 g), sealed with a paper filter (0.3 g). The assembly of one capsule requires <strong>0.8 Wh of medium-voltage electricity</strong>. The detailed bill of materials is reported in Table 1.</p>
+
+        <p>Each capsule contains <strong>5.5 g of roasted and ground coffee</strong>. Coffee is grown and processed in <strong>Colombia</strong>, and the unitary impacts of 1 kg of roasted coffee (including cultivation, processing and export preparation) are reported in Table 2. The coffee is then transported from Colombia to Hamburg by <strong>container ship (10,450 km)</strong>, and subsequently transported by <strong>small lorry (680 km)</strong> to the filling plant in <strong>Italy (IT)</strong>.</p>
+
+        <p>The filled capsules are packed into <strong>cardboard boxes</strong> (10 capsules per box, box weight 48 g) at the Italian plant. Cardboard box production requires <strong>0.35 kWh of medium-voltage electricity per kg of cardboard</strong>. The packaged product is then transported by <strong>small lorry (220 km)</strong> to a distribution centre and subsequently to retailers.</p>
+
+        <p>During the <strong>use phase</strong>, the consumer brews one capsule per use using a coffee machine. The machine consumes <strong>0.033 kWh of electricity</strong> (low voltage) per brewing cycle, and <strong>200 ml of tap water</strong> (at consumer level, from surface water – IT).</p>
+
+        <div class="warn-box">☛ <strong>Functional unit:</strong> the preparation and consumption of <strong>1 cup of coffee</strong> (one capsule brewing cycle). The system boundary covers all stages from raw material extraction to end-of-life.</div>
+
+        <p>At <strong>end-of-life</strong>, two scenarios must be modelled. In the reference scenario, the used capsule (containing residual coffee grounds) is disposed of as <strong>municipal solid waste and sent to incineration with energy recovery</strong>. The unitary impacts of incineration of the capsule (aluminium + PP lid + paper filter + coffee grounds) are reported in Table 3. In the alternative scenario, the capsule is <strong>separately collected and sent to aluminium recycling</strong>, using the system expansion approach: the recycled aluminium displaces primary aluminium production. Consider that <strong>85% of the aluminium is recovered</strong> during recycling, and the collection and sorting process requires <strong>0.04 kWh/capsule of medium-voltage electricity</strong>.</p>
+
+        <p>The considered impact categories are <strong>"Climate change"</strong> and <strong>"Resource use, fossils"</strong> of the Impact assessment method <strong>EF 3.0 Method (adapted)</strong>.</p>
+
+        <p>Refer to Tables 4 and 5 for indications on elementary flows and providers that must be used in the modelling.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tables -->
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">T</div><span class="card-head-title">Inventory Data Tables</span></div>
+    <div class="card-body">
+
+      <p class="table-label">Table 1 – Bill of materials for capsule production (per capsule)</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Material</th><th>Amount</th><th>Unit</th></tr></thead>
+          <tbody>
+            <tr><td>Capsule body</td><td>Aluminium sheet</td><td>3.2</td><td>g</td></tr>
+            <tr><td>Lid</td><td>Polypropylene (PP)</td><td>0.5</td><td>g</td></tr>
+            <tr><td>Filter disc</td><td>Paper (graphic paper)</td><td>0.3</td><td>g</td></tr>
+            <tr><td>Assembly electricity</td><td>Medium voltage, DE grid</td><td>0.8</td><td>Wh</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 2 – Unitary impacts of roasted coffee production</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Climate change [kg CO₂-eq]</th><th>Resource use, fossils [MJ]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Roasted coffee (Colombia)</td><td>3.84</td><td>28.6</td><td>1 kg roasted coffee</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 3 – Unitary impacts of end-of-life incineration of the capsule</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Waste stream</th><th>Climate change [kg CO₂-eq]</th><th>Resource use, fossils [MJ]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Mixed capsule waste (MSW incineration)</td><td>0.0082</td><td>0.21</td><td>1 capsule (full weight)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 4 – Elementary flows to be used in the modelling</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Elementary flow</th><th>Flow name</th><th>Containing folder</th></tr></thead>
+          <tbody>
+            <tr><td>Carbon dioxide (2 options, 1 correct)</td><td>Carbon dioxide, fossil</td><td>Emission to air / unspecified</td></tr>
+            <tr><td></td><td>Carbon dioxide, in air</td><td>Resource / in air</td></tr>
+            <tr><td>Oil (2 options, 1 correct)</td><td>Oil, crude, in ground</td><td>Resource / in ground</td></tr>
+            <tr><td></td><td>Natural gas, in ground</td><td>Resource / in ground</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 5 – Product flows and providers to be used in the modelling</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Flow name</th><th>Provider name</th></tr></thead>
+          <tbody>
+            <tr><td>Aluminium</td><td>Aluminium sheet</td><td>Aluminium sheet, production mix, at plant, primary production, aluminium semi-finished sheet product, including primary production, transformation and recycling – RER</td></tr>
+            <tr><td>Polypropylene</td><td>polypropylene fibres (PP)</td><td>Polypropylene fibres (PP), production mix, at plant, crude oil based, PP granulate without additives – EU-27</td></tr>
+            <tr><td>Paper / cardboard</td><td>Graphic paper (typical European)</td><td>Graphic Paper, production mix, at plant, technology mix, 79% primary fibre, 21% recycled fibre – EU-25</td></tr>
+            <tr><td>Tap water</td><td>Drinking water</td><td>Drinking water, production mix, at plant, water purification treatment, from surface water – IT</td></tr>
+            <tr><td>Transport (lorry)</td><td>transport in t·km</td><td>Follow indications in the text</td></tr>
+            <tr><td>Transport (ship)</td><td>transport in t·km</td><td>Follow indications in the text</td></tr>
+            <tr><td>Electricity (2 options, both correct)</td><td>Electricity</td><td>Electricity grid mix 1kV–60kV, consumption mix, at consumer, AC, 1kV–60kV</td></tr>
+            <tr><td></td><td>Electricity</td><td>Electricity grid mix, consumption mix, at consumer, AC, 230V</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Questions -->
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">Q</div><span class="card-head-title">Answer the Following Requests</span></div>
+    <div class="card-body">
+      <ul class="questions-list">
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 1</span><span class="q-pts">12 points</span></div>
+          <div class="q-body">
+            <p><strong>Build the product system in OpenLCA</strong> (reference EoL scenario: incineration).</p>
+            <div class="q-sub">• Attach screenshot(s) of the model graphs with all processes visible.<br>• Expand all input/output tabs to show flows and amounts, with provider names visible.<br>• Flag the "elementary flows" option (☑) in the model graph.<br>• Display all formulas fully expanded in your screenshots.</div>
+            <p class="mandatory-note">Mandatory: screenshots of model graphs and input/output tabs of all created processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Model Structure &amp; Reference Flow</div>
+              <div class="sol-body">
+                <p>Create <strong>3 processes</strong> in OpenLCA:</p>
+                <ul>
+                  <li><strong>Capsule Manufacturing (DE)</strong> — output: 1 capsule. Inputs: Al sheet (3.2 g), PP fibres (0.5 g), graphic paper (0.3 g), electricity DE medium (0.8 Wh).</li>
+                  <li><strong>Coffee Production &amp; Transport</strong> — output: 1 capsule worth of coffee (5.5 g). Inputs: roasted coffee modelled via direct elementary flows (3.84 × 0.0055 = 0.02112 kg CO₂-eq; 28.6 × 0.0055 = 0.1573 MJ fossils), container ship transport (0.0055 kg × 10,450 km = 0.05748 t·km), lorry transport (0.0055 × 680 = 3.74 t·km).</li>
+                  <li><strong>Brewing &amp; Use (IT)</strong> — main process / reference flow = <em>1 cup of coffee</em>. Inputs: capsule (1 unit from Capsule Mfg), coffee (1 unit from Coffee process), electricity IT low voltage (0.033 kWh), drinking water IT (0.2 kg), cardboard box (1/10 of 0.048 kg = 4.8 g), EoL incineration (direct elementary flows from Table 3).</li>
+                </ul>
+                <div class="sol-calc">Cardboard per cup = 48 g / 10 capsules = 4.8 g = 0.0048 kg</div>
+                <p class="sol-note">For the EoL incineration, enter Table 3 values directly as elementary flows (CO₂ fossil and fossil resource) on the Brewing process, since they refer to the whole capsule per brewing cycle.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 2</span><span class="q-pts">1 point</span></div>
+          <div class="q-body">
+            <p><strong>Calculate the total impact of 1 Functional Unit</strong> for both impact categories. Use the <strong>EF 3.0 Method (adapted)</strong>. Report your results clearly.</p>
+            <p class="mandatory-note">Mandatory: screenshot of the results tab with categories selected; screenshot of the general information tab showing the correct target amount.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Expected Results (1 cup of coffee)</div>
+              <div class="sol-body">
+                <p>The dominant contribution comes from <strong>coffee production</strong> (cultivation + processing), which typically accounts for 60–75% of climate change in single-serve systems.</p>
+                <div class="sol-calc">
+Climate change ≈ 0.055 – 0.075 kg CO₂-eq / cup<br>
+Resource use, fossils ≈ 0.55 – 0.80 MJ / cup
+                </div>
+                <p>Key contributors to these ranges:</p>
+                <ul>
+                  <li>Coffee production (Table 2 direct flows): ~0.021 kg CO₂-eq, ~0.157 MJ</li>
+                  <li>Aluminium capsule body: ~0.008–0.012 kg CO₂-eq (significant — primary Al is energy-intensive)</li>
+                  <li>Electricity for brewing (IT grid, low voltage): ~0.005–0.010 kg CO₂-eq</li>
+                  <li>Transport (ship + lorry): minor contribution, &lt;5%</li>
+                </ul>
+                <p class="sol-note">Exact values depend on the database version; the ranges above are indicative. Set target amount = 1 in the product system general information tab.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 3</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>Which process makes the <strong>highest direct contribution</strong> to each of the two assessed impact categories? Report its <strong>relative direct contribution (%)</strong> for both indicators.</p>
+            <p class="mandatory-note">Mandatory: screenshot of the contribution analysis tab for each impact category.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Highest Direct Contributions</div>
+              <div class="sol-body">
+                <p><strong>Climate change:</strong> The <em>Coffee Production &amp; Transport</em> process (where the Table 2 elementary flows are entered) is expected to show the highest direct contribution.</p>
+                <div class="sol-calc">Relative contribution (Climate change) ≈ 35–45% (direct elementary flows of coffee production)</div>
+                <p><strong>Resource use, fossils:</strong> Also dominated by the coffee production process due to fossil energy use in Colombian agriculture and processing.</p>
+                <div class="sol-calc">Relative contribution (Resource use, fossils) ≈ 25–40%</div>
+                <p>The <em>Capsule Manufacturing</em> process (aluminium) may rank second for climate change (~15–20%) due to primary aluminium's high carbon footprint.</p>
+                <p class="sol-note">Read the direct contribution from the "Direct contributions" column in OpenLCA's contribution tree, not the total (which includes upstream).</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 4</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>What is the <strong>direct contribution (absolute and relative %)</strong> of the coffee production process (roasting and cultivation) to both impact categories?</p>
+            <p class="mandatory-note">Mandatory: screenshot of the contribution analysis tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Coffee Production Contribution</div>
+              <div class="sol-body">
+                <p>Since coffee production is modelled via <strong>direct elementary flows</strong> (Table 2 values × 0.0055 kg), its direct contribution equals its total contribution:</p>
+                <div class="sol-calc">
+Climate change (direct) = 3.84 × 0.0055 = 0.02112 kg CO₂-eq<br>
+Resource use, fossils (direct) = 28.6 × 0.0055 = 0.15730 MJ
+                </div>
+                <p>Relative % is computed by dividing by the total FU result. Indicatively:</p>
+                <div class="sol-calc">
+Relative CC ≈ 0.02112 / 0.065 ≈ 32%<br>
+Relative RF ≈ 0.1573 / 0.68 ≈ 23%
+                </div>
+                <p class="sol-note">Use your own calculated FU total as denominator for the exact % values.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 5</span><span class="q-pts">7 points</span></div>
+          <div class="q-body">
+            <p>Perform a <strong>sensitivity analysis</strong> comparing the two end-of-life scenarios:</p>
+            <div class="q-sub">
+              <strong>Scenario A (Reference):</strong> Capsule disposed of via municipal solid waste incineration with energy recovery.<br><br>
+              <strong>Scenario B (Recycling):</strong> Capsule separately collected; aluminium recycled with system expansion (85% recovery rate). The avoided burden is applied: displaced primary aluminium production.<br><br>
+              Compare both scenarios for the two impact categories. Which end-of-life strategy is more sustainable? Comment on the role of system expansion and its implications for the results.
+            </div>
+            <p class="mandatory-note">Mandatory: screenshots of process input/output tabs if modified; screenshot of project setup and main report results.</p>
+            <div class="green-box">☛ Remember to export the project and results — these must be uploaded with the exam solution.</div>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">EoL Sensitivity Analysis — Modelling &amp; Expected Results</div>
+              <div class="sol-body">
+                <p><strong>Scenario A modelling:</strong> Enter Table 3 elementary flows directly into the Brewing process (already done in Q1). No changes needed.</p>
+                <p><strong>Scenario B modelling (system expansion):</strong> Create a new EoL process or modify the Brewing process. The recycled aluminium credit is calculated as:</p>
+                <div class="sol-calc">
+Al recovered = 3.2 g × 85% = 2.72 g = 0.00272 kg<br>
+Collection electricity = 0.04 kWh / capsule (medium voltage, IT or EU)<br><br>
+Avoided burden: subtract the impact of 0.00272 kg primary Al from the EoL total.<br>
+→ Enter –[impact of 0.00272 kg Al sheet] as a credit on the EoL process.
+                </div>
+                <p><strong>Expected direction of results:</strong></p>
+                <ul>
+                  <li><strong>Climate change:</strong> Scenario B (recycling) should yield a <em>lower</em> total impact than Scenario A, because the credit for avoided primary Al production exceeds the incineration impact. The difference is modest (~5–15%) given the small capsule weight.</li>
+                  <li><strong>Resource use, fossils:</strong> Scenario B likely also lower, as primary Al production is fossil-intensive.</li>
+                </ul>
+                <p><strong>Commentary:</strong> System expansion reveals that recycling avoids environmental burdens associated with primary material production. However, for a single small capsule, the EoL contribution is minor compared to coffee cultivation and brewing electricity. The choice of EoL is more significant at scale (millions of capsules).</p>
+                <p class="sol-note">In OpenLCA, create a project with the two product systems (or two calculations on the same product system with parameters) to compare Scenario A and B side by side.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM 2 – ELECTRIC SCOOTER
+═══════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam-1">
+  <div class="exam-meta">
+    <span class="exam-badge brown">Exam 2</span>
+    <span class="exam-badge green">Cradle-to-Use</span>
+    <span class="points-badge">Part A · 24 points</span>
+    <span class="method-badge">EF 3.0 Method (adapted)</span>
+  </div>
+
+  <h2 class="exam-title">LCA of a Shared Electric Scooter</h2>
+  <p class="exam-intro">Cradle-to-use LCA of a lithium-ion battery-powered electric scooter used in an urban shared-mobility service, comparing alternative battery charging scenarios.</p>
+
+  <div class="card" style="border-color:#c3e6ce;background:#f6fdf8">
+    <div class="card-head" style="background:#eaf5ee;border-color:#c3e6ce">
+      <div class="card-head-icon" style="background:var(--accent2)">★</div>
+      <span class="card-head-title" style="color:var(--accent2)">Solution Guide — click "Show Solution" under each question</span>
+    </div>
+    <div class="card-body" style="font-size:13.5px;color:var(--text-secondary)">
+      Solutions include reference flow calculations, process inventory setup hints, expected numerical results, and commentary on sensitivity analysis. Use them only after attempting the exercise.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">▶</div><span class="card-head-title">Scenario Description</span></div>
+    <div class="card-body">
+      <div class="scenario">
+        <p>A shared-mobility company operating in <strong>Amsterdam, Netherlands (NL)</strong> is evaluating the environmental footprint of its fleet of electric scooters. The goal of this exercise is to perform an LCA of one electric scooter over its operational lifetime, including manufacturing, use phase, and battery replacement.</p>
+
+        <p>The scooter frame and body are manufactured in a plant in <strong>Taiwan</strong>. The frame is made of aluminium (15 kg) and the body panels are made of high-density polyethylene (HDPE, 3.2 kg). Assembly at the Taiwanese plant requires <strong>12 kWh of medium-voltage electricity</strong>. The assembled scooter (without battery) is transported by <strong>container ship to Rotterdam (21,500 km)</strong> and then by <strong>small lorry to Amsterdam (70 km)</strong>. The weight of the assembled scooter (without battery) is 22.5 kg.</p>
+
+        <p>The <strong>lithium-ion battery pack</strong> weighs 8.5 kg and is produced in <strong>South Korea (KR)</strong>. Its composition is reported in Table 1. Assembly of the battery pack requires <strong>2.3 kWh of medium-voltage electricity</strong> (Korean grid). The battery is transported from the factory to Amsterdam by <strong>air freight (9,400 km)</strong> and then by <strong>small lorry (70 km)</strong>.</p>
+
+        <p>The <strong>functional unit</strong> is <strong>1 km of urban travel</strong> by the electric scooter. The scooter has an expected service life of <strong>5 years</strong> and covers approximately <strong>15,000 km per year</strong>. The battery has a service life of <strong>3 years</strong> (one replacement during the scooter's lifetime). Energy consumption during use is <strong>0.028 kWh per km</strong> (low-voltage electricity, Netherlands grid).</p>
+
+        <div class="warn-box">☛ <strong>Important:</strong> the battery is replaced once during the scooter's lifetime (at year 3). Both the original battery and the replacement battery must be accounted for in the modelling, allocated to the total km travelled.</div>
+
+        <p>The unitary impacts of components produced in South Korea (battery cells and electrolyte) for which only aggregated data are available are reported in Table 2. For all other battery components, use the providers specified in Table 5.</p>
+
+        <p>The considered impact categories are <strong>"Climate change"</strong> and <strong>"Ionising radiation, human health"</strong> of the Impact assessment method <strong>EF 3.0 Method (adapted)</strong>.</p>
+
+        <p>Refer to Tables 3, 4 and 5 for indications on elementary flows and providers.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">T</div><span class="card-head-title">Inventory Data Tables</span></div>
+    <div class="card-body">
+
+      <p class="table-label">Table 1 – Composition of the lithium-ion battery pack (8.5 kg total)</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Weight fraction (%)</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td>Battery cells (incl. active materials)</td><td>65</td><td>See unitary impacts in Table 2</td></tr>
+            <tr><td>Electrolyte</td><td>10</td><td>See unitary impacts in Table 2</td></tr>
+            <tr><td>Copper current collector</td><td>8</td><td>Copper sheet</td></tr>
+            <tr><td>Aluminium casing</td><td>9</td><td>Aluminium sheet</td></tr>
+            <tr><td>Steel fasteners</td><td>4</td><td>Steel hot rolled coil</td></tr>
+            <tr><td>Polypropylene housing</td><td>4</td><td>Polypropylene fibres (PP)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 2 – Unitary impacts of battery components produced in South Korea</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Climate change [kg CO₂-eq]</th><th>Ionising radiation [kBq U235-eq]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Battery cells (active materials)</td><td>22.4</td><td>5.8</td><td>1 kg</td></tr>
+            <tr><td>Electrolyte</td><td>8.7</td><td>1.2</td><td>1 kg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 3 – Elementary flows to be used in the modelling</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Elementary flow</th><th>Flow name</th><th>Containing folder</th></tr></thead>
+          <tbody>
+            <tr><td>Carbon dioxide (2 options, 1 correct)</td><td>Carbon dioxide, fossil</td><td>Emission to air / unspecified</td></tr>
+            <tr><td></td><td>Carbon dioxide, in air</td><td>Resource / in air</td></tr>
+            <tr><td>Uranium-235 (2 options, 1 correct)</td><td>Uranium-235</td><td>Resource / in ground</td></tr>
+            <tr><td></td><td>Uranium, in ground</td><td>Resource / in ground</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 4 – Scooter frame material providers</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Material</th><th>Flow name</th><th>Provider</th></tr></thead>
+          <tbody>
+            <tr><td>Aluminium (frame)</td><td>Aluminium sheet</td><td>Aluminium sheet, production mix, at plant, primary production – RER</td></tr>
+            <tr><td>HDPE (body panels)</td><td>Polyethylene, high density</td><td>Polyethylene high density granulate (PE-HD), production mix, at plant – RER</td></tr>
+            <tr><td>Copper sheet (battery)</td><td>Copper sheet</td><td>Copper sheet; technology mix; market mix, at plant; 0,6 mm thickness – EU-25</td></tr>
+            <tr><td>Steel (battery fasteners)</td><td>Steel hot rolled coil</td><td>Steel hot rolled coil, production mix, at plant, blast furnace route – RER</td></tr>
+            <tr><td>Polypropylene (battery housing)</td><td>polypropylene fibres (PP)</td><td>Polypropylene fibres (PP), production mix, at plant, crude oil based – EU-27</td></tr>
+            <tr><td>Transport</td><td>transport in t·km</td><td>Follow indications in the text</td></tr>
+            <tr><td>Electricity (2 options, both correct)</td><td>Electricity</td><td>Electricity grid mix 1kV–60kV, consumption mix, at consumer, AC, 1kV–60kV</td></tr>
+            <tr><td></td><td>Electricity</td><td>Electricity grid mix, consumption mix, at consumer, AC, 230V</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">Q</div><span class="card-head-title">Answer the Following Requests</span></div>
+    <div class="card-body">
+      <ul class="questions-list">
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 1</span><span class="q-pts">11 points</span></div>
+          <div class="q-body">
+            <p><strong>Build the product system in OpenLCA.</strong></p>
+            <div class="q-sub">• Attach screenshot(s) of the model graph.<br>• Expand all input/output tabs showing all flows and amounts, with provider names visible.<br>• Flag the "elementary flows" option (☑) in the model graph.<br>• Display all formulas fully expanded in your screenshots.</div>
+            <p class="mandatory-note">Mandatory: screenshots of model graph and input/output tabs of all created processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Model Structure &amp; Key Calculations</div>
+              <div class="sol-body">
+                <p><strong>Total lifetime km:</strong> 5 years × 15,000 km/yr = <span class="sol-result">75,000 km</span></p>
+                <p>Create <strong>3 processes</strong>:</p>
+                <ul>
+                  <li><strong>Scooter Frame Mfg (TW):</strong> output = 1 scooter frame (22.5 kg). Inputs: Al sheet 15 kg, HDPE 3.2 kg, electricity TW medium 12 kWh, ship transport 22.5×21500 = 483,750 t·km, lorry 22.5×70 = 1,575 t·km.</li>
+                  <li><strong>Battery Pack Mfg (KR):</strong> output = 1 battery (8.5 kg). Inputs: direct elementary flows for cells (8.5×0.65=5.525 kg → CC=123.76 kg CO₂-eq, IR=32.05 kBq) and electrolyte (8.5×0.10=0.85 kg → CC=7.40, IR=1.02 kBq); Cu sheet 0.68 kg, Al sheet 0.765 kg, steel 0.34 kg, PP 0.34 kg; electricity KR medium 2.3 kWh; air freight 8.5×9400=79,900 t·km; lorry 8.5×70=595 t·km.</li>
+                  <li><strong>Scooter Operation (NL):</strong> reference flow = 1 km. Inputs: frame 1/75,000 units, battery ×2 (each 1/75,000 units), electricity NL low voltage 0.028 kWh.</li>
+                </ul>
+                <div class="sol-calc">Battery allocation per km = 2 batteries / 75,000 km = 2.667×10⁻⁵ per km</div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 2</span><span class="q-pts">1 point</span></div>
+          <div class="q-body">
+            <p><strong>Calculate the total impact of 1 Functional Unit</strong> for both impact categories using the <strong>EF 3.0 Method (adapted)</strong>.</p>
+            <p class="mandatory-note">Mandatory: screenshot of results tab; general information tab showing target amount = 1.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Expected Results (1 km)</div>
+              <div class="sol-body">
+                <div class="sol-calc">Climate change ≈ 0.025 – 0.055 kg CO₂-eq / km
+Ionising radiation ≈ 0.005 – 0.020 kBq U235-eq / km</div>
+                <ul>
+                  <li>Use-phase electricity (NL grid, ~0.35 kg CO₂-eq/kWh): 0.028×0.35 ≈ 0.0098 kg CO₂-eq/km → ~25–40% of CC</li>
+                  <li>Battery manufacturing (cells+electrolyte direct flows): ≈0.0035 kg CO₂-eq/km → ~10–15%</li>
+                  <li>Frame aluminium (upstream): adds ~0.010–0.015 kg CO₂-eq/km</li>
+                </ul>
+                <p class="sol-note">Battery IR dominates: (32.05+1.02)×2/75,000 ≈ 8.8×10⁻⁴ kBq/km direct alone.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 3</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>Which process makes the <strong>highest direct contribution</strong> to each impact category? Report its <strong>relative direct contribution (%)</strong> for both indicators.</p>
+            <p class="mandatory-note">Mandatory: screenshot of contribution analysis tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Highest Direct Contributions</div>
+              <div class="sol-body">
+                <p><strong>Climate change:</strong> <em>Scooter Operation</em> (direct: use-phase electricity CO₂ flows if entered as elementary flows) or <em>Battery Pack Mfg</em> (direct: cells+electrolyte CC flows). Which ranks first depends on exact NL grid carbon factor in the database.</p>
+                <p><strong>Ionising radiation:</strong> <em>Battery Pack Mfg</em> dominates strongly due to Korean grid (nuclear-heavy) and the large direct IR elementary flows from cells+electrolyte.</p>
+                <div class="sol-calc">Battery direct IR per km = (32.05+1.02) × 2/75,000 ≈ 8.8×10⁻⁴ kBq/km → likely 50–70% of total IR</div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 4</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>What is the <strong>direct contribution (absolute and relative %)</strong> of the lithium-ion battery production (original + replacement, combined) to both impact categories?</p>
+            <p class="mandatory-note">Mandatory: screenshot of contribution analysis tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Battery Direct Contribution (both batteries combined)</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+CC direct = (123.76 + 7.40) × 2 / 75,000 = 262.32 / 75,000 ≈ 3.50×10⁻³ kg CO₂-eq/km
+IR direct = (32.05 + 1.02) × 2 / 75,000 = 66.14 / 75,000 ≈ 8.82×10⁻⁴ kBq U235-eq/km
+                </div>
+                <p>Divide by your total FU result for each category to get the relative %. Typically: CC ≈ 8–15%, IR ≈ 40–60%.</p>
+                <p class="sol-note">This only counts the direct elementary flows entered in Battery Pack Mfg. Upstream impacts of Cu, Al, steel, PP within the battery are counted separately under those provider processes.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 5</span><span class="q-pts">8 points</span></div>
+          <div class="q-body">
+            <p>Perform a <strong>sensitivity analysis</strong> on the electricity mix used to charge the scooter:</p>
+            <div class="q-sub">
+              <strong>Scenario A:</strong> Dutch grid (NL low voltage) · <strong>Scenario B:</strong> Wind (0.008 kg CO₂/kWh; 0.15 kBq/kWh) · <strong>Scenario C:</strong> Coal (1.05 kg CO₂/kWh; 0.07 kBq/kWh).
+            </div>
+            <p class="mandatory-note">Mandatory: screenshots of modified process tabs; project setup and results.</p>
+            <div class="green-box">☛ Remember to export the project and results.</div>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Electricity Sensitivity — Modelling &amp; Expected Ranking</div>
+              <div class="sol-body">
+                <p>For B and C, replace the NL grid provider with direct elementary flows in the Operation process:</p>
+                <div class="sol-calc">
+Scenario B (wind):  CC = 0.028 × 0.008 = 2.24×10⁻⁴ kg CO₂-eq/km
+                    IR = 0.028 × 0.15  = 4.20×10⁻³ kBq/km
+Scenario C (coal):  CC = 0.028 × 1.05  = 2.94×10⁻² kg CO₂-eq/km
+                    IR = 0.028 × 0.07  = 1.96×10⁻³ kBq/km
+                </div>
+                <p><strong>CC ranking:</strong> B (wind) ≪ A (NL grid) &lt; C (coal). Coal makes the scooter ~2–3× worse than the NL grid for CC.</p>
+                <p><strong>IR ranking:</strong> C (coal) &lt; A (NL grid) &lt; B (wind). Wind power has higher IR due to materials in turbine manufacturing chains; coal produces almost no nuclear radiation.</p>
+                <p><strong>Commentary:</strong> The environmental benefit of electric scooters depends critically on the grid carbon intensity. Even wind power still carries background battery manufacturing impacts (~8–15% of CC), setting a practical minimum. The CC improvement from NL→wind is ~80–90% for the use-phase contribution.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM 3 – WOODEN FURNITURE
+═══════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam-2">
+  <div class="exam-meta">
+    <span class="exam-badge teal">Exam 3</span>
+    <span class="exam-badge green">Cradle-to-Gate + EoL</span>
+    <span class="points-badge">Part A · 24 points</span>
+    <span class="method-badge">EF 3.0 Method (adapted)</span>
+  </div>
+
+  <h2 class="exam-title">LCA of a Flat-Pack Wooden Bookshelf</h2>
+  <p class="exam-intro">Comparative LCA of two wood-based bookshelf options, assessing the role of material choice, surface treatment, and end-of-life strategy.</p>
+
+  <div class="card" style="border-color:#c3e6ce;background:#f6fdf8">
+    <div class="card-head" style="background:#eaf5ee;border-color:#c3e6ce">
+      <div class="card-head-icon" style="background:var(--accent2)">★</div>
+      <span class="card-head-title" style="color:var(--accent2)">Solution Guide — click "Show Solution" under each question</span>
+    </div>
+    <div class="card-body" style="font-size:13.5px;color:var(--text-secondary)">
+      Solutions include reference flow calculations, process inventory setup hints, expected numerical results, and commentary on sensitivity analysis. Use them only after attempting the exercise.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">▶</div><span class="card-head-title">Scenario Description</span></div>
+    <div class="card-body">
+      <div class="scenario">
+        <p>A furniture retailer is evaluating the environmental profile of a flat-pack bookshelf available in two material variants: one made from <strong>solid spruce wood</strong> and one made from <strong>medium-density fibreboard (MDF)</strong>. The goal of this exercise is to perform a comparative LCA of the two product variants.</p>
+
+        <p>The system boundary includes raw material extraction, manufacturing (cutting, milling, surface treatment), packaging, transport to a retail warehouse in <strong>Sweden (SE)</strong>, and end-of-life. The assembly by the consumer is excluded from the system boundary.</p>
+
+        <p>Both bookshelf variants have the same dimensions and load-bearing capacity. The <strong>solid wood bookshelf</strong> is manufactured in a carpentry in <strong>Austria (AT)</strong>. The final bookshelf requires <strong>18 kg of finished spruce boards</strong>. Due to cutting and planing, <strong>25% of the raw timber input is lost as wood waste</strong>, which is incinerated with energy recovery at the carpentry site. The manufacturing process consumes <strong>2.4 kWh of medium-voltage electricity</strong> and <strong>18 MJ of heat</strong> produced by burning desulphurised natural gas (net calorific value 44.5 MJ/kg; combustion releases 2.6 kg CO₂ per kg of gas). The surface of the solid wood bookshelf is treated with <strong>0.6 kg of water-based lacquer</strong>; unitary impacts of the lacquer are given in Table 2.</p>
+
+        <p>The <strong>MDF bookshelf</strong> is produced in a factory in <strong>Poland (PL)</strong> using <strong>22 kg of MDF panels</strong>. Manufacturing requires <strong>3.8 kWh of medium-voltage electricity</strong> and <strong>25 MJ of heat</strong> (same natural gas assumptions as above). The MDF surface is treated with <strong>0.45 kg of melamine resin coating</strong>; the unitary impacts of melamine resin coating are given in Table 2.</p>
+
+        <p>Both products are packaged in <strong>corrugated cardboard</strong> (2.4 kg per bookshelf). Both bookshelves are transported by <strong>small lorry to the Swedish warehouse</strong>: the solid wood variant travels <strong>1,640 km</strong> and the MDF variant travels <strong>950 km</strong>. Both weigh approximately 24 kg (including packaging) when shipped.</p>
+
+        <div class="warn-box">☛ <strong>Functional unit:</strong> one bookshelf providing 10 years of storage service. Adjust the model if the service lives of the two variants differ (solid wood: 15 years; MDF: 8 years).</div>
+
+        <p>At <strong>end-of-life</strong>, the bookshelf is assumed to be collected as bulky waste and incinerated (with energy recovery). The unitary impacts of end-of-life incineration are reported in Table 3.</p>
+
+        <p>The considered impact categories are <strong>"Climate change"</strong> and <strong>"Land use"</strong> of the Impact assessment method <strong>EF 3.0 Method (adapted)</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">T</div><span class="card-head-title">Inventory Data Tables</span></div>
+    <div class="card-body">
+
+      <p class="table-label">Table 1 – Raw materials and energy for manufacturing (per finished bookshelf)</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>Solid wood variant</th><th>MDF variant</th><th>Unit</th></tr></thead>
+          <tbody>
+            <tr><td>Board material</td><td>18 kg finished spruce boards (+ 25% waste)</td><td>22 kg MDF panels</td><td>kg</td></tr>
+            <tr><td>Electricity (medium voltage)</td><td>2.4</td><td>3.8</td><td>kWh</td></tr>
+            <tr><td>Heat (natural gas)</td><td>18</td><td>25</td><td>MJ</td></tr>
+            <tr><td>Surface treatment</td><td>0.6 kg water-based lacquer</td><td>0.45 kg melamine resin coating</td><td>kg</td></tr>
+            <tr><td>Packaging (cardboard)</td><td>2.4</td><td>2.4</td><td>kg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 2 – Unitary impacts of surface treatment products</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Climate change [kg CO₂-eq]</th><th>Land use [Pt]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Water-based lacquer</td><td>1.94</td><td>0.38</td><td>1 kg</td></tr>
+            <tr><td>Melamine resin coating</td><td>3.12</td><td>0.22</td><td>1 kg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 3 – Unitary impacts of end-of-life incineration</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Waste type</th><th>Climate change [kg CO₂-eq]</th><th>Land use [Pt]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Wood waste (solid boards)</td><td>0.021</td><td>0.004</td><td>1 kg</td></tr>
+            <tr><td>MDF waste</td><td>0.034</td><td>0.006</td><td>1 kg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 4 – Elementary flows to be used in the modelling</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Elementary flow</th><th>Flow name</th><th>Containing folder</th></tr></thead>
+          <tbody>
+            <tr><td>Carbon dioxide (2 options, 1 correct)</td><td>Carbon dioxide, fossil</td><td>Emission to air / unspecified</td></tr>
+            <tr><td></td><td>Carbon dioxide, in air</td><td>Resource / in air</td></tr>
+            <tr><td>Land (2 options, 1 correct)</td><td>Occupation, annual crop</td><td>Resource / land</td></tr>
+            <tr><td></td><td>Occupation, forest, primary (non-use)</td><td>Resource / land</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 5 – Product flows and providers</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Flow name</th><th>Provider name</th></tr></thead>
+          <tbody>
+            <tr><td>Spruce wood</td><td>Spruce wood</td><td>Spruce wood, production mix, at saw mill, timber, 40% water content – DE</td></tr>
+            <tr><td>MDF panels</td><td>Medium-density fibreboard (MDF)</td><td>Medium density fibreboard (MDF), production mix, at plant – RER</td></tr>
+            <tr><td>Cardboard packaging</td><td>cartonboard boxes</td><td>cartonboard sheets; mixed technology; production mix, at plant; 46% primary fibre, 54% recovered fibre (en) – EU-27</td></tr>
+            <tr><td>Natural gas</td><td>Natural gas</td><td>Natural Gas, consumption mix, at consumer, from onshore and offshore production incl. pipeline and LNG transport, desulphurised – EU-27</td></tr>
+            <tr><td>Transport</td><td>transport in t·km</td><td>Follow indications in the text</td></tr>
+            <tr><td>Electricity (2 options, both correct)</td><td>Electricity</td><td>Electricity grid mix 1kV–60kV, consumption mix, at consumer, AC, 1kV–60kV</td></tr>
+            <tr><td></td><td>Electricity</td><td>Electricity grid mix, consumption mix, at consumer, AC, 230V</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">Q</div><span class="card-head-title">Answer the Following Requests</span></div>
+    <div class="card-body">
+      <ul class="questions-list">
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 1</span><span class="q-pts">12 points</span></div>
+          <div class="q-body">
+            <p><strong>Build both product systems in OpenLCA</strong>, adjusting the functional unit for the difference in service lives.</p>
+            <div class="q-sub">• Attach screenshot(s) of model graphs for both systems.<br>• Expand all input/output tabs with flows, amounts, and provider names visible.<br>• Flag the "elementary flows" option (☑) in the model graph.<br>• Display all formulas fully expanded.</div>
+            <p class="mandatory-note">Mandatory: screenshots of model graphs and input/output tabs of all created processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Model Structure &amp; FU Adjustment</div>
+              <div class="sol-body">
+                <p><strong>FU = 10 years of service.</strong> Since service lives differ, scale each product system accordingly:</p>
+                <div class="sol-calc">
+Solid wood (15-yr life): target amount = 10/15 = 0.667 bookshelves per FU
+MDF (8-yr life): target amount = 10/8 = 1.25 bookshelves per FU
+                </div>
+                <p>Create <strong>2 product systems</strong>, one per variant. Each should have:</p>
+                <ul>
+                  <li><strong>Wood bookshelf process:</strong> inputs: spruce timber 18 kg / 0.75 = 24 kg raw (25% waste → 6 kg waste, incinerated), electricity AT medium 2.4 kWh, natural gas heat (18 MJ / 44.5 MJ·kg⁻¹ = 0.404 kg gas → CO₂: 0.404×2.6 = 1.05 kg), lacquer 0.6 kg (direct elementary flows from Table 2), cardboard 2.4 kg, lorry transport 24 kg × 1640 km = 39.36 t·km, EoL incineration (Table 3 direct flows for 18 kg wood).</li>
+                  <li><strong>MDF bookshelf process:</strong> MDF panels 22 kg, electricity PL medium 3.8 kWh, gas heat (25/44.5=0.562 kg → CO₂=1.46 kg), melamine coating 0.45 kg (Table 2 flows), cardboard 2.4 kg, lorry 24×950=22.8 t·km, EoL (Table 3 for 22 kg MDF).</li>
+                </ul>
+                <div class="sol-calc">
+Wood waste from cutting = 18 / (1−0.25) × 0.25 = 6 kg incinerated at carpentry
+(Raw timber input = 18 / 0.75 = 24 kg spruce)
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 2</span><span class="q-pts">1 point</span></div>
+          <div class="q-body">
+            <p><strong>Calculate the total impact of 1 FU</strong> for both impact categories (EF 3.0 Method) for both systems. Which is better?</p>
+            <p class="mandatory-note">Mandatory: screenshot of results tab; general information tab for each system.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Expected Results (per 10-year FU)</div>
+              <div class="sol-body">
+                <p>The FU scaling is critical here. The MDF bookshelf needs 1.25 units per 10 years vs 0.667 for solid wood.</p>
+                <div class="sol-calc">
+Solid wood (×0.667): CC ≈ lower due to biogenic carbon cycle in wood
+MDF (×1.25): CC likely higher due to resin binders and more frequent replacement
+Land use: solid wood likely higher (forest occupation flows) but comparable
+                </div>
+                <p>Expected winner for <strong>climate change: solid wood</strong> (longer life + biogenic carbon). For <strong>land use</strong>: result may be closer or reverse depending on database forestry factors vs MDF production land.</p>
+                <p class="sol-note">Set target amount = 0.667 for solid wood system and 1.25 for MDF system in their respective product system general info tabs.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 3</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>For each product system: which process makes the <strong>highest direct contribution</strong> to each impact category? Report its <strong>relative %</strong>.</p>
+            <p class="mandatory-note">Mandatory: screenshot of contribution analysis tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Highest Direct Contributions</div>
+              <div class="sol-body">
+                <p><strong>Solid wood — CC:</strong> The bookshelf manufacturing process (direct gas combustion CO₂ elementary flow + lacquer direct flows) typically dominates. The lacquer at 0.6 kg × 1.94 = 1.16 kg CO₂-eq is notable.</p>
+                <p><strong>Solid wood — Land use:</strong> The spruce wood input (upstream forestry occupation) will dominate the land use category.</p>
+                <p><strong>MDF — CC:</strong> Manufacturing process (gas combustion + melamine coating: 0.45×3.12=1.40 kg CO₂-eq directly).</p>
+                <p><strong>MDF — Land use:</strong> MDF panel production (upstream wood fibre sourcing) dominates.</p>
+                <p class="sol-note">Read direct contributions from the contribution tree in OpenLCA, not the total upstream chain.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 4</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>What is the <strong>ratio between manufacturing phase and EoL phase</strong> impact for both systems and categories? (Exclude transport.)</p>
+            <p class="mandatory-note">Mandatory: screenshot of contribution analysis tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Manufacturing vs EoL Ratio</div>
+              <div class="sol-body">
+                <p>EoL incineration of wood/MDF is a small fraction of total CC because the dominant impacts are in material production upstream. For land use, EoL has negligible contribution.</p>
+                <div class="sol-calc">
+Solid wood EoL CC (direct): 18 kg × 0.021 = 0.378 kg CO₂-eq per bookshelf
+MDF EoL CC (direct): 22 kg × 0.034 = 0.748 kg CO₂-eq per bookshelf
+
+Manufacturing/EoL ratio for CC (rough estimate):
+Solid wood: manufacturing ~5–8 kg CO₂-eq / EoL 0.378 → ratio ≈ 13–21×
+MDF: manufacturing ~8–12 kg CO₂-eq / EoL 0.748 → ratio ≈ 11–16×
+                </div>
+                <p>Manufacturing dominates by an order of magnitude in both cases. EoL is environmentally minor for these wood products.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 5</span><span class="q-pts">7 points</span></div>
+          <div class="q-body">
+            <p>Perform a <strong>sensitivity analysis</strong> on the EoL strategy for the solid wood bookshelf (Scenario A: incineration; B: landfill; C: reuse 5 additional years).</p>
+            <div class="q-sub">
+              <strong>B:</strong> 0.048 kg CO₂-eq and 0.003 Pt land use per kg landfilled (direct elementary flows).<br>
+              <strong>C:</strong> Cut-off; no EoL impact; 50% of production impacts credited as avoided burden.
+            </div>
+            <p class="mandatory-note">Mandatory: modified process tabs; project setup and report.</p>
+            <div class="green-box">☛ Remember to export the project and results.</div>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">EoL Sensitivity — Modelling &amp; Expected Ranking</div>
+              <div class="sol-body">
+                <p><strong>Scenario A (incineration):</strong> already modelled. EoL CC = 18 × 0.021 = 0.378 kg CO₂-eq.</p>
+                <p><strong>Scenario B (landfill):</strong> Replace incineration direct flows with landfill direct flows:</p>
+                <div class="sol-calc">
+EoL CC (landfill) = 18 kg × 0.048 = 0.864 kg CO₂-eq  → worse than incineration for CC
+EoL Land use = 18 × 0.003 = 0.054 Pt
+                </div>
+                <p><strong>Scenario C (reuse, cut-off):</strong> Remove EoL process entirely (no impact assigned at end of first life). Then subtract 50% of production impacts as a credit:</p>
+                <div class="sol-calc">
+Net impact = production + transport − 0.5 × production = 0.5 × production + transport
+→ Effectively halves the production contribution
+                </div>
+                <p><strong>Ranking for CC:</strong> C (reuse) &lt;&lt; A (incineration) &lt; B (landfill).</p>
+                <p><strong>Commentary:</strong> Reuse is strongly preferred for CC as it halves the per-year manufacturing burden. Landfill generates methane from wood decomposition (captured in the 0.048 factor), making it worse than incineration. This shows the importance of circular economy strategies for wood furniture.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM 4 – SMARTPHONE
+═══════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam-3">
+  <div class="exam-meta">
+    <span class="exam-badge">Exam 4</span>
+    <span class="exam-badge green">Cradle-to-Grave</span>
+    <span class="points-badge">Part A · 24 points</span>
+    <span class="method-badge">EF 3.0 Method (adapted)</span>
+  </div>
+
+  <h2 class="exam-title">LCA of a Mid-Range Smartphone</h2>
+  <p class="exam-intro">Cradle-to-grave LCA of a mid-range smartphone, with sensitivity analysis on use patterns and end-of-life treatment of the lithium battery.</p>
+
+  <div class="card" style="border-color:#c3e6ce;background:#f6fdf8">
+    <div class="card-head" style="background:#eaf5ee;border-color:#c3e6ce">
+      <div class="card-head-icon" style="background:var(--accent2)">★</div>
+      <span class="card-head-title" style="color:var(--accent2)">Solution Guide — click "Show Solution" under each question</span>
+    </div>
+    <div class="card-body" style="font-size:13.5px;color:var(--text-secondary)">
+      Solutions include reference flow calculations, process inventory setup hints, expected numerical results, and commentary on sensitivity analysis. Use them only after attempting the exercise.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">▶</div><span class="card-head-title">Scenario Description</span></div>
+    <div class="card-body">
+      <div class="scenario">
+        <p>A consumer electronics company based in <strong>France (FR)</strong> is conducting an environmental assessment of a mid-range smartphone. The goal is to perform a <strong>cradle-to-grave LCA</strong> of the smartphone, covering raw material extraction, manufacturing, packaging, transportation, use phase, and end-of-life treatment.</p>
+
+        <p>The smartphone weighs <strong>180 g</strong> and its component composition is given in Table 1. The device is manufactured at an assembly facility in <strong>China (CN)</strong>. Assembly of one unit requires <strong>3.1 kWh of medium-voltage electricity</strong>. From the factory, the smartphone is transported by <strong>air freight to Paris (9,200 km)</strong> and then by <strong>small lorry (350 km)</strong> to a French distribution centre.</p>
+
+        <p>The smartphone is packaged in a <strong>cardboard box</strong> (weighing 85 g) that contains also a <strong>polypropylene charger</strong> (125 g) and a <strong>USB-C cable with copper wiring</strong> (45 g, of which 60% is copper wire and 40% is PVC insulation — polyvinyl chloride resin). The unitary impacts of charger production (electronic components included) are given in Table 2.</p>
+
+        <p>During the <strong>use phase</strong>, the smartphone is used in <strong>France</strong> for an expected service life of <strong>3 years</strong>. The device is charged daily and consumes an average of <strong>3.5 kWh per year</strong> of low-voltage electricity (French grid mix). No screen-on/off time adjustment is required.</p>
+
+        <div class="warn-box">☛ <strong>Functional unit:</strong> <strong>1 year of smartphone use</strong>. All manufacturing, transport, and end-of-life impacts must be allocated per year of use accordingly.</div>
+
+        <p>At <strong>end-of-life</strong>, the device is collected via an e-waste take-back programme. The <strong>lithium-ion battery (24 g)</strong> is removed and sent to a dedicated battery recycling facility, while the rest of the device (PCB, glass, metals, plastics) is treated by a generalised e-waste recycling process. Unitary impacts of both EoL processes are reported in Table 3.</p>
+
+        <p>The considered impact categories are <strong>"Climate change"</strong> and <strong>"Resource use, minerals and metals"</strong> of the Impact assessment method <strong>EF 3.0 Method (adapted)</strong>.</p>
+
+        <p>Refer to Tables 4 and 5 for indications on elementary flows and providers.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">T</div><span class="card-head-title">Inventory Data Tables</span></div>
+    <div class="card-body">
+
+      <p class="table-label">Table 1 – Smartphone component composition (180 g total)</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Material</th><th>Weight fraction (%)</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td>Display glass</td><td>Glass fibre / mineral glass</td><td>25</td><td>Continuous filament glass fibre (RER)</td></tr>
+            <tr><td>Aluminium casing</td><td>Aluminium sheet</td><td>20</td><td>Primary aluminium sheet (RER)</td></tr>
+            <tr><td>Printed circuit board (PCB)</td><td>Copper wire + epoxy resin</td><td>18</td><td>See Table 2</td></tr>
+            <tr><td>Battery</td><td>Lithium-ion battery pack</td><td>13</td><td>See Table 2</td></tr>
+            <tr><td>Polycarbonate back panel</td><td>Polycarbonate granulate</td><td>10</td><td>PC production mix (RER)</td></tr>
+            <tr><td>Steel internal frame</td><td>Steel hot rolled coil</td><td>8</td><td>Blast furnace route (RER)</td></tr>
+            <tr><td>Copper wiring (internal)</td><td>Copper wire</td><td>6</td><td>Technology mix (EU-15)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 2 – Unitary impacts of components with aggregated data</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Climate change [kg CO₂-eq]</th><th>Resource use, min. & metals [kg Sb-eq]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Printed circuit board (PCB)</td><td>128</td><td>0.0342</td><td>1 kg PCB</td></tr>
+            <tr><td>Lithium-ion battery pack</td><td>41.5</td><td>0.0087</td><td>1 kg battery</td></tr>
+            <tr><td>Charger (PP + electronics)</td><td>3.8</td><td>0.0011</td><td>1 charger unit (125 g)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 3 – Unitary impacts of end-of-life treatment</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Waste stream</th><th>Climate change [kg CO₂-eq]</th><th>Resource use, min. & metals [kg Sb-eq]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Battery recycling (Li-ion)</td><td>0.48</td><td>–0.0018</td><td>1 kg battery (credit for recovered metals)</td></tr>
+            <tr><td>E-waste recycling (device body)</td><td>1.24</td><td>–0.0052</td><td>1 kg e-waste</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">ℹ <strong>Note on negative values:</strong> negative values in Table 3 represent credits from recovered materials (avoided burden approach). Enter them as negative amounts on the appropriate elementary flow in the EoL process.</div>
+
+      <p class="table-label" style="margin-top:18px">Table 4 – Elementary flows to be used in the modelling</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Elementary flow</th><th>Flow name</th><th>Containing folder</th></tr></thead>
+          <tbody>
+            <tr><td>Carbon dioxide (2 options, 1 correct)</td><td>Carbon dioxide, fossil</td><td>Emission to air / unspecified</td></tr>
+            <tr><td></td><td>Carbon dioxide, in air</td><td>Resource / in air</td></tr>
+            <tr><td>Antimony (2 options, 1 correct)</td><td>Antimony</td><td>Resource / unspecified</td></tr>
+            <tr><td></td><td>Antimony compounds</td><td>Emission to air / unspecified</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 5 – Product flows and providers</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Flow name</th><th>Provider name</th></tr></thead>
+          <tbody>
+            <tr><td>Glass fibre</td><td>Continuous filament glass fibre</td><td>Continuous filament glass fibre (assembled rovings), at plant – RER</td></tr>
+            <tr><td>Aluminium sheet</td><td>Aluminium sheet</td><td>Aluminium sheet, production mix, at plant, primary production – RER</td></tr>
+            <tr><td>Polycarbonate</td><td>Polycarbonate granule</td><td>Polycarbonate granulate (PC), production mix, at plant – RER</td></tr>
+            <tr><td>Steel</td><td>Steel hot rolled coil</td><td>Steel hot rolled coil, production mix, at plant, blast furnace route – RER</td></tr>
+            <tr><td>Copper wire</td><td>Copper wire</td><td>Copper wire, consumption mix, at plant, technology mix, cross section 1 mmy – EU-15</td></tr>
+            <tr><td>PVC (cable insulation)</td><td>polyvinylchloride resin (B-PVC)</td><td>Polyvinylchloride resin (B-PVC), production mix, at plant, bulk polymerisation – RER</td></tr>
+            <tr><td>Cardboard packaging</td><td>Graphic paper (typical European)</td><td>Graphic Paper, production mix, at plant, technology mix, 79% primary fibre, 21% recycled fibre – EU-25</td></tr>
+            <tr><td>Transport</td><td>transport in t·km</td><td>Follow indications in the text</td></tr>
+            <tr><td>Electricity (2 options, both correct)</td><td>Electricity</td><td>Electricity grid mix 1kV–60kV, consumption mix, at consumer, AC, 1kV–60kV</td></tr>
+            <tr><td></td><td>Electricity</td><td>Electricity grid mix, consumption mix, at consumer, AC, 230V</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">Q</div><span class="card-head-title">Answer the Following Requests</span></div>
+    <div class="card-body">
+      <ul class="questions-list">
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 1</span><span class="q-pts">11 points</span></div>
+          <div class="q-body">
+            <p><strong>Build the product system in OpenLCA.</strong></p>
+            <div class="q-sub">• Attach screenshot(s) of the model graph with all processes visible.<br>• Expand all input/output tabs showing flows, amounts, and provider names.<br>• Flag the "elementary flows" option (☑) in the model graph.<br>• Display all formulas fully expanded in your screenshots.</div>
+            <p class="mandatory-note">Mandatory: screenshots of model graph and input/output tabs of all created processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Model Structure &amp; Reference Flow Calculations</div>
+              <div class="sol-body">
+                <p><strong>FU = 1 year of use.</strong> Service life = 3 years → target amount = 1 year.</p>
+                <p>Create <strong>4 processes</strong>:</p>
+                <ul>
+                  <li><strong>Smartphone Manufacturing (CN):</strong> output = 1 smartphone (180 g). Inputs per Table 1: glass fibre 0.045 kg, Al sheet 0.036 kg, PCB (direct flows: 128×0.0324=4.147 kg CO₂-eq; 0.0342×0.0324=1.108×10⁻³ kg Sb-eq), battery (direct flows: 41.5×0.0234=0.971 kg CO₂-eq; 0.0087×0.0234=2.036×10⁻⁴ kg Sb-eq), PC granulate 0.018 kg, steel 0.0144 kg, Cu wire 0.0108 kg. Assembly electricity CN medium 3.1 kWh. Air freight 0.18 kg × 9200 km = 1.656 t·km; lorry 0.18 × 350 = 63 t·km.</li>
+                  <li><strong>Packaging Process:</strong> cardboard box 0.085 kg, charger (direct flows Table 2: 3.8 kg CO₂-eq, 0.0011 kg Sb-eq per unit), USB-C cable: Cu wire 0.045×0.60=0.027 kg, PVC resin 0.045×0.40=0.018 kg.</li>
+                  <li><strong>Use Phase (FR):</strong> electricity FR low voltage 3.5 kWh/year.</li>
+                  <li><strong>End-of-Life:</strong> battery recycling (direct flows Table 3: 0.48×0.024=0.01152 kg CO₂-eq; −0.0018×0.024=−4.32×10⁻⁵ kg Sb-eq), e-waste recycling (1.24×0.156=0.1934 kg CO₂-eq; −0.0052×0.156=−8.11×10⁻⁴ kg Sb-eq).</li>
+                </ul>
+                <div class="sol-calc">
+Main process (1 year FU): inputs:
+  Smartphone: 1/3 units per year
+  Packaging: 1/3 per year
+  Electricity: 3.5 kWh/yr
+  EoL processes: 1/3 per year (each)
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 2</span><span class="q-pts">1 point</span></div>
+          <div class="q-body">
+            <p><strong>Calculate the total impact of 1 FU</strong> for both categories (EF 3.0 Method).</p>
+            <p class="mandatory-note">Mandatory: screenshot of results tab; general information tab with target amount = 1.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Expected Results (1 year of use)</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+Climate change ≈ 15 – 25 kg CO₂-eq / year
+Resource use, min. &amp; metals ≈ 1.5×10⁻³ – 3.0×10⁻³ kg Sb-eq / year
+                </div>
+                <p>Key contributions (per year, i.e. divided by 3):</p>
+                <ul>
+                  <li>PCB manufacturing (direct): 4.147/3 ≈ 1.38 kg CO₂-eq/yr → large share</li>
+                  <li>Battery manufacturing (direct): 0.971/3 ≈ 0.32 kg CO₂-eq/yr</li>
+                  <li>Use-phase electricity (FR, ~0.05 kg CO₂-eq/kWh): 3.5×0.05 ≈ 0.18 kg CO₂-eq/yr → minor</li>
+                  <li>EoL provides negative Sb-eq credits</li>
+                </ul>
+                <p class="sol-note">The PCB direct flow dominates strongly because PCBs are one of the most impact-intensive components in electronics (rare earth, complex manufacturing).</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 3</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>Which process makes the <strong>highest direct contribution</strong> to each impact category? Report its <strong>relative %</strong>.</p>
+            <p class="mandatory-note">Mandatory: screenshot of contribution analysis tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Highest Direct Contributions</div>
+              <div class="sol-body">
+                <p><strong>Both CC and minerals &amp; metals:</strong> The <em>Smartphone Manufacturing</em> process dominates, primarily due to the <strong>PCB direct elementary flows</strong> (128 kg CO₂-eq/kg and 0.0342 kg Sb-eq/kg — the highest among all components).</p>
+                <div class="sol-calc">
+PCB direct CC per FU = 128 × 0.0324 / 3 = 1.382 kg CO₂-eq/yr
+PCB relative CC ≈ 1.382 / 18 ≈ 7.7% direct (but PCB also has large upstream contributions)
+
+PCB direct Sb-eq = 0.0342 × 0.0324 / 3 = 3.69×10⁻⁴ kg Sb-eq/yr → likely 15–25% of total Sb-eq
+                </div>
+                <p class="sol-note">Note: the question asks for direct contributions only. In OpenLCA's contribution tree, select "Direct contributions" column, not "Total".</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 4</span><span class="q-pts">3 points</span></div>
+          <div class="q-body">
+            <p>What is the <strong>direct EoL contribution</strong> (battery + e-waste recycling) for both categories (absolute + relative %)? Discuss the sign of the Sb-eq EoL value.</p>
+            <p class="mandatory-note">Mandatory: screenshot of contribution analysis tabs showing EoL processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">EoL Direct Contribution &amp; Sign Discussion</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+Per FU (1 year = 1/3 of lifetime):
+
+Battery recycling CC = 0.48 × 0.024 / 3 = 3.84×10⁻³ kg CO₂-eq/yr
+E-waste recycling CC = 1.24 × 0.156 / 3 = 6.45×10⁻² kg CO₂-eq/yr
+Total EoL CC ≈ 0.068 kg CO₂-eq/yr → relative ≈ 0.4–0.5% of total CC
+
+Battery recycling Sb-eq = −0.0018 × 0.024 / 3 = −1.44×10⁻⁵ kg Sb-eq/yr
+E-waste recycling Sb-eq = −0.0052 × 0.156 / 3 = −2.70×10⁻⁴ kg Sb-eq/yr
+Total EoL Sb-eq ≈ −2.84×10⁻⁴ kg Sb-eq/yr → negative (credit)
+                </div>
+                <p><strong>Sign discussion:</strong> The negative sign for "Resource use, minerals and metals" at EoL represents an <em>environmental credit</em> via the <strong>avoided burden</strong> approach. When metals (e.g. cobalt, lithium, copper) are recovered and recycled, they displace the need to mine virgin materials. The negative value means the EoL process reduces the total demand for mineral resources. This credit is larger for electronics due to the high concentration of valuable metals in circuit boards and batteries.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 5</span><span class="q-pts">7 points</span></div>
+          <div class="q-body">
+            <p>Perform a <strong>sensitivity analysis</strong> on service life (Scenario A: 3 yr; B: 5 yr with battery replacement; C: 2 yr).</p>
+            <div class="q-sub">
+              Compare all three scenarios for both categories. What is the break-even service life for CC between Scenario A and B?
+            </div>
+            <p class="mandatory-note">Mandatory: modified process tabs; project setup and report.</p>
+            <div class="green-box">☛ Remember to export the project and results.</div>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Service Life Sensitivity — Modelling &amp; Break-Even</div>
+              <div class="sol-body">
+                <p><strong>Scenario A (3 yr, reference):</strong> total lifetime CC ≈ L₀ kg. Per year CC = L₀/3.</p>
+                <p><strong>Scenario B (5 yr + battery replacement):</strong> Add a second battery (same production + EoL impacts). Total lifetime CC = L₀ + battery_CC. Per year = (L₀ + battery_CC) / 5.</p>
+                <div class="sol-calc">
+Let L₀ = total 3-yr CC, B = battery CC contribution over lifetime.
+Battery CC per lifetime ≈ (0.971 + 3.84×10⁻³) ≈ 0.975 kg CO₂-eq total (direct only)
+
+Scenario A per year = L₀ / 3
+Scenario B per year = (L₀ + 0.975) / 5
+
+Break-even: (L₀ + 0.975) / 5 = L₀ / 3
+→ 3(L₀ + 0.975) = 5·L₀
+→ 3·L₀ + 2.925 = 5·L₀
+→ 2·L₀ = 2.925
+→ L₀ = 1.46 kg CO₂-eq / lifetime (unrealistically low — use your actual L₀ value)
+
+General break-even service life t*:
+t* = 3 × (1 + B/L₀)  where B is the added battery CC impact
+With realistic L₀ ≈ 45–60 kg CO₂-eq: t* ≈ 3.05–3.06 years (very quickly reached)
+                </div>
+                <p><strong>Scenario C (2 yr):</strong> Per year CC = L₀ / 2 — worse than Scenario A since manufacturing is amortised over fewer years.</p>
+                <p><strong>Ranking for CC per year:</strong> B (5 yr) &lt; A (3 yr) &lt; C (2 yr).</p>
+                <p><strong>Commentary:</strong> Extending smartphone life from 3 to 5 years reduces the per-year CC by ~40%, even accounting for a battery replacement. The manufacturing phase (especially PCB) dominates, so longer lifetimes have high leverage. The break-even is reached almost immediately (just slightly over 3 years), confirming that any extension beyond 3 years is environmentally beneficial for CC.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM 5 – WIND TURBINE
+═══════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam-4">
+  <div class="exam-meta">
+    <span class="exam-badge">Exam 5</span>
+    <span class="exam-badge green">Cradle-to-Grave</span>
+    <span class="points-badge">Part A · 24 points</span>
+    <span class="method-badge">EF 3.0 Method (adapted)</span>
+  </div>
+
+  <h2 class="exam-title">LCA of a Onshore Wind Turbine</h2>
+  <p class="exam-intro">Cradle-to-grave LCA of a 2 MW onshore wind turbine, assessing the environmental performance of wind energy over its operational lifetime.</p>
+
+  <div class="card" style="border-color:#c3e6ce;background:#f6fdf8">
+    <div class="card-head" style="background:#eaf5ee;border-color:#c3e6ce">
+      <div class="card-head-icon" style="background:var(--accent2)">★</div>
+      <span class="card-head-title" style="color:var(--accent2)">Solution Guide — click "Show Solution" under each question</span>
+    </div>
+    <div class="card-body" style="font-size:13.5px;color:var(--text-secondary)">
+      Solutions include reference flow calculations, process inventory setup hints, expected numerical results, and commentary on sensitivity analysis.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">▶</div><span class="card-head-title">Scenario Description</span></div>
+    <div class="card-body">
+      <div class="scenario">
+        <p>A renewable energy company based in <strong>Denmark (DK)</strong> is assessing the environmental performance of a <strong>2 MW onshore wind turbine</strong>. The goal is to perform a cradle-to-grave LCA of the turbine, from raw material extraction and manufacturing, through 20 years of electricity generation, to decommissioning and end-of-life treatment.</p>
+
+        <p>The turbine tower is manufactured in <strong>Germany (DE)</strong> from <strong>steel hot rolled coil (180,000 kg)</strong>. The nacelle and hub assembly are also produced in Germany and contain <strong>cast iron (28,000 kg)</strong>, <strong>copper wire (3,200 kg)</strong>, and <strong>aluminium sheet (1,800 kg)</strong>. The three rotor blades are produced in <strong>Denmark</strong> and are made of <strong>glass fibre reinforced polymer</strong> (each blade: 6,500 kg, of which 70% is glass fibre and 30% is epoxy resin). The foundation is made of <strong>concrete (320,000 kg)</strong> and <strong>reinforcing steel (18,000 kg)</strong>, poured on-site in Denmark.</p>
+
+        <p>All steel and nacelle components are transported from the German factory to the installation site in Denmark by <strong>large lorry (680 km)</strong>. Blades are transported by <strong>large lorry (95 km)</strong>. The total installation process requires <strong>45,000 kWh of diesel-powered machinery</strong> (model as medium-voltage electricity equivalent for simplicity).</p>
+
+        <p>During its <strong>20-year operational life</strong>, the turbine generates an average of <strong>6,000 MWh of electricity per year</strong> (capacity factor ~34%). Maintenance activities require <strong>2,500 kg of lubricating oil</strong> over the lifetime and one <strong>gearbox replacement</strong> at year 10 (gearbox mass: 14,000 kg steel + 800 kg copper; unitary impacts in Table 2).</p>
+
+        <div class="warn-box">☛ <strong>Functional unit:</strong> <strong>1 kWh of electricity delivered</strong> to the grid. All manufacturing, installation, maintenance, and end-of-life impacts must be divided by the total lifetime electricity generation.</div>
+
+        <p>At <strong>end-of-life</strong>, steel and metals are recycled (system expansion: recycled steel displaces primary steel production, 90% recovery rate). Blades are sent to landfill (unitary impacts from Table 3). Concrete is crushed and used as road aggregate (no burden, no credit).</p>
+
+        <p>The considered impact categories are <strong>"Climate change"</strong> and <strong>"Resource use, minerals and metals"</strong> of the Impact assessment method <strong>EF 3.0 Method (adapted)</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">T</div><span class="card-head-title">Inventory Data Tables</span></div>
+    <div class="card-body">
+
+      <p class="table-label">Table 1 – Main material composition of the turbine</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Material</th><th>Mass (kg)</th></tr></thead>
+          <tbody>
+            <tr><td>Tower</td><td>Steel hot rolled coil</td><td>180,000</td></tr>
+            <tr><td>Nacelle + hub</td><td>Cast iron</td><td>28,000</td></tr>
+            <tr><td>Nacelle + hub</td><td>Copper wire</td><td>3,200</td></tr>
+            <tr><td>Nacelle + hub</td><td>Aluminium sheet</td><td>1,800</td></tr>
+            <tr><td>Blades (×3)</td><td>Glass fibre (70%)</td><td>13,650</td></tr>
+            <tr><td>Blades (×3)</td><td>Epoxy resin (30%)</td><td>5,850</td></tr>
+            <tr><td>Foundation</td><td>Concrete (ready-mix)</td><td>320,000</td></tr>
+            <tr><td>Foundation</td><td>Reinforcing steel</td><td>18,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 2 – Unitary impacts of gearbox replacement components</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Climate change [kg CO₂-eq]</th><th>Resource use, min. &amp; metals [kg Sb-eq]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Gearbox steel</td><td>1.85</td><td>0.000042</td><td>1 kg</td></tr>
+            <tr><td>Gearbox copper</td><td>4.20</td><td>0.000380</td><td>1 kg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 3 – Unitary impacts of blade landfill</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Waste type</th><th>Climate change [kg CO₂-eq]</th><th>Resource use, min. &amp; metals [kg Sb-eq]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Glass fibre composite (blade)</td><td>0.008</td><td>0.0000012</td><td>1 kg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 4 – Elementary flows</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Elementary flow</th><th>Flow name</th><th>Folder</th></tr></thead>
+          <tbody>
+            <tr><td>Carbon dioxide (1 correct)</td><td>Carbon dioxide, fossil</td><td>Emission to air / unspecified</td></tr>
+            <tr><td>Antimony (1 correct)</td><td>Antimony</td><td>Resource / unspecified</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 5 – Product flow providers</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Provider</th></tr></thead>
+          <tbody>
+            <tr><td>Steel hot rolled coil</td><td>Steel hot rolled coil, production mix, at plant, blast furnace route – RER</td></tr>
+            <tr><td>Cast iron</td><td>Cast iron, production mix, at plant – RER</td></tr>
+            <tr><td>Copper wire</td><td>Copper wire, consumption mix, at plant, technology mix – EU-15</td></tr>
+            <tr><td>Aluminium sheet</td><td>Aluminium sheet, production mix, at plant, primary production – RER</td></tr>
+            <tr><td>Glass fibre</td><td>Continuous filament glass fibre (assembled rovings), at plant – RER</td></tr>
+            <tr><td>Epoxy resin</td><td>Epoxy resin, production mix, at plant – RER</td></tr>
+            <tr><td>Concrete</td><td>Concrete, ready-mix, production mix, at plant – RER</td></tr>
+            <tr><td>Lubricating oil</td><td>Lubricating oil, production mix, at plant – RER</td></tr>
+            <tr><td>Transport</td><td>Follow indications in text</td></tr>
+            <tr><td>Electricity</td><td>Electricity grid mix 1kV–60kV, consumption mix, at consumer – DK</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">Q</div><span class="card-head-title">Answer the Following Requests</span></div>
+    <div class="card-body">
+      <ul class="questions-list">
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 1</span><span class="q-pts">12 points</span></div>
+          <div class="q-body">
+            <p><strong>Build the product system in OpenLCA.</strong></p>
+            <div class="q-sub">• Screenshots of model graph and all input/output tabs.<br>• Elementary flows option (☑) flagged.<br>• All formulas visible and expanded.</div>
+            <p class="mandatory-note">Mandatory: screenshots of all processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Model Structure &amp; Key Calculations</div>
+              <div class="sol-body">
+                <p><strong>Total lifetime electricity:</strong> 6,000 MWh/yr × 20 yr = <span class="sol-result">120,000 MWh = 120,000,000 kWh</span></p>
+                <p>Create <strong>4 processes</strong>:</p>
+                <ul>
+                  <li><strong>Turbine Manufacturing:</strong> all materials from Table 1 as product flow inputs; installation electricity 45,000 kWh; transport lorry for tower+nacelle: (180,000+28,000+3,200+1,800) kg × 680 km = 145,560,000 t·km... wait, convert: 213,000 kg = 213 t × 680 = 144,840 t·km; blades: 19,500 kg = 19.5 t × 95 = 1,852.5 t·km.</li>
+                  <li><strong>Gearbox Replacement:</strong> direct elementary flows from Table 2 × masses: CC = (1.85×14,000) + (4.20×800) = 25,900 + 3,360 = 29,260 kg CO₂-eq; Sb = (0.000042×14,000) + (0.000380×800) = 0.588 + 0.304 = 0.892 kg Sb-eq.</li>
+                  <li><strong>Maintenance:</strong> lubricating oil 2,500 kg total over lifetime.</li>
+                  <li><strong>Wind Turbine Operation (1 kWh):</strong> reference flow = 1 kWh electricity. Inputs: manufacturing 1/120,000,000; gearbox replacement 1/120,000,000; maintenance 1/120,000,000; EoL blade landfill direct flows per kWh.</li>
+                </ul>
+                <div class="sol-calc">
+Allocation per kWh:
+Manufacturing: 1 turbine / 120,000,000 kWh
+Gearbox CC per kWh: 29,260 / 120,000,000 = 2.44×10⁻⁴ kg CO₂-eq/kWh
+Blade EoL CC: (13,650+5,850) kg × 0.008 / 120,000,000 = 1.30×10⁻⁶ kg CO₂-eq/kWh
+
+Steel recycling credit (system expansion):
+Recycled steel = (180,000+18,000) × 0.90 = 178,200 kg → avoided primary steel impact
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 2</span><span class="q-pts">1 point</span></div>
+          <div class="q-body">
+            <p><strong>Calculate the total impact of 1 kWh</strong> for both categories (EF 3.0 Method).</p>
+            <p class="mandatory-note">Mandatory: screenshot of results tab; general info tab showing target amount = 1.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Expected Results (1 kWh wind electricity)</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+Climate change ≈ 0.006 – 0.012 kg CO₂-eq / kWh
+Resource use, min. &amp; metals ≈ 1×10⁻⁶ – 5×10⁻⁶ kg Sb-eq / kWh
+                </div>
+                <p>Wind electricity is one of the lowest-carbon energy sources. The dominant contributions come from <strong>steel manufacturing</strong> (tower) and <strong>concrete foundation</strong>, not from operations (zero fuel combustion).</p>
+                <p class="sol-note">Compare with the Italian grid (~0.35 kg CO₂-eq/kWh) — wind is ~30–50× lower for climate change.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 3</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>Which process makes the <strong>highest direct contribution</strong> to each category? Report the relative % for both.</p>
+            <p class="mandatory-note">Mandatory: screenshot of contribution analysis tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Highest Direct Contributions</div>
+              <div class="sol-body">
+                <p><strong>Climate change:</strong> Turbine Manufacturing dominates (steel tower upstream + concrete foundation). The gearbox replacement adds a notable direct CC contribution via Table 2 flows.</p>
+                <p><strong>Resource use, min. &amp; metals:</strong> Turbine Manufacturing dominates via copper wire (copper is the most mineral-intensive material in turbines).</p>
+                <div class="sol-calc">Gearbox direct Sb-eq per kWh = 0.892 / 120,000,000 ≈ 7.4×10⁻⁹ kg Sb-eq/kWh (minor)</div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 4</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>What is the <strong>direct contribution of the gearbox replacement</strong> to both categories (absolute + relative %)?</p>
+            <p class="mandatory-note">Mandatory: screenshot of contribution analysis tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Gearbox Replacement Contribution</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+CC direct per kWh = 29,260 / 120,000,000 = 2.44×10⁻⁴ kg CO₂-eq/kWh
+Sb direct per kWh = 0.892 / 120,000,000 = 7.43×10⁻⁹ kg Sb-eq/kWh
+                </div>
+                <p>Relative % = divide by total FU result. Typically CC contribution of gearbox ≈ 5–15% of total turbine CC, depending on database steel/copper values.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 5</span><span class="q-pts">7 points</span></div>
+          <div class="q-body">
+            <p>Perform a <strong>sensitivity analysis</strong> on the turbine's lifetime electricity production:</p>
+            <div class="q-sub">
+              <strong>Scenario A (Reference):</strong> 6,000 MWh/yr × 20 yr = 120,000 MWh total.<br><br>
+              <strong>Scenario B – Higher capacity factor:</strong> 7,500 MWh/yr × 20 yr = 150,000 MWh total.<br><br>
+              <strong>Scenario C – Extended lifetime:</strong> 6,000 MWh/yr × 25 yr = 150,000 MWh total (same total energy as B but different reason). A second gearbox replacement occurs at year 20.<br><br>
+              Compare both categories. Which strategy — better capacity factor or longer lifetime — is more effective?
+            </div>
+            <p class="mandatory-note">Mandatory: modified process tabs; project setup and report.</p>
+            <div class="green-box">☛ Remember to export the project and results.</div>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Lifetime Sensitivity — Modelling &amp; Expected Results</div>
+              <div class="sol-body">
+                <p><strong>Scenarios A and B have the same total energy (150,000 MWh) but B gets there without extra gearbox. Scenario C reaches 150,000 MWh but needs 2 gearbox replacements.</strong></p>
+                <div class="sol-calc">
+Scenario A: 1/120,000,000 kWh denominator
+Scenario B: 1/150,000,000 kWh denominator (same hardware, more energy → lower impact/kWh)
+Scenario C: 1/150,000,000 kWh denominator + 2nd gearbox replacement impacts
+
+B vs C comparison:
+Scenario B impact/kWh = total_mfg / 150,000,000
+Scenario C impact/kWh = (total_mfg + gearbox_CC) / 150,000,000
+
+Since gearbox_CC = 29,260 kg CO₂-eq and total_mfg >> gearbox, the difference between B and C is small (~0.5–2%)
+                </div>
+                <p><strong>Expected ranking for CC:</strong> B ≈ C &lt; A (both B and C have 25% more energy in denominator).</p>
+                <p><strong>Commentary:</strong> Both strategies achieve the same result numerically (150,000 MWh), but a higher capacity factor is preferable as it avoids the extra gearbox replacement cost and material impact. Extending turbine lifetime is also effective but requires additional maintenance investment.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM 6 – COTTON T-SHIRT
+═══════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam-5">
+  <div class="exam-meta">
+    <span class="exam-badge brown">Exam 6</span>
+    <span class="exam-badge green">Cradle-to-Grave</span>
+    <span class="points-badge">Part A · 24 points</span>
+    <span class="method-badge">EF 3.0 Method (adapted)</span>
+  </div>
+
+  <h2 class="exam-title">LCA of a Cotton T-Shirt</h2>
+  <p class="exam-intro">Cradle-to-grave LCA of a conventional cotton T-shirt, comparing washing frequency scenarios and assessing the use-phase dominance typical of textile products.</p>
+
+  <div class="card" style="border-color:#c3e6ce;background:#f6fdf8">
+    <div class="card-head" style="background:#eaf5ee;border-color:#c3e6ce">
+      <div class="card-head-icon" style="background:var(--accent2)">★</div>
+      <span class="card-head-title" style="color:var(--accent2)">Solution Guide — click "Show Solution" under each question</span>
+    </div>
+    <div class="card-body" style="font-size:13.5px;color:var(--text-secondary)">
+      Solutions include reference flow calculations, process inventory setup hints, expected numerical results, and commentary on sensitivity analysis.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">▶</div><span class="card-head-title">Scenario Description</span></div>
+    <div class="card-body">
+      <div class="scenario">
+        <p>A European fashion brand is evaluating the environmental footprint of one of its basic cotton T-shirts. The goal is to perform a <strong>cradle-to-grave LCA</strong> of the T-shirt, covering cotton cultivation, yarn and fabric production, garment manufacturing, transport to the consumer in <strong>Italy (IT)</strong>, use phase (washing and drying), and end-of-life.</p>
+
+        <p>The T-shirt weighs <strong>180 g</strong> and is made of <strong>100% conventional cotton</strong>. Cotton is cultivated and ginned in <strong>India</strong>. The unitary impacts of raw cotton production (including irrigation, pesticides, and ginning) are reported in Table 2. The cotton fibre is then spun into yarn and woven into fabric in a mill also in India, which consumes <strong>3.8 kWh of medium-voltage electricity per kg of fabric</strong>. The finished fabric is transported by <strong>container ship from Mumbai to Genova (8,400 km)</strong> and then by <strong>small lorry to a garment factory in Portugal (2,100 km)</strong>. The weight of fabric per T-shirt is <strong>200 g</strong> (20 g lost as cutting waste, incinerated).</p>
+
+        <p>The <strong>garment manufacturing</strong> in <strong>Portugal (PT)</strong> requires <strong>0.8 kWh of medium-voltage electricity per T-shirt</strong>. The finished T-shirt is packaged in a <strong>polypropylene bag (15 g)</strong>. It is transported by <strong>small lorry (1,450 km)</strong> to an Italian distribution centre and then to retailers.</p>
+
+        <div class="warn-box">☛ <strong>Functional unit:</strong> <strong>1 T-shirt used for 2 years</strong> (100 washing cycles total, ~1 wash per week). The system boundary includes all life cycle stages.</div>
+
+        <p>During the <strong>use phase</strong>, the T-shirt is washed in a washing machine (4 kg load, 40°C) and tumble-dried after each wash. Each washing cycle consumes <strong>0.55 kWh of electricity</strong> and <strong>40 litres of water</strong>. Tumble drying consumes <strong>2.0 kWh of electricity</strong> per cycle. All electricity in Italy, low voltage.</p>
+
+        <p>At <strong>end-of-life</strong>, the T-shirt is collected as textile waste and sent to <strong>municipal solid waste incineration</strong>. Unitary impacts of cotton textile incineration are in Table 3.</p>
+
+        <p>The considered impact categories are <strong>"Climate change"</strong> and <strong>"Water use"</strong> of the Impact assessment method <strong>EF 3.0 Method (adapted)</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">T</div><span class="card-head-title">Inventory Data Tables</span></div>
+    <div class="card-body">
+
+      <p class="table-label">Table 1 – Use phase per washing cycle</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Activity</th><th>Amount</th><th>Unit</th></tr></thead>
+          <tbody>
+            <tr><td>Washing machine electricity (IT low voltage)</td><td>0.55</td><td>kWh/cycle</td></tr>
+            <tr><td>Tumble dryer electricity (IT low voltage)</td><td>2.0</td><td>kWh/cycle</td></tr>
+            <tr><td>Water (tap, IT)</td><td>40</td><td>litres/cycle</td></tr>
+            <tr><td>Total cycles over lifetime</td><td>100</td><td>cycles</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 2 – Unitary impacts of raw cotton production (India)</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Climate change [kg CO₂-eq]</th><th>Water use [m³ world-eq]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Raw cotton fibre (India)</td><td>2.15</td><td>8.40</td><td>1 kg cotton fibre</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 3 – Unitary impacts of EoL incineration</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Waste</th><th>Climate change [kg CO₂-eq]</th><th>Water use [m³ world-eq]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Cotton textile (MSW incineration)</td><td>0.42</td><td>0.002</td><td>1 kg textile</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 4 – Elementary flows</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Elementary flow</th><th>Flow name</th><th>Folder</th></tr></thead>
+          <tbody>
+            <tr><td>Carbon dioxide (1 correct)</td><td>Carbon dioxide, fossil</td><td>Emission to air / unspecified</td></tr>
+            <tr><td>Water (2 options, 1 correct)</td><td>Water, river</td><td>Resource / in water</td></tr>
+            <tr><td></td><td>Water, well, in ground</td><td>Resource / in ground</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 5 – Product flow providers</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Provider</th></tr></thead>
+          <tbody>
+            <tr><td>Polypropylene bag</td><td>Polypropylene fibres (PP), production mix, at plant, crude oil based – EU-27</td></tr>
+            <tr><td>Drinking/tap water</td><td>Drinking water, production mix, at plant, water purification treatment, from surface water – IT</td></tr>
+            <tr><td>Transport</td><td>Follow indications in text</td></tr>
+            <tr><td>Electricity</td><td>Electricity grid mix, consumption mix, at consumer, AC, 230V – IT / PT / IN</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">Q</div><span class="card-head-title">Answer the Following Requests</span></div>
+    <div class="card-body">
+      <ul class="questions-list">
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 1</span><span class="q-pts">12 points</span></div>
+          <div class="q-body">
+            <p><strong>Build the product system in OpenLCA.</strong></p>
+            <div class="q-sub">• Screenshots of model graph and all input/output tabs.<br>• Elementary flows (☑) flagged.<br>• All formulas visible.</div>
+            <p class="mandatory-note">Mandatory: screenshots of all processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Model Structure &amp; Key Calculations</div>
+              <div class="sol-body">
+                <p>Create <strong>4 processes</strong>:</p>
+                <ul>
+                  <li><strong>Cotton &amp; Fabric Production (IN):</strong> raw cotton (direct flows: 2.15×0.20=0.430 kg CO₂; 8.40×0.20=1.68 m³ water per T-shirt), spinning/weaving electricity 3.8×0.20=0.76 kWh, transport ship 0.20×8400=1,680 t·km, transport lorry 0.20×2100=420 t·km.</li>
+                  <li><strong>Garment Manufacturing (PT):</strong> fabric input 0.20 kg, electricity PT 0.8 kWh, PP bag 0.015 kg, cutting waste EoL (0.02 kg incinerated: direct flows 0.02×0.42=0.0084 kg CO₂).</li>
+                  <li><strong>Use Phase (IT):</strong> electricity IT low voltage (0.55+2.0)×100=255 kWh total, tap water IT 40×100=4,000 litres=4 m³.</li>
+                  <li><strong>T-Shirt System (FU):</strong> inputs: garment (1 item) + use phase (1 unit) + EoL incineration (direct flows: 0.18×0.42=0.0756 kg CO₂; 0.18×0.002=3.6×10⁻⁴ m³ water). Output: T-shirt used 2yr (1 item).</li>
+                </ul>
+                <div class="sol-calc">
+Cotton per T-shirt = 180 g finished = 200 g fabric input (20 g cutting waste)
+Raw cotton input ≈ 200 g (fabric) — use 0.200 kg for direct flow calculations
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 2</span><span class="q-pts">1 point</span></div>
+          <div class="q-body">
+            <p><strong>Calculate the total impact of 1 FU</strong> for both categories (EF 3.0 Method).</p>
+            <p class="mandatory-note">Mandatory: screenshot of results and general info tabs.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Expected Results (1 T-shirt, 2-year lifetime)</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+Climate change ≈ 25 – 45 kg CO₂-eq (use phase dominates due to 255 kWh electricity)
+Water use ≈ 2 – 5 m³ world-eq (cotton cultivation dominates due to irrigation)
+                </div>
+                <p>Use phase electricity: 255 kWh × ~0.35 kg CO₂-eq/kWh (IT grid) ≈ 89 kg CO₂-eq → likely the largest contributor.</p>
+                <p>Cotton irrigation: 8.40 × 0.20 = 1.68 m³ per T-shirt → dominates water use.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 3</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>Which process has the <strong>highest direct contribution</strong> to each category? Report relative %.</p>
+            <p class="mandatory-note">Mandatory: contribution analysis screenshots.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Highest Direct Contributions</div>
+              <div class="sol-body">
+                <p><strong>Climate change:</strong> Use Phase dominates strongly due to 255 kWh of Italian electricity. Expected direct contribution ≈ 60–75%.</p>
+                <p><strong>Water use:</strong> Cotton &amp; Fabric Production dominates due to the large irrigation water direct flows (8.40 m³/kg cotton). Expected ≈ 70–85%.</p>
+                <p class="sol-note">This illustrates the typical LCA result for textiles: climate change is use-phase dominated, water use is production dominated.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 4</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>What is the <strong>direct contribution of cotton cultivation</strong> (Table 2 direct flows) to both categories (absolute + relative %)?</p>
+            <p class="mandatory-note">Mandatory: contribution analysis screenshots.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Cotton Cultivation Direct Contribution</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+CC direct = 2.15 × 0.20 = 0.430 kg CO₂-eq
+Water direct = 8.40 × 0.20 = 1.680 m³ world-eq
+                </div>
+                <p>Relative CC ≈ 0.430 / ~35 ≈ 1.2% — small fraction of total (use phase dominates).</p>
+                <p>Relative water ≈ 1.680 / ~2.5 ≈ 67% — dominant contributor to water use.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 5</span><span class="q-pts">7 points</span></div>
+          <div class="q-body">
+            <p>Perform a <strong>sensitivity analysis</strong> on washing behaviour:</p>
+            <div class="q-sub">
+              <strong>Scenario A (Reference):</strong> 100 washes with tumble drying (as modelled).<br><br>
+              <strong>Scenario B – No tumble drying:</strong> 100 washes, air-dried (remove 2.0 kWh/cycle dryer electricity).<br><br>
+              <strong>Scenario C – Reduced washing:</strong> 50 washes with tumble drying (T-shirt worn twice before washing).<br><br>
+              Compare CC for all three. What is the % reduction from A→B and A→C? Which behaviour change has greater impact?
+            </div>
+            <p class="mandatory-note">Mandatory: modified process tabs; project setup and report.</p>
+            <div class="green-box">☛ Remember to export the project and results.</div>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Washing Sensitivity — Modelling &amp; Results</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+Scenario A: electricity = (0.55+2.0)×100 = 255 kWh
+Scenario B: electricity = 0.55×100 = 55 kWh (no dryer) → saving = 200 kWh
+Scenario C: electricity = (0.55+2.0)×50 = 127.5 kWh (half washes) → saving = 127.5 kWh
+
+Use phase CC (IT grid ~0.35 kg CO₂/kWh):
+A: 255×0.35 ≈ 89.3 kg CO₂-eq from use phase
+B: 55×0.35 ≈ 19.3 kg CO₂-eq → reduction ≈ 78% of use-phase CC
+C: 127.5×0.35 ≈ 44.6 kg CO₂-eq → reduction ≈ 50% of use-phase CC
+                </div>
+                <p><strong>A→B reduction</strong> (skip dryer): ~55–60% reduction in total CC.</p>
+                <p><strong>A→C reduction</strong> (halve washes): ~25–30% reduction in total CC.</p>
+                <p><strong>Commentary:</strong> Eliminating tumble drying has a much larger impact than halving wash frequency, because the dryer is far more energy-intensive (2.0 kWh) than the washer (0.55 kWh). This is a key consumer behaviour recommendation for textile LCAs.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM 7 – PLASTIC BOTTLE
+═══════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam-6">
+  <div class="exam-meta">
+    <span class="exam-badge teal">Exam 7</span>
+    <span class="exam-badge green">Cradle-to-Grave</span>
+    <span class="points-badge">Part A · 24 points</span>
+    <span class="method-badge">EF 3.0 Method (adapted)</span>
+  </div>
+
+  <h2 class="exam-title">LCA of a PET Mineral Water Bottle</h2>
+  <p class="exam-intro">Comparative cradle-to-grave LCA of a 1.5 L PET single-use bottle vs a reusable glass bottle, including filling, distribution, and end-of-life.</p>
+
+  <div class="card" style="border-color:#c3e6ce;background:#f6fdf8">
+    <div class="card-head" style="background:#eaf5ee;border-color:#c3e6ce">
+      <div class="card-head-icon" style="background:var(--accent2)">★</div>
+      <span class="card-head-title" style="color:var(--accent2)">Solution Guide — click "Show Solution" under each question</span>
+    </div>
+    <div class="card-body" style="font-size:13.5px;color:var(--text-secondary)">
+      Solutions include reference flow calculations, process inventory setup hints, expected numerical results, and commentary on sensitivity analysis.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">▶</div><span class="card-head-title">Scenario Description</span></div>
+    <div class="card-body">
+      <div class="scenario">
+        <p>A mineral water company operating in <strong>Italy (IT)</strong> is comparing two packaging options for its 1.5 L mineral water product: a <strong>single-use PET bottle</strong> and a <strong>reusable glass bottle</strong>. The goal is to perform a comparative cradle-to-grave LCA of both options.</p>
+
+        <p>The <strong>PET bottle</strong> weighs <strong>28 g</strong> and is produced at a plastics plant in <strong>Italy</strong>. Production requires <strong>0.35 kWh of medium-voltage electricity per kg of PET bottle</strong>. The bottle is capped with a <strong>polyethylene cap (2 g)</strong> and labelled with a <strong>paper label (3 g)</strong>. The filled bottle is transported by <strong>small lorry (180 km)</strong> to retailers. At end-of-life, <strong>40% of PET bottles are collected for recycling</strong> (system expansion: recycled PET displaces virgin PET, 85% material recovery); the remaining 60% go to <strong>MSW incineration</strong>.</p>
+
+        <p>The <strong>reusable glass bottle</strong> weighs <strong>380 g</strong> and is produced in <strong>Germany (DE)</strong>. Production requires <strong>1.8 kWh of medium-voltage electricity per kg of glass bottle</strong>. The glass bottle is used <strong>25 times</strong> before disposal. After each use, the bottle is collected, transported back to the filling plant by <strong>small lorry (180 km round trip)</strong>, and washed using <strong>0.04 kWh of medium-voltage electricity and 0.8 litres of hot water per wash cycle</strong>. At end-of-life (after 25 uses), the glass is crushed and recycled (avoided burden: recycled glass displaces 50% of primary glass production).</p>
+
+        <div class="warn-box">☛ <strong>Functional unit:</strong> <strong>delivery of 1.5 litres of mineral water to the consumer</strong>. For the glass bottle, all manufacturing, washing, and end-of-life impacts must be divided by 25 uses.</div>
+
+        <p>The mineral water itself (extraction and filling) contributes identical impacts in both scenarios and can be <strong>excluded from the comparison</strong> (cut-off). Only packaging-related impacts are assessed.</p>
+
+        <p>The considered impact categories are <strong>"Climate change"</strong> and <strong>"Resource use, fossils"</strong> of the Impact assessment method <strong>EF 3.0 Method (adapted)</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">T</div><span class="card-head-title">Inventory Data Tables</span></div>
+    <div class="card-body">
+
+      <p class="table-label">Table 1 – Packaging materials per unit</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>PET bottle</th><th>Glass bottle</th><th>Unit</th></tr></thead>
+          <tbody>
+            <tr><td>Main container</td><td>28 g PET</td><td>380 g glass</td><td>g</td></tr>
+            <tr><td>Cap</td><td>2 g PE</td><td>2 g PE (same)</td><td>g</td></tr>
+            <tr><td>Label</td><td>3 g paper</td><td>3 g paper (same)</td><td>g</td></tr>
+            <tr><td>Production electricity</td><td>0.35 kWh/kg PET</td><td>1.8 kWh/kg glass</td><td>kWh/kg</td></tr>
+            <tr><td>Number of uses</td><td>1</td><td>25</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 2 – Unitary impacts of EoL processes</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Process</th><th>Climate change [kg CO₂-eq]</th><th>Resource use, fossils [MJ]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>PET incineration (MSW)</td><td>2.28</td><td>68.4</td><td>1 kg PET incinerated</td></tr>
+            <tr><td>Virgin PET production (avoided)</td><td>2.15</td><td>82.0</td><td>1 kg virgin PET displaced</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 3 – Elementary flows</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Elementary flow</th><th>Flow name</th><th>Folder</th></tr></thead>
+          <tbody>
+            <tr><td>CO₂ (1 correct)</td><td>Carbon dioxide, fossil</td><td>Emission to air / unspecified</td></tr>
+            <tr><td>Fossils (1 correct)</td><td>Oil, crude, in ground</td><td>Resource / in ground</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 4 – Product flow providers</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Provider</th></tr></thead>
+          <tbody>
+            <tr><td>PET granulate</td><td>Polyethylene terephthalate granulate (PET), production mix, at plant – RER</td></tr>
+            <tr><td>Glass bottle</td><td>Glass bottle, production mix, at plant – RER</td></tr>
+            <tr><td>Polyethylene cap</td><td>Polyethylene high density granulate (PE-HD), production mix, at plant – RER</td></tr>
+            <tr><td>Paper label</td><td>Graphic Paper, production mix, at plant, technology mix – EU-25</td></tr>
+            <tr><td>Transport</td><td>Follow indications in text</td></tr>
+            <tr><td>Electricity</td><td>Electricity grid mix 1kV–60kV, at consumer – IT / DE</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">Q</div><span class="card-head-title">Answer the Following Requests</span></div>
+    <div class="card-body">
+      <ul class="questions-list">
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 1</span><span class="q-pts">12 points</span></div>
+          <div class="q-body">
+            <p><strong>Build both product systems in OpenLCA.</strong></p>
+            <div class="q-sub">• Screenshots of model graphs and all input/output tabs.<br>• Elementary flows (☑) flagged.<br>• All formulas visible.</div>
+            <p class="mandatory-note">Mandatory: screenshots of all processes for both systems.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Model Structure &amp; Key Calculations</div>
+              <div class="sol-body">
+                <p><strong>PET system (1 use = 1 FU):</strong></p>
+                <ul>
+                  <li>PET bottle production: PET 0.028 kg, electricity 0.35×0.028=0.0098 kWh, PE cap 0.002 kg, paper label 0.003 kg</li>
+                  <li>Transport: (0.028+0.002+0.003) kg × 180 km = 5.94 t·km... = 0.033×180/1000 = 0.00594 t·km</li>
+                  <li>EoL: 60% incineration direct flows: 0.028×0.60×2.28=0.0383 kg CO₂; 40% recycling credit: −0.028×0.40×0.85×2.15=−0.0205 kg CO₂</li>
+                </ul>
+                <p><strong>Glass system (divide by 25 uses):</strong></p>
+                <ul>
+                  <li>Bottle production: 0.380 kg glass, electricity 1.8×0.380=0.684 kWh — all divided by 25</li>
+                  <li>Per use: washing electricity 0.04 kWh, hot water 0.8 L, transport return 0.380×180/1000=0.0684 t·km per use</li>
+                  <li>EoL (divided by 25): glass recycling credit (avoided 50% of glass production)</li>
+                </ul>
+                <div class="sol-calc">
+Glass bottle production per FU:
+Electricity = 0.684 / 25 = 0.02736 kWh per use
+Glass = 0.380 / 25 = 0.0152 kg per use
+EoL glass credit (per use) = 0.380 × 0.50 / 25 = 0.0076 kg glass displaced
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 2</span><span class="q-pts">1 point</span></div>
+          <div class="q-body">
+            <p><strong>Calculate the total impact of 1 FU</strong> for both systems and categories. Which packaging is better?</p>
+            <p class="mandatory-note">Mandatory: results tab screenshots for both systems.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Expected Results (per 1.5 L delivery)</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+PET CC ≈ 0.05 – 0.15 kg CO₂-eq per FU
+Glass CC ≈ 0.04 – 0.10 kg CO₂-eq per FU (amortised over 25 uses)
+                </div>
+                <p>Glass tends to win for CC when used many times (25×), but PET with recycling can be competitive. For fossils, PET production is fossil-intensive but so is glass manufacturing energy.</p>
+                <p class="sol-note">The washing energy and return transport for glass add up — result depends heavily on Italian grid carbon intensity.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 3</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>Which process has the <strong>highest direct contribution</strong> for each system and each category?</p>
+            <p class="mandatory-note">Mandatory: contribution analysis screenshots.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Highest Direct Contributions</div>
+              <div class="sol-body">
+                <p><strong>PET — CC:</strong> EoL incineration direct flows dominate (2.28 kg CO₂/kg × 0.028×0.60 = 0.0383 kg CO₂).</p>
+                <p><strong>PET — Fossils:</strong> PET production (upstream fossil resource use for PET resin, highly fossil-intensive).</p>
+                <p><strong>Glass — CC:</strong> Washing electricity (0.04 kWh × IT grid × 1 use) or glass bottle production amortised.</p>
+                <p><strong>Glass — Fossils:</strong> Glass bottle manufacturing (energy-intensive melting process).</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 4</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>What is the <strong>net EoL contribution</strong> (incineration + recycling credit combined) for PET for both categories?</p>
+            <p class="mandatory-note">Mandatory: contribution analysis tabs showing EoL processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">PET Net EoL Contribution</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+CC incineration = 0.028 × 0.60 × 2.28 = 0.03830 kg CO₂-eq
+CC recycling credit = −0.028 × 0.40 × 0.85 × 2.15 = −0.02050 kg CO₂-eq
+Net CC EoL = 0.03830 − 0.02050 = +0.01780 kg CO₂-eq
+
+Fossils incineration = 0.028 × 0.60 × 68.4 = 1.149 MJ
+Fossils recycling credit = −0.028 × 0.40 × 0.85 × 82.0 = −0.783 MJ
+Net Fossils EoL = 1.149 − 0.783 = +0.366 MJ
+                </div>
+                <p>Both net EoL values are positive — the incineration burden exceeds the recycling credit, meaning end-of-life adds net impact even with 40% recycling.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 5</span><span class="q-pts">7 points</span></div>
+          <div class="q-body">
+            <p>Perform a <strong>sensitivity analysis</strong> on the PET recycling rate:</p>
+            <div class="q-sub">
+              <strong>Scenario A (Reference):</strong> 40% recycling, 60% incineration.<br><br>
+              <strong>Scenario B – High recycling:</strong> 70% recycling, 30% incineration.<br><br>
+              <strong>Scenario C – No recycling:</strong> 0% recycling, 100% incineration.<br><br>
+              Compare CC and fossils for all three. At what recycling rate does PET become better than glass for CC?
+            </div>
+            <p class="mandatory-note">Mandatory: modified process tabs; project setup and report.</p>
+            <div class="green-box">☛ Remember to export the project and results.</div>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Recycling Rate Sensitivity</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+Net EoL CC formula: 0.028 × [r_inc × 2.28 − r_rec × 0.85 × 2.15]
+where r_inc + r_rec = 1
+
+Scenario A (40% rec): net = 0.028×[0.60×2.28 − 0.40×0.85×2.15] = +0.0178 kg CO₂
+Scenario B (70% rec): net = 0.028×[0.30×2.28 − 0.70×0.85×2.15] = 0.028×[0.684−1.279] = −0.0167 kg CO₂ (net credit!)
+Scenario C (0% rec):  net = 0.028×[1.00×2.28] = +0.0638 kg CO₂
+                </div>
+                <p><strong>Break-even recycling rate</strong> (net EoL = 0):</p>
+                <div class="sol-calc">
+r_inc × 2.28 = r_rec × 0.85 × 2.15
+(1−r) × 2.28 = r × 1.8275
+2.28 = r × (2.28 + 1.8275) = r × 4.1075
+r = 2.28 / 4.1075 ≈ 55.5% recycling rate → EoL becomes net credit above this rate
+                </div>
+                <p><strong>Commentary:</strong> Increasing recycling from 40% to 70% turns the EoL contribution from a burden to a credit. This shows the critical importance of waste collection infrastructure. At 70%+ recycling, PET can be competitive with glass on CC.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     EXAM 8 – CONCRETE BLOCK
+═══════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam-7">
+  <div class="exam-meta">
+    <span class="exam-badge">Exam 8</span>
+    <span class="exam-badge green">Cradle-to-Gate</span>
+    <span class="points-badge">Part A · 24 points</span>
+    <span class="method-badge">EF 3.0 Method (adapted)</span>
+  </div>
+
+  <h2 class="exam-title">LCA of a Structural Concrete Block</h2>
+  <p class="exam-intro">Cradle-to-gate comparative LCA of a standard concrete block vs a low-carbon alternative using supplementary cementitious materials (fly ash), assessing climate change and resource use.</p>
+
+  <div class="card" style="border-color:#c3e6ce;background:#f6fdf8">
+    <div class="card-head" style="background:#eaf5ee;border-color:#c3e6ce">
+      <div class="card-head-icon" style="background:var(--accent2)">★</div>
+      <span class="card-head-title" style="color:var(--accent2)">Solution Guide — click "Show Solution" under each question</span>
+    </div>
+    <div class="card-body" style="font-size:13.5px;color:var(--text-secondary)">
+      Solutions include reference flow calculations, process inventory setup hints, expected numerical results, and commentary on sensitivity analysis.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">▶</div><span class="card-head-title">Scenario Description</span></div>
+    <div class="card-body">
+      <div class="scenario">
+        <p>A construction materials company in <strong>Spain (ES)</strong> is evaluating the environmental performance of two concrete block formulations. The goal is to perform a comparative <strong>cradle-to-gate LCA</strong>, from raw material extraction to the factory gate, for a standard concrete block and a low-carbon alternative.</p>
+
+        <p>Both blocks have the same dimensions (40×20×20 cm) and structural performance. The <strong>standard concrete block</strong> (Variant A) is produced using <strong>ordinary Portland cement (OPC)</strong> as the sole binder. The <strong>low-carbon block</strong> (Variant B) replaces <strong>40% of the OPC with fly ash</strong> (a by-product from coal power plants, collected at zero burden under the cut-off approach).</p>
+
+        <p>The composition of one block is given in Table 1. Both variants are produced in the same factory in Spain, consuming <strong>0.018 kWh of medium-voltage electricity per block</strong>. The OPC is produced in a cement kiln in <strong>Spain</strong>, transported to the factory by <strong>small lorry (35 km)</strong>. Sand and gravel are sourced locally (transport: <strong>small lorry, 12 km</strong>). Water is tap water (Spanish supply).</p>
+
+        <p>The unitary impacts of OPC clinker production (which includes calcination CO₂) are given in Table 2. Fly ash is modelled with <strong>zero production burden</strong> (cut-off approach — it is a waste from power plants).</p>
+
+        <div class="warn-box">☛ <strong>Functional unit:</strong> <strong>1 concrete block</strong> (both variants have identical structural performance). System boundary: cradle-to-factory gate (no use phase, no EoL).</div>
+
+        <p>The considered impact categories are <strong>"Climate change"</strong> and <strong>"Resource use, fossils"</strong> of the Impact assessment method <strong>EF 3.0 Method (adapted)</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">T</div><span class="card-head-title">Inventory Data Tables</span></div>
+    <div class="card-body">
+
+      <p class="table-label">Table 1 – Composition of one concrete block (both variants, per block)</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Variant A (Standard)</th><th>Variant B (Low-carbon)</th><th>Unit</th></tr></thead>
+          <tbody>
+            <tr><td>OPC cement</td><td>2.40 kg</td><td>1.44 kg (−40%)</td><td>kg</td></tr>
+            <tr><td>Fly ash</td><td>0</td><td>0.96 kg (+40% replacement)</td><td>kg</td></tr>
+            <tr><td>Sand</td><td>8.20 kg</td><td>8.20 kg</td><td>kg</td></tr>
+            <tr><td>Gravel (crushed stone)</td><td>12.50 kg</td><td>12.50 kg</td><td>kg</td></tr>
+            <tr><td>Water</td><td>1.10 kg</td><td>1.10 kg</td><td>kg</td></tr>
+            <tr><td>Electricity (production)</td><td>0.018 kWh</td><td>0.018 kWh</td><td>kWh</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 2 – Unitary impacts of OPC production</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Climate change [kg CO₂-eq]</th><th>Resource use, fossils [MJ]</th><th>Per</th></tr></thead>
+          <tbody>
+            <tr><td>Ordinary Portland Cement (OPC)</td><td>0.82</td><td>3.60</td><td>1 kg OPC</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 3 – Elementary flows</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Elementary flow</th><th>Flow name</th><th>Folder</th></tr></thead>
+          <tbody>
+            <tr><td>CO₂ (1 correct)</td><td>Carbon dioxide, fossil</td><td>Emission to air / unspecified</td></tr>
+            <tr><td>Fossils (1 correct)</td><td>Oil, crude, in ground</td><td>Resource / in ground</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-label" style="margin-top:18px">Table 4 – Product flow providers</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Provider</th></tr></thead>
+          <tbody>
+            <tr><td>Sand</td><td>Sand, production mix, at mine – RER</td></tr>
+            <tr><td>Gravel / crushed stone</td><td>Gravel, crushed, production mix, at mine – RER</td></tr>
+            <tr><td>Tap water</td><td>Drinking water, production mix, at plant, from surface water – ES</td></tr>
+            <tr><td>Transport</td><td>Small lorry transport, Euro 0–4 mix, 7.5 t total weight – RER</td></tr>
+            <tr><td>Electricity</td><td>Electricity grid mix 1kV–60kV, at consumer – ES</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-head-icon">Q</div><span class="card-head-title">Answer the Following Requests</span></div>
+    <div class="card-body">
+      <ul class="questions-list">
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 1</span><span class="q-pts">12 points</span></div>
+          <div class="q-body">
+            <p><strong>Build both product systems in OpenLCA.</strong></p>
+            <div class="q-sub">• Screenshots of model graphs and all input/output tabs.<br>• Elementary flows (☑) flagged.<br>• All formulas visible.</div>
+            <p class="mandatory-note">Mandatory: screenshots of all processes.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Model Structure &amp; Key Calculations</div>
+              <div class="sol-body">
+                <p>Create <strong>2 processes</strong> (one per variant), each with:</p>
+                <p><strong>Variant A — Standard Block:</strong></p>
+                <ul>
+                  <li>OPC direct flows (Table 2): CC = 0.82×2.40 = <span class="sol-result">1.968 kg CO₂-eq</span>; RF = 3.60×2.40 = 8.64 MJ</li>
+                  <li>Sand 8.20 kg (provider RER), transport: 8.20×12/1000 = 0.0984 t·km</li>
+                  <li>Gravel 12.50 kg, transport: 12.50×12/1000 = 0.150 t·km</li>
+                  <li>OPC 2.40 kg transport: 2.40×35/1000 = 0.084 t·km</li>
+                  <li>Water 1.10 kg (tap water ES)</li>
+                  <li>Electricity ES medium 0.018 kWh</li>
+                </ul>
+                <p><strong>Variant B — Low-Carbon Block:</strong></p>
+                <ul>
+                  <li>OPC direct flows: CC = 0.82×1.44 = <span class="sol-result">1.181 kg CO₂-eq</span>; RF = 3.60×1.44 = 5.184 MJ</li>
+                  <li>Fly ash: <strong>0 impact</strong> (cut-off — no process needed)</li>
+                  <li>All other inputs identical to Variant A</li>
+                </ul>
+                <div class="sol-calc">
+CC reduction from A→B (cement only):
+1.968 − 1.181 = 0.787 kg CO₂-eq → ~40% reduction in cement-related CC
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 2</span><span class="q-pts">1 point</span></div>
+          <div class="q-body">
+            <p><strong>Calculate total impact of 1 block</strong> for both variants and categories. Which is better?</p>
+            <p class="mandatory-note">Mandatory: results tab screenshots for both product systems.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Expected Results (1 concrete block)</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+Variant A CC ≈ 2.0 – 2.5 kg CO₂-eq / block (cement dominates ~80%)
+Variant B CC ≈ 1.2 – 1.6 kg CO₂-eq / block (~35–40% lower)
+
+Fossils: proportional reduction — Variant B better by ~28%
+(only cement-related fossil fuel use reduces; sand/gravel/electricity unchanged)
+                </div>
+                <p><strong>Variant B clearly wins</strong> for both CC and fossils. The fly ash substitution has a large effect because OPC production is the dominant impact driver.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 3</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>Which process has the <strong>highest direct contribution</strong> for each variant and category? Report relative %.</p>
+            <p class="mandatory-note">Mandatory: contribution analysis screenshots.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Highest Direct Contributions</div>
+              <div class="sol-body">
+                <p>For <strong>both variants</strong>, the concrete block production process itself (where OPC direct flows are entered) will show the highest direct contribution:</p>
+                <div class="sol-calc">
+Variant A: OPC CC direct = 1.968 kg CO₂ / total ~2.3 kg CO₂ ≈ 85% direct
+Variant B: OPC CC direct = 1.181 kg CO₂ / total ~1.5 kg CO₂ ≈ 79% direct
+                </div>
+                <p>The relative share of cement is slightly lower in B because the denominator (total) decreases while gravel/sand/electricity contributions remain constant.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 4</span><span class="q-pts">2 points</span></div>
+          <div class="q-body">
+            <p>What is the <strong>absolute and relative reduction</strong> in both CC and fossils from Variant A to Variant B?</p>
+            <p class="mandatory-note">Mandatory: screenshot showing both result values side by side.</p>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">A→B Reduction</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+CC reduction = (0.82 × 2.40) − (0.82 × 1.44) = 0.82 × 0.96 = 0.787 kg CO₂-eq
+Relative CC reduction ≈ 0.787 / 2.3 ≈ 34%
+
+Fossils reduction = (3.60 × 2.40) − (3.60 × 1.44) = 3.60 × 0.96 = 3.456 MJ
+Relative fossils reduction ≈ 3.456 / 10.5 ≈ 33%
+                </div>
+                <p>Both reductions are proportional (~33–34%) because fly ash replaces exactly 40% of OPC and has zero burden. The non-cement components (sand, gravel, electricity, water, transport) are unchanged.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="question-item">
+          <div class="q-header"><span class="q-num">Question 5</span><span class="q-pts">7 points</span></div>
+          <div class="q-body">
+            <p>Perform a <strong>sensitivity analysis</strong> on the fly ash substitution rate for Variant B:</p>
+            <div class="q-sub">
+              <strong>Scenario A (Reference):</strong> 40% fly ash substitution (as modelled).<br><br>
+              <strong>Scenario B – Higher substitution:</strong> 60% fly ash (OPC = 0.96 kg, fly ash = 1.44 kg). Note: higher substitution may reduce strength — assume same performance for this exercise.<br><br>
+              <strong>Scenario C – Lower substitution:</strong> 20% fly ash (OPC = 1.92 kg, fly ash = 0.48 kg).<br><br>
+              Compare CC and fossils for all three scenarios vs Variant A (100% OPC). Is the relationship linear?
+            </div>
+            <p class="mandatory-note">Mandatory: modified process tabs; project setup and report.</p>
+            <div class="green-box">☛ Remember to export the project and results.</div>
+            <button class="sol-toggle-btn" onclick="toggleSol(this)"><span class="arrow">▼</span> Show Solution</button>
+            <div class="solution-block">
+              <div class="sol-header">Fly Ash Substitution Sensitivity</div>
+              <div class="sol-body">
+                <div class="sol-calc">
+CC(OPC only) = 0.82 × 2.40 = 1.968 kg CO₂-eq (base cement contribution)
+
+20% fly ash: OPC = 1.92 kg → CC_cement = 0.82×1.92 = 1.574 → reduction = 0.394 kg (20%)
+40% fly ash: OPC = 1.44 kg → CC_cement = 0.82×1.44 = 1.181 → reduction = 0.787 kg (40%)
+60% fly ash: OPC = 0.96 kg → CC_cement = 0.82×0.96 = 0.787 → reduction = 1.181 kg (60%)
+                </div>
+                <p><strong>Yes, the relationship is perfectly linear</strong> because fly ash has zero burden (cut-off) and OPC impact is proportional to mass. Each 10% substitution → exactly 10% reduction in cement-related CC.</p>
+                <p><strong>Commentary:</strong> This linear relationship is a specific consequence of the cut-off allocation for fly ash. If fly ash were allocated with a burden (e.g. system expansion attributing some coal plant impacts to fly ash), the relationship would be non-linear and the break-even point would depend on the fly ash impact factor.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>LCA Mock Exams — Generated for practice purposes · Politecnico di Milano · Life Cycle Assessment of Materials and Processes</footer>
+
+<script>
+const examTitles = [
+  'Exam 1 - Coffee Capsule',
+  'Exam 2 - Electric Scooter',
+  'Exam 3 - Wooden Furniture',
+  'Exam 4 - Smartphone',
+  'Exam 5 - Wind Turbine',
+  'Exam 6 - Cotton T-Shirt',
+  'Exam 7 - Plastic Bottle',
+  'Exam 8 - Concrete Block'
+];
+
+let currentExam = 0;
+
+function toggleSol(btn) {
+  const block = btn.nextElementSibling;
+  const isOpen = block.classList.contains('visible');
+  block.classList.toggle('visible', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.innerHTML = isOpen
+    ? '<span class="arrow">▼</span> Show Solution'
+    : '<span class="arrow">▼</span> Hide Solution';
+}
+
+(idx) {
+  currentExam = idx;
+  document.querySelectorAll('.exam-panel').forEach((p, i) => {
+    p.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.nav-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+}
+
+function exportPDF() {
+  const btn = document.getElementById('pdf-btn');
+  btn.classList.add('loading');
+  btn.querySelector('span') && (btn.querySelector('span').textContent = 'Generating…');
+
+  // Clone the active panel for PDF rendering
+  const panel = document.getElementById('exam-' + currentExam).cloneNode(true);
+  panel.style.display = 'block';
+  panel.style.padding = '0';
+
+  // Build a print-ready wrapper
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = `
+    font-family: 'IBM Plex Sans', Arial, sans-serif;
+    font-size: 13px;
+    color: #1c1a18;
+    line-height: 1.6;
+    background: #fff;
+    padding: 0;
+  `;
+
+  // Header block
+  const hdr = document.createElement('div');
+  hdr.style.cssText = `
+    background: #1a4d6e;
+    color: #fff;
+    padding: 20px 24px 16px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+  `;
+  hdr.innerHTML = `
+    <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6);font-family:monospace;margin-bottom:4px">Politecnico di Milano · LCA Course</div>
+    <div style="font-size:18px;font-weight:700;margin-bottom:2px">Life Cycle Assessment of Materials and Processes</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.75)">Mock Exam — Part A &nbsp;·&nbsp; ${examTitles[currentExam]}</div>
+  `;
+  wrapper.appendChild(hdr);
+  wrapper.appendChild(panel);
+
+  const filename = examTitles[currentExam].replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') + '_PartA.pdf';
+
+  const opt = {
+    margin: [12, 10, 12, 10],
+    filename: filename,
+    image: { type: 'jpeg', quality: 0.97 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff'
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  html2pdf().set(opt).from(wrapper).save().then(() => {
+    btn.classList.remove('loading');
+  }).catch(() => {
+    btn.classList.remove('loading');
+  });
+}
+</script>
+</body>
+</html>
